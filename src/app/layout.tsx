@@ -1,0 +1,31 @@
+import type { Metadata } from "next";
+import { Hind_Siliguri } from "next/font/google";
+import "./globals.css";
+
+const hindSiliguri = Hind_Siliguri({
+  weight: ["300", "400", "500", "600", "700"],
+  subsets: ["bengali", "latin"],
+  variable: "--font-hind-siliguri",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title:
+    "জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা | Jamia Nesaria Islamia Madrasha & Orphanage",
+  description:
+    "কুরআন-সুন্নাহর আলোকে দ্বীনি শিক্ষা, নৈতিকতা ও আদর্শ মানুষ গড়ার প্রত্যয়ে। মরকুন, (তিস্তাগেট- আনোয়ার সিল্ক মিলস সংলগ্ন) টঙ্গী, গাজীপুর, বাংলাদেশ। প্রতিষ্ঠাকাল: ১৯৬৯ খ্রিষ্টাব্দ।",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="bn" className={`${hindSiliguri.variable} scroll-smooth`}>
+      <body className="min-h-screen bg-[#FAF7F0] font-sans antialiased text-gray-800">
+        {children}
+      </body>
+    </html>
+  );
+}
