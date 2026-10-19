@@ -5,31 +5,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { homePageContent, siteSettings } from "@/data/siteData";
 import {
-  BookOpen,
-  Award,
-  Target,
   ArrowRight,
-  Calendar,
-  UserCheck,
-  Users,
-  ShieldCheck,
-  GraduationCap,
-  MapPin,
-  Sparkles,
-  CheckCircle2,
-  Library,
-  Mic,
-  FileEdit,
-  HeartHandshake,
-  Bell,
-  Camera,
   Phone,
   Mail,
+  MapPin,
+  GraduationCap,
+  Users,
+  ClipboardCheck,
+  Library,
+  Mic,
+  Utensils,
   Building2,
-  ScrollText,
-  Compass,
-  Clock,
-  FileCheck,
+  ShieldCheck,
 } from "lucide-react";
 
 export default function HomePrimarySection() {
@@ -43,6 +30,7 @@ export default function HomePrimarySection() {
     atAGlance,
     missionAndObjectives,
     departments,
+    madrasaFeatures,
     curriculum,
     studentTraining,
     notices,
@@ -56,14 +44,15 @@ export default function HomePrimarySection() {
       ? gallery.categories
       : gallery.categories.filter((item) => item.id === activeGalleryCategory);
 
+  const bengaliDigits = ["১", "২", "৩", "৪", "৫"];
+
   return (
-    <div className="w-full">
+    <div className="w-full bg-[#F4F5F0] text-gray-800">
       {/* =====================================================================
-          ২। প্রধান ব্যানার (Hero Banner — Borderless & Balanced)
+          ২। প্রধান ব্যানার (Hero Banner — Placed right after Breaking News)
       ===================================================================== */}
       <section className="w-full relative">
-        <div className="relative w-full h-[320px] sm:h-[400px] md:h-[460px] lg:h-[520px] overflow-hidden">
-          {/* Main Campus Image - No border */}
+        <div className="relative w-full h-[300px] sm:h-[380px] md:h-[440px] lg:h-[490px] overflow-hidden">
           <Image
             src={hero.image}
             alt={hero.title}
@@ -73,13 +62,13 @@ export default function HomePrimarySection() {
             className="object-cover object-[center_35%]"
           />
 
-          {/* Smooth dark gradient at the lower part for clean text readability */}
-          <div className="absolute inset-x-0 bottom-0 pt-20 pb-6 sm:pb-8 px-4 sm:px-6 bg-gradient-to-t from-black/85 via-black/50 to-transparent flex flex-col items-center text-center">
-            <div className="max-w-4xl mx-auto">
-              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-snug drop-shadow-sm">
+          {/* Clean dark gradient at the lower part of prodhan_banner.jpeg */}
+          <div className="absolute inset-x-0 bottom-0 pt-20 pb-5 sm:pb-7 px-4 bg-gradient-to-t from-[#021c0e]/95 via-[#021c0e]/65 to-transparent">
+            <div className="max-w-7xl mx-auto text-center">
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-[36px] font-bold text-white tracking-tight leading-snug">
                 {hero.title}
               </h1>
-              <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm md:text-base lg:text-lg font-medium text-amber-200 leading-relaxed drop-shadow-xs">
+              <p className="mt-1 sm:mt-1.5 text-xs sm:text-sm md:text-base lg:text-[17px] font-medium text-[#FDE68A] leading-relaxed">
                 {hero.slogan}
               </p>
             </div>
@@ -88,628 +77,544 @@ export default function HomePrimarySection() {
       </section>
 
       {/* =====================================================================
-          ৩। আমাদের জামিয়ায় স্বাগতম (Welcome to Our Jamia)
+          MAIN INSTITUTIONAL PORTAL HUB (2-Column Editorial & Admin Layout)
+          Left Column (8 cols): ৩। আমাদের জামিয়ায় স্বাগতম + ৫। আমাদের লক্ষ্য ও উদ্দেশ্য
+          Right Column (4 cols): ৪। এক নজরে আমাদের জামিয়া + ৯। নোটিশ ও বিজ্ঞপ্তি
       ===================================================================== */}
-      <section
-        id="welcome"
-        className="py-10 sm:py-14 px-4 sm:px-6 lg:px-8 bg-[#FAF7F0] scroll-mt-14"
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden">
-            <div className="h-1.5 w-full bg-gradient-to-r from-[#016332] via-[#D9822B] to-[#8B111A]" />
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 py-8 sm:py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* LEFT MAIN COLUMN (8 cols) */}
+          <div className="lg:col-span-8 space-y-6">
+            {/* ৩। আমাদের জামিয়ায় স্বাগতম */}
+            <article
+              id="welcome"
+              className="bg-white border border-gray-200 shadow-2xs scroll-mt-14"
+            >
+              <div className="bg-[#016332] text-white px-4 sm:px-5 py-2.5 border-b-2 border-[#D9822B] flex items-center justify-between">
+                <h2 className="text-base sm:text-lg font-bold tracking-wide">
+                  {welcome.title}
+                </h2>
+                <span className="text-xs text-amber-200 font-medium">
+                  স্থাপিত: ১৯৬৯ খ্রিষ্টাব্দ
+                </span>
+              </div>
 
-            <div className="p-6 sm:p-8 lg:p-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
-              {/* Left Column: Seal Logo */}
-              <div className="lg:col-span-4 flex flex-col items-center text-center">
-                <div className="relative p-3 rounded-full bg-amber-50/60 border border-amber-200/80">
-                  <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-full overflow-hidden border-2 border-[#8B111A] bg-white p-1.5 shadow-sm flex items-center justify-center">
+              <div className="p-5 sm:p-6">
+                <div className="flex flex-col sm:flex-row gap-5 items-center sm:items-start">
+                  {/* Official Madrasa Seal */}
+                  <div className="shrink-0 w-28 h-28 sm:w-32 sm:h-32 rounded-full border-2 border-[#8B111A] p-1 bg-white shadow-2xs flex items-center justify-center">
                     <Image
                       src={siteSettings.logoUrl}
                       alt={siteSettings.nameBn}
-                      width={150}
-                      height={150}
+                      width={128}
+                      height={128}
                       className="w-full h-full object-contain rounded-full"
                     />
                   </div>
-                  <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 bg-[#016332] text-white text-[11px] sm:text-xs font-semibold px-3 py-0.5 rounded-full whitespace-nowrap shadow-2xs">
-                    স্থাপিত: ১৯৬৯ খ্রিষ্টাব্দ
+
+                  {/* Welcome Paragraphs */}
+                  <div className="flex-1 space-y-3 text-gray-700 text-sm sm:text-[15px] leading-relaxed text-justify">
+                    {welcome.paragraphs.map((para, idx) => (
+                      <p key={idx}>{para}</p>
+                    ))}
+
+                    <div className="pt-2">
+                      <Link
+                        href={welcome.buttonHref}
+                        className="inline-flex items-center gap-1.5 bg-[#8B111A] hover:bg-[#6e0b13] text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded-xs transition-colors"
+                      >
+                        <span>{welcome.buttonText}</span>
+                        <ArrowRight size={14} />
+                      </Link>
+                    </div>
                   </div>
                 </div>
+              </div>
+            </article>
 
-                <div className="mt-5 space-y-0.5">
-                  <h3 className="text-base sm:text-lg font-bold text-[#8B111A]">
-                    {siteSettings.nameBn}
-                  </h3>
-                  <p className="text-xs text-[#016332] font-medium">
-                    মরকুন, টঙ্গী, গাজীপুর, বাংলাদেশ
-                  </p>
-                </div>
+            {/* ৫. আমাদের লক্ষ্য ও উদ্দেশ্য */}
+            <article
+              id="mission"
+              className="bg-white border border-gray-200 shadow-2xs scroll-mt-14"
+            >
+              <div className="bg-[#016332] text-white px-4 sm:px-5 py-2.5 border-b-2 border-[#D9822B] flex items-center justify-between">
+                <h2 className="text-base sm:text-lg font-bold tracking-wide">
+                  {missionAndObjectives.title}
+                </h2>
               </div>
 
-              {/* Right Column: Welcome Text & Button */}
-              <div className="lg:col-span-8 space-y-3.5">
-                <div className="inline-flex items-center gap-1.5 bg-emerald-50 text-[#016332] border border-emerald-200 px-3 py-1 rounded-full text-xs font-semibold">
-                  <Sparkles size={13} className="text-[#D9822B]" />
-                  <span>স্বাগতম বার্তা</span>
+              <div className="p-5 sm:p-6 space-y-5">
+                {/* Main Goal Box */}
+                <div className="bg-[#FAF7F0] border-l-4 border-[#8B111A] p-4 text-sm sm:text-[15.5px] font-semibold text-gray-900 leading-relaxed">
+                  {missionAndObjectives.mainGoal}
                 </div>
 
-                <h2 className="text-xl sm:text-2xl md:text-[28px] font-bold text-gray-900 leading-snug">
-                  {welcome.title}
-                </h2>
-
-                <div className="w-14 h-1 rounded-full bg-gradient-to-r from-[#8B111A] to-[#D9822B]" />
-
-                <div className="space-y-3 text-gray-700 text-sm sm:text-[15px] leading-relaxed text-justify">
-                  {welcome.paragraphs.map((para, idx) => (
-                    <p key={idx}>{para}</p>
-                  ))}
+                {/* Objectives List */}
+                <div>
+                  <h3 className="text-sm sm:text-base font-bold text-[#016332] mb-3 pb-1.5 border-b border-gray-200">
+                    {missionAndObjectives.objectivesTitle}
+                  </h3>
+                  <ul className="divide-y divide-gray-100 border border-gray-200 bg-[#fcfcfa]">
+                    {missionAndObjectives.objectives.map((obj, idx) => (
+                      <li
+                        key={idx}
+                        className="px-4 py-2.5 flex items-start gap-3 text-sm sm:text-[15px] text-gray-800"
+                      >
+                        <span className="font-bold text-[#8B111A] shrink-0">
+                          {bengaliDigits[idx]}।
+                        </span>
+                        <span>{obj}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
-                <div className="pt-2">
+                <div>
                   <Link
-                    href={welcome.buttonHref}
-                    className="inline-flex items-center gap-2 bg-[#016332] hover:bg-[#014f28] text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-lg shadow-xs transition-colors group"
+                    href={missionAndObjectives.buttonHref}
+                    className="inline-flex items-center gap-1.5 bg-[#016332] hover:bg-[#014724] text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded-xs transition-colors"
                   >
-                    <span>{welcome.buttonText}</span>
-                    <ArrowRight
-                      size={15}
-                      className="text-amber-300 group-hover:translate-x-0.5 transition-transform"
-                    />
+                    <span>{missionAndObjectives.buttonText}</span>
+                    <ArrowRight size={14} />
                   </Link>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================================
-          ৪। এক নজরে আমাদের জামিয়া (At a Glance Section)
-      ===================================================================== */}
-      <section
-        id="at-a-glance"
-        className="py-10 sm:py-14 px-4 sm:px-6 lg:px-8 bg-[#05351b] text-white relative overflow-hidden scroll-mt-14"
-      >
-        <div className="max-w-7xl mx-auto relative z-10">
-          {/* Section Header */}
-          <div className="text-center max-w-2xl mx-auto mb-8">
-            <span className="inline-flex items-center gap-1.5 bg-white/10 text-amber-300 border border-amber-300/30 px-3 py-1 rounded-full text-xs font-semibold mb-2">
-              <Building2 size={13} />
-              <span>প্রতিষ্ঠানের সংক্ষিপ্ত তথ্যাবলি</span>
-            </span>
-            <h2 className="text-xl sm:text-2xl md:text-[28px] font-bold text-white">
-              {atAGlance.title}
-            </h2>
-            <div className="w-16 h-1 bg-[#D9822B] rounded-full mx-auto mt-2.5" />
+            </article>
           </div>
 
-          {/* Top Row: 4 Key Pillars */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-            {/* প্রতিষ্ঠাকাল */}
-            <div className="bg-white/10 rounded-xl p-4 sm:p-5 border border-emerald-700/70">
-              <div className="w-9 h-9 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300 mb-3">
-                <Calendar size={18} />
+          {/* RIGHT INSTITUTIONAL SIDEBAR COLUMN (4 cols) */}
+          <aside className="lg:col-span-4 space-y-6">
+            {/* ৪। এক নজরে আমাদের জামিয়া (Institutional Profile Table) */}
+            <div
+              id="at-a-glance"
+              className="bg-white border border-gray-200 shadow-2xs scroll-mt-14"
+            >
+              <div className="bg-[#8B111A] text-white px-4 py-2.5 border-b-2 border-[#D9822B]">
+                <h2 className="text-base sm:text-lg font-bold tracking-wide">
+                  {atAGlance.title}
+                </h2>
               </div>
-              <p className="text-xs text-emerald-200">প্রতিষ্ঠাকাল</p>
-              <h3 className="text-base sm:text-lg font-bold text-white mt-0.5">
-                {atAGlance.established}
-              </h3>
-            </div>
 
-            {/* মুতাওয়াল্লী */}
-            <div className="bg-white/10 rounded-xl p-4 sm:p-5 border border-emerald-700/70">
-              <div className="w-9 h-9 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300 mb-3">
-                <ShieldCheck size={18} />
-              </div>
-              <p className="text-xs text-emerald-200">মুতাওয়াল্লী</p>
-              <h3 className="text-base sm:text-lg font-bold text-white mt-0.5">
-                {atAGlance.mutawalli}
-              </h3>
-            </div>
-
-            {/* সভাপতি */}
-            <div className="bg-white/10 rounded-xl p-4 sm:p-5 border border-emerald-700/70">
-              <div className="w-9 h-9 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300 mb-3">
-                <Award size={18} />
-              </div>
-              <p className="text-xs text-emerald-200">সভাপতি</p>
-              <h3 className="text-base sm:text-lg font-bold text-white mt-0.5">
-                {atAGlance.president}
-              </h3>
-            </div>
-
-            {/* মুহতামিম */}
-            <div className="bg-white/10 rounded-xl p-4 sm:p-5 border border-emerald-700/70">
-              <div className="w-9 h-9 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300 mb-3">
-                <UserCheck size={18} />
-              </div>
-              <p className="text-xs text-emerald-200">মুহতামিম</p>
-              <h3 className="text-base sm:text-lg font-bold text-white mt-0.5">
-                {atAGlance.muhtamim}
-              </h3>
-            </div>
-          </div>
-
-          {/* Bottom Row: 3 Detailed Cards */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {/* জমিদাতাগন */}
-            <div className="bg-white/10 rounded-xl p-4 sm:p-5 border border-emerald-700/70">
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-9 h-9 rounded-lg bg-[#8B111A] flex items-center justify-center text-amber-300 shrink-0">
-                  <Users size={18} />
+              <div className="divide-y divide-gray-200 text-xs sm:text-sm">
+                <div className="grid grid-cols-12 px-4 py-2.5 bg-white">
+                  <span className="col-span-4 font-bold text-gray-700">
+                    প্রতিষ্ঠাকাল
+                  </span>
+                  <span className="col-span-8 font-semibold text-gray-900">
+                    : {atAGlance.established}
+                  </span>
                 </div>
-                <h3 className="text-base font-bold text-amber-300">
-                  জমিদাতাগন
-                </h3>
-              </div>
-              <ul className="space-y-1.5 text-sm font-medium text-white">
-                {atAGlance.landDonors.map((donor, idx) => (
-                  <li
-                    key={idx}
-                    className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
-                    <span>{donor}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
 
-            {/* শিক্ষা কার্যক্রম */}
-            <div className="bg-white/10 rounded-xl p-4 sm:p-5 border border-emerald-700/70 flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-2.5 mb-3">
-                  <div className="w-9 h-9 rounded-lg bg-[#8B111A] flex items-center justify-center text-amber-300 shrink-0">
-                    <GraduationCap size={18} />
+                <div className="grid grid-cols-12 px-4 py-2.5 bg-[#F9FAF8]">
+                  <span className="col-span-4 font-bold text-gray-700">
+                    মুতাওয়াল্লী
+                  </span>
+                  <span className="col-span-8 font-semibold text-gray-900">
+                    : {atAGlance.mutawalli}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-12 px-4 py-2.5 bg-white">
+                  <span className="col-span-4 font-bold text-gray-700">
+                    জমিদাতাগন
+                  </span>
+                  <div className="col-span-8 font-medium text-gray-900 space-y-0.5">
+                    {atAGlance.landDonors.map((donor, idx) => (
+                      <div key={idx}>{donor}</div>
+                    ))}
                   </div>
-                  <h3 className="text-base font-bold text-amber-300">
+                </div>
+
+                <div className="grid grid-cols-12 px-4 py-2.5 bg-[#F9FAF8]">
+                  <span className="col-span-4 font-bold text-gray-700">
+                    সভাপতি
+                  </span>
+                  <span className="col-span-8 font-semibold text-gray-900">
+                    : {atAGlance.president}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-12 px-4 py-2.5 bg-white">
+                  <span className="col-span-4 font-bold text-gray-700">
+                    মুহতামিম
+                  </span>
+                  <span className="col-span-8 font-semibold text-[#016332]">
+                    : {atAGlance.muhtamim}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-12 px-4 py-2.5 bg-[#F9FAF8]">
+                  <span className="col-span-4 font-bold text-gray-700">
                     শিক্ষা কার্যক্রম
-                  </h3>
+                  </span>
+                  <span className="col-span-8 font-medium text-gray-900 leading-snug">
+                    : {atAGlance.academicPrograms}
+                  </span>
                 </div>
-                <p className="text-sm sm:text-base font-semibold text-white leading-relaxed bg-white/5 p-3.5 rounded-lg border border-white/10">
-                  {atAGlance.academicPrograms}
-                </p>
-              </div>
-              <div className="mt-3 flex flex-wrap gap-1.5">
-                {["মক্তব", "হিফজ", "হিফজ রিভিশন", "কিতাব বিভাগ"].map(
-                  (dept, idx) => (
-                    <span
-                      key={idx}
-                      className="text-xs bg-emerald-900/80 text-amber-200 px-2.5 py-0.5 rounded-full border border-emerald-700"
-                    >
-                      {dept}
-                    </span>
-                  )
-                )}
+
+                <div className="grid grid-cols-12 px-4 py-2.5 bg-white">
+                  <span className="col-span-4 font-bold text-gray-700">
+                    ঠিকানা
+                  </span>
+                  <span className="col-span-8 font-medium text-gray-900 leading-snug whitespace-pre-line">
+                    {atAGlance.address}
+                  </span>
+                </div>
               </div>
             </div>
 
-            {/* ঠিকানা */}
-            <div className="bg-white/10 rounded-xl p-4 sm:p-5 border border-emerald-700/70 flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-2.5 mb-3">
-                  <div className="w-9 h-9 rounded-lg bg-[#8B111A] flex items-center justify-center text-amber-300 shrink-0">
-                    <MapPin size={18} />
-                  </div>
-                  <h3 className="text-base font-bold text-amber-300">ঠিকানা</h3>
-                </div>
-                <p className="text-sm sm:text-[15px] font-medium text-white leading-relaxed whitespace-pre-line bg-white/5 p-3.5 rounded-lg border border-white/10">
-                  {atAGlance.address}
-                </p>
+            {/* ৯। নোটিশ ও বিজ্ঞপ্তি (Official Notice Board) */}
+            <div
+              id="notices"
+              className="bg-white border border-gray-200 shadow-2xs scroll-mt-14"
+            >
+              <div className="bg-[#016332] text-white px-4 py-2.5 border-b-2 border-[#D9822B] flex items-center justify-between">
+                <h2 className="text-base sm:text-lg font-bold tracking-wide">
+                  {notices.title}
+                </h2>
+                <Link
+                  href="/functions/notices"
+                  className="text-xs text-amber-200 hover:underline"
+                >
+                  সকল নোটিশ
+                </Link>
               </div>
-              <div className="mt-3 text-xs text-emerald-200 flex items-center gap-1.5">
-                <Phone size={13} className="text-amber-300" />
-                <span>মোবাইল: {siteSettings.phone}</span>
+
+              <div className="p-4 space-y-3">
+                <p className="text-xs text-gray-600 leading-relaxed">
+                  {notices.subtitle}
+                </p>
+
+                {/* 4 Notice Categories */}
+                <div className="grid grid-cols-2 gap-1.5">
+                  {notices.categories.map((cat, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setActiveNoticeTab(idx)}
+                      className={`px-2.5 py-2 text-xs font-semibold text-left border transition-colors cursor-pointer ${
+                        activeNoticeTab === idx
+                          ? "bg-[#8B111A] text-white border-[#8B111A]"
+                          : "bg-[#F9FAF8] text-gray-800 border-gray-200 hover:border-[#016332]"
+                      }`}
+                    >
+                      • {cat}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Active Notice Box */}
+                <div className="border border-gray-200 bg-[#FAF7F0] p-5 text-center">
+                  <p className="text-xs font-semibold text-[#016332] mb-1">
+                    [{notices.categories[activeNoticeTab]}]
+                  </p>
+                  <p className="text-sm font-bold text-gray-800">
+                    “{notices.emptyMessage}”
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </aside>
         </div>
       </section>
 
       {/* =====================================================================
-          ৫. আমাদের লক্ষ্য ও উদ্দেশ্য (Our Aim & Objectives)
+          ৬। আমাদের শিক্ষা বিভাগসমূহ (Academic Departments)
       ===================================================================== */}
       <section
-        id="mission"
-        className="py-10 sm:py-14 px-4 sm:px-6 lg:px-8 bg-white scroll-mt-14"
+        id="departments"
+        className="bg-white border-y border-gray-200 py-8 sm:py-10 scroll-mt-14"
       >
-        <div className="max-w-7xl mx-auto">
-          {/* Section Title */}
-          <div className="text-center max-w-2xl mx-auto mb-8">
-            <span className="inline-flex items-center gap-1.5 bg-red-50 text-[#8B111A] border border-red-200 px-3 py-1 rounded-full text-xs font-semibold mb-2">
-              <Target size={13} />
-              <span>আদর্শ ও উদ্দেশ্য</span>
-            </span>
-            <h2 className="text-xl sm:text-2xl md:text-[28px] font-bold text-gray-900">
-              {missionAndObjectives.title}
+        <div className="max-w-7xl mx-auto px-3 sm:px-6">
+          {/* Classic Institutional Section Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 mb-6 border-b-2 border-[#016332]">
+            <div className="flex items-center gap-2.5">
+              <span className="w-1.5 h-6 bg-[#8B111A] inline-block" />
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
+                {departments.title}
+              </h2>
+            </div>
+            <Link
+              href={departments.buttonHref}
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#8B111A] hover:text-[#016332]"
+            >
+              <span>{departments.buttonText}</span>
+              <ArrowRight size={14} />
+            </Link>
+          </div>
+
+          {/* 4 Main Departments Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {departments.items.slice(0, 4).map((dept, idx) => (
+              <div
+                key={dept.id}
+                className="bg-[#FAF7F0] border border-gray-200 border-t-3 border-t-[#016332] p-4 sm:p-5 flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-bold text-[#8B111A]">
+                      বিভাগ - ০{idx + 1}
+                    </span>
+                    <span className="text-[11px] font-medium text-gray-600 bg-white px-2 py-0.5 border border-gray-200">
+                      {dept.badge}
+                    </span>
+                  </div>
+                  <h3 className="text-base sm:text-lg font-bold text-[#016332] mb-2">
+                    {dept.name}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">
+                    {dept.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* মাদানি নেসাব Row + সকল শিক্ষা বিভাগ দেখুন Button */}
+          {departments.items[4] && (
+            <div className="mt-4 bg-[#FAF7F0] border border-gray-200 border-l-4 border-l-[#8B111A] p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base sm:text-lg font-bold text-[#8B111A]">
+                    {departments.items[4].name}
+                  </h3>
+                  <span className="text-[11px] font-semibold bg-[#016332] text-white px-2 py-0.5">
+                    {departments.items[4].badge}
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-gray-700 mt-1">
+                  {departments.items[4].description}
+                </p>
+              </div>
+              <Link
+                href={departments.buttonHref}
+                className="shrink-0 inline-flex items-center gap-1.5 bg-[#016332] hover:bg-[#014724] text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded-xs transition-colors"
+              >
+                <span>{departments.buttonText}</span>
+                <ArrowRight size={14} />
+              </Link>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* =====================================================================
+          ৭। মাদরাসার বৈশিষ্ট্য (Madrasa Features / Boisisto - as in reference image)
+      ===================================================================== */}
+      {madrasaFeatures && (
+        <section
+          id="features"
+          className="max-w-7xl mx-auto px-3 sm:px-6 py-8 sm:py-10 scroll-mt-14"
+        >
+          {/* Section Header */}
+          <div className="pb-3 mb-6 border-b-2 border-[#016332]">
+            <div className="flex items-center gap-2.5">
+              <span className="w-1.5 h-6 bg-[#8B111A] inline-block" />
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
+                {madrasaFeatures.title}
+              </h2>
+            </div>
+            <p className="text-xs sm:text-sm text-gray-600 mt-1 leading-relaxed">
+              {madrasaFeatures.subtitle}
+            </p>
+          </div>
+
+          {/* 8 Feature Cards Grid matching reference image */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+            {madrasaFeatures.items.map((feature) => {
+              const getIcon = (id: string) => {
+                switch (id) {
+                  case "teachers":
+                    return (
+                      <GraduationCap
+                        className="w-6 h-6 text-gray-700"
+                        strokeWidth={1.8}
+                      />
+                    );
+                  case "supervision":
+                    return (
+                      <Users
+                        className="w-6 h-6 text-gray-700"
+                        strokeWidth={1.8}
+                      />
+                    );
+                  case "education-initiative":
+                    return (
+                      <ClipboardCheck
+                        className="w-6 h-6 text-gray-700"
+                        strokeWidth={1.8}
+                      />
+                    );
+                  case "library":
+                    return (
+                      <Library
+                        className="w-6 h-6 text-gray-700"
+                        strokeWidth={1.8}
+                      />
+                    );
+                  case "moral-events":
+                    return (
+                      <Mic
+                        className="w-6 h-6 text-gray-700"
+                        strokeWidth={1.8}
+                      />
+                    );
+                  case "food":
+                    return (
+                      <Utensils
+                        className="w-6 h-6 text-gray-700"
+                        strokeWidth={1.8}
+                      />
+                    );
+                  case "building":
+                    return (
+                      <Building2
+                        className="w-6 h-6 text-gray-700"
+                        strokeWidth={1.8}
+                      />
+                    );
+                  case "environment":
+                    return (
+                      <ShieldCheck
+                        className="w-6 h-6 text-gray-700"
+                        strokeWidth={1.8}
+                      />
+                    );
+                  default:
+                    return (
+                      <GraduationCap
+                        className="w-6 h-6 text-gray-700"
+                        strokeWidth={1.8}
+                      />
+                    );
+                }
+              };
+
+              return (
+                <div
+                  key={feature.id}
+                  className="bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-2xs hover:border-gray-300 transition-colors flex flex-col justify-start"
+                >
+                  <div className="mb-3.5 sm:mb-4">{getIcon(feature.id)}</div>
+                  <h3 className="text-base sm:text-[17px] font-bold text-gray-900 mb-2 leading-snug">
+                    {feature.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* =====================================================================
+          ৮। পাঠ্যক্রম ও শিক্ষা কার্যক্রম & ৯। ছাত্র প্রশিক্ষণ ও সহশিক্ষা কার্যক্রম
+      ===================================================================== */}
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 py-8 sm:py-10 space-y-8">
+        {/* ৭। পাঠ্যক্রম ও শিক্ষা কার্যক্রম */}
+        <div
+          id="curriculum"
+          className="bg-white border border-gray-200 shadow-2xs scroll-mt-14"
+        >
+          <div className="bg-[#016332] text-white px-4 sm:px-5 py-2.5 border-b-2 border-[#D9822B] flex items-center justify-between">
+            <h2 className="text-base sm:text-lg font-bold tracking-wide">
+              {curriculum.title}
             </h2>
-            <div className="w-16 h-1 bg-gradient-to-r from-[#016332] to-[#8B111A] rounded-full mx-auto mt-2.5" />
+            <span className="text-xs text-amber-200 hidden sm:inline">
+              {curriculum.subtitle}
+            </span>
           </div>
 
-          {/* Main Goal Callout Card */}
-          <div className="bg-gradient-to-r from-[#8B111A] to-[#6e0b13] text-white rounded-xl p-5 sm:p-6 shadow-sm mb-8 text-center">
-            <p className="text-xs uppercase tracking-wider text-amber-300 font-semibold mb-1">
-              মূল লক্ষ্য
-            </p>
-            <p className="text-base sm:text-lg md:text-xl font-bold leading-relaxed max-w-4xl mx-auto">
-              “{missionAndObjectives.mainGoal}”
-            </p>
+          <div className="p-5 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div className="lg:col-span-7 space-y-3">
+              <h3 className="text-base sm:text-lg font-bold text-[#8B111A]">
+                {curriculum.subtitle}
+              </h3>
+              <div className="space-y-3 text-sm sm:text-[15px] text-gray-700 leading-relaxed text-justify">
+                {curriculum.paragraphs.map((para, idx) => (
+                  <p key={idx}>{para}</p>
+                ))}
+              </div>
+              <div className="pt-2">
+                <Link
+                  href={curriculum.buttonHref}
+                  className="inline-flex items-center gap-1.5 bg-[#8B111A] hover:bg-[#6e0b13] text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded-xs transition-colors"
+                >
+                  <span>{curriculum.buttonText}</span>
+                  <ArrowRight size={14} />
+                </Link>
+              </div>
+            </div>
+
+            <div className="lg:col-span-5 bg-[#FAF7F0] border border-gray-200 p-4">
+              <h4 className="text-xs sm:text-sm font-bold text-[#016332] pb-2 mb-3 border-b border-gray-200">
+                পাঠ্যক্রমের অন্তর্ভুক্ত প্রধান বিষয়সমূহ :
+              </h4>
+              <div className="grid grid-cols-2 gap-2 text-xs sm:text-[13.5px] font-medium text-gray-800">
+                {curriculum.subjects.map((sub, idx) => (
+                  <div
+                    key={idx}
+                    className={`bg-white border border-gray-200 px-3 py-1.5 flex items-center gap-1.5 ${
+                      idx === curriculum.subjects.length - 1 ? "col-span-2" : ""
+                    }`}
+                  >
+                    <span className="text-[#8B111A] font-bold">▪</span>
+                    <span>{sub}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ৮। ছাত্র প্রশিক্ষণ ও সহশিক্ষা কার্যক্রম */}
+        <div
+          id="training"
+          className="bg-white border border-gray-200 shadow-2xs scroll-mt-14"
+        >
+          <div className="bg-[#8B111A] text-white px-4 sm:px-5 py-2.5 border-b-2 border-[#D9822B] flex items-center justify-between">
+            <h2 className="text-base sm:text-lg font-bold tracking-wide">
+              {studentTraining.title}
+            </h2>
+            <Link
+              href={studentTraining.buttonHref}
+              className="text-xs text-amber-200 hover:underline flex items-center gap-1"
+            >
+              <span>{studentTraining.buttonText}</span>
+              <ArrowRight size={12} />
+            </Link>
           </div>
 
-          {/* Objectives Grid */}
-          <div>
-            <h3 className="text-base sm:text-lg font-bold text-[#016332] mb-4 flex items-center gap-2">
-              <Compass size={18} className="text-[#8B111A]" />
-              <span>{missionAndObjectives.objectivesTitle}</span>
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {missionAndObjectives.objectives.map((obj, idx) => (
+          <div className="p-5 sm:p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {studentTraining.items.map((item, idx) => (
                 <div
                   key={idx}
-                  className="flex items-start gap-3 p-4 rounded-xl bg-[#FAF7F0] border border-amber-200/80 hover:border-[#016332] transition-colors"
+                  className="border border-gray-200 bg-[#FAF7F0] p-4 border-l-3 border-l-[#016332]"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-[#016332] text-white flex items-center justify-center shrink-0 mt-0.5">
-                    <CheckCircle2 size={15} className="text-amber-300" />
-                  </div>
-                  <p className="text-sm sm:text-[15px] font-medium text-gray-800 leading-snug">
-                    {obj}
+                  <span className="text-xs font-bold text-[#8B111A] block mb-1">
+                    কার্যক্রম - ০{idx + 1}
+                  </span>
+                  <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1.5">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">
+                    {item.description}
                   </p>
                 </div>
               ))}
             </div>
 
-            {/* Button */}
-            <div className="mt-7 text-center">
+            <div className="mt-5">
               <Link
-                href={missionAndObjectives.buttonHref}
-                className="inline-flex items-center gap-2 bg-[#8B111A] hover:bg-[#6e0b13] text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-lg shadow-xs transition-colors group"
+                href={studentTraining.buttonHref}
+                className="inline-flex items-center gap-1.5 bg-[#016332] hover:bg-[#014724] text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded-xs transition-colors"
               >
-                <span>{missionAndObjectives.buttonText}</span>
-                <ArrowRight
-                  size={15}
-                  className="text-amber-300 group-hover:translate-x-0.5 transition-transform"
-                />
+                <span>{studentTraining.buttonText}</span>
+                <ArrowRight size={14} />
               </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================================
-          ৬। আমাদের শিক্ষা বিভাগসমূহ (Our Academic Departments)
-      ===================================================================== */}
-      <section
-        id="departments"
-        className="py-10 sm:py-14 px-4 sm:px-6 lg:px-8 bg-[#FAF7F0] border-y border-amber-200/60 scroll-mt-14"
-      >
-        <div className="max-w-7xl mx-auto">
-          {/* Section Header */}
-          <div className="text-center max-w-2xl mx-auto mb-8">
-            <span className="inline-flex items-center gap-1.5 bg-emerald-100/80 text-[#016332] border border-emerald-300 px-3 py-1 rounded-full text-xs font-semibold mb-2">
-              <BookOpen size={13} />
-              <span>বিভাগসমূহ</span>
-            </span>
-            <h2 className="text-xl sm:text-2xl md:text-[28px] font-bold text-gray-900">
-              {departments.title}
-            </h2>
-            <div className="w-16 h-1 bg-gradient-to-r from-[#016332] to-[#8B111A] rounded-full mx-auto mt-2.5" />
-          </div>
-
-          {/* 4 Main Departments Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {departments.items.slice(0, 4).map((dept, idx) => {
-              const bengaliNumbers = ["০১", "০২", "০৩", "০৪"];
-              return (
-                <div
-                  key={dept.id}
-                  className="bg-white rounded-xl border border-gray-200/90 shadow-2xs hover:shadow-md transition-all overflow-hidden flex flex-col justify-between group"
-                >
-                  <div>
-                    <div className="h-1 w-full bg-gradient-to-r from-[#016332] to-[#D9822B]" />
-                    <div className="p-5">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-[11px] font-semibold text-[#016332] bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
-                          {dept.badge}
-                        </span>
-                        <span className="text-lg font-bold text-amber-500/50 group-hover:text-[#8B111A] transition-colors">
-                          {bengaliNumbers[idx]}
-                        </span>
-                      </div>
-                      <h3 className="text-base sm:text-lg font-bold text-gray-900 group-hover:text-[#016332] transition-colors mb-2">
-                        {dept.name}
-                      </h3>
-                      <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                        {dept.description}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="px-5 pb-4 pt-1">
-                    <div className="w-full h-[1px] bg-gray-100 mb-2.5" />
-                    <span className="text-xs font-semibold text-[#8B111A]">
-                      নিয়মিত পাঠদান ও তত্ত্বাবধান
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* মাদানি নেসাব Special Highlight Bar */}
-          {departments.items[4] && (
-            <div className="mt-5 bg-[#016332] rounded-xl p-5 sm:p-6 text-white shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3.5 text-center sm:text-left">
-                <div className="w-11 h-11 rounded-xl bg-amber-400/20 flex items-center justify-center text-amber-300 shrink-0">
-                  <ScrollText size={22} />
-                </div>
-                <div>
-                  <span className="inline-block text-[11px] font-semibold bg-[#8B111A] text-amber-200 px-2.5 py-0.5 rounded-full mb-1">
-                    {departments.items[4].badge}
-                  </span>
-                  <h3 className="text-lg sm:text-xl font-bold text-white">
-                    {departments.items[4].name}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-emerald-100 mt-0.5 max-w-2xl">
-                    {departments.items[4].description}
-                  </p>
-                </div>
-              </div>
-
-              <Link
-                href={departments.buttonHref}
-                className="shrink-0 inline-flex items-center gap-1.5 bg-[#D9822B] hover:bg-[#c27120] text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-lg transition-colors group"
-              >
-                <span>{departments.buttonText}</span>
-                <ArrowRight
-                  size={15}
-                  className="group-hover:translate-x-0.5 transition-transform"
-                />
-              </Link>
-            </div>
-          )}
-
-          {/* Section Main CTA Button */}
-          <div className="mt-7 text-center">
-            <Link
-              href={departments.buttonHref}
-              className="inline-flex items-center gap-2 bg-[#016332] hover:bg-[#014724] text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-lg shadow-xs transition-colors group"
-            >
-              <span>{departments.buttonText}</span>
-              <ArrowRight
-                size={15}
-                className="text-amber-300 group-hover:translate-x-0.5 transition-transform"
-              />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================================
-          ৭। পাঠ্যক্রম ও শিক্ষা কার্যক্রম (Curriculum & Educational Activities)
-      ===================================================================== */}
-      <section
-        id="curriculum"
-        className="py-10 sm:py-14 px-4 sm:px-6 lg:px-8 bg-white scroll-mt-14"
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            {/* Left Content (7 cols) */}
-            <div className="lg:col-span-7 space-y-4">
-              <span className="inline-flex items-center gap-1.5 bg-amber-50 text-[#8B111A] border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
-                <BookOpen size={13} className="text-[#016332]" />
-                <span>{curriculum.title}</span>
-              </span>
-
-              <h2 className="text-xl sm:text-2xl md:text-[28px] font-bold text-gray-900 leading-snug">
-                {curriculum.subtitle}
-              </h2>
-
-              <div className="w-14 h-1 rounded-full bg-gradient-to-r from-[#016332] to-[#D9822B]" />
-
-              <div className="space-y-3 text-gray-700 text-sm sm:text-[15px] leading-relaxed text-justify">
-                {curriculum.paragraphs.map((para, idx) => (
-                  <p key={idx}>{para}</p>
-                ))}
-              </div>
-
-              <div className="pt-2">
-                <Link
-                  href={curriculum.buttonHref}
-                  className="inline-flex items-center gap-2 bg-[#8B111A] hover:bg-[#6E0B13] text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-lg shadow-xs transition-colors group"
-                >
-                  <span>{curriculum.buttonText}</span>
-                  <ArrowRight
-                    size={15}
-                    className="text-amber-300 group-hover:translate-x-0.5 transition-transform"
-                  />
-                </Link>
-              </div>
-            </div>
-
-            {/* Right Visual Card: Included Subjects & Holistic Pillars (5 cols) */}
-            <div className="lg:col-span-5 bg-[#FAF7F0] rounded-2xl p-5 sm:p-6 border border-amber-200/80 space-y-5">
-              <div>
-                <h3 className="text-base font-bold text-[#016332] mb-3 flex items-center gap-1.5">
-                  <Sparkles size={16} className="text-[#D9822B]" />
-                  <span>পাঠ্যক্রমের অন্তর্ভুক্ত বিষয়সমূহ</span>
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {curriculum.subjects.map((sub, idx) => (
-                    <span
-                      key={idx}
-                      className="bg-white text-gray-800 font-medium text-xs sm:text-[13px] px-3 py-1.5 rounded-lg border border-amber-200/90 flex items-center gap-1.5"
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#016332]" />
-                      <span>{sub}</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="border-t border-amber-200/70 pt-4">
-                <h4 className="text-xs font-bold text-[#8B111A] mb-2.5 uppercase tracking-wide">
-                  শিক্ষার্থীদের সার্বিক বিকাশের ৪টি স্তম্ভ
-                </h4>
-                <div className="grid grid-cols-2 gap-2.5">
-                  {[
-                    "চিন্তাশক্তি বিকাশ",
-                    "ভাষাগত দক্ষতা",
-                    "উন্নত আদব-আখলাক",
-                    "দায়িত্বশীলতা গঠন",
-                  ].map((pillar, idx) => (
-                    <div
-                      key={idx}
-                      className="bg-emerald-950/5 border border-emerald-800/15 rounded-lg p-2.5 text-center font-semibold text-xs sm:text-[13px] text-[#016332]"
-                    >
-                      {pillar}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================================
-          ৮। ছাত্র প্রশিক্ষণ ও সহশিক্ষা কার্যক্রম (Student Training & Co-curricular)
-      ===================================================================== */}
-      <section
-        id="training"
-        className="py-10 sm:py-14 px-4 sm:px-6 lg:px-8 bg-[#FAF7F0] border-t border-amber-200/60 scroll-mt-14"
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-8">
-            <span className="inline-flex items-center gap-1.5 bg-red-50 text-[#8B111A] border border-red-200 px-3 py-1 rounded-full text-xs font-semibold mb-2">
-              <Award size={13} />
-              <span>প্রতিভা ও চরিত্র গঠন</span>
-            </span>
-            <h2 className="text-xl sm:text-2xl md:text-[28px] font-bold text-gray-900">
-              {studentTraining.title}
-            </h2>
-            <div className="w-16 h-1 bg-gradient-to-r from-[#8B111A] to-[#016332] rounded-full mx-auto mt-2.5" />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {studentTraining.items.map((item, idx) => {
-              const icons = [
-                <Library key="lib" size={20} />,
-                <Mic key="mic" size={20} />,
-                <FileEdit key="edit" size={20} />,
-                <HeartHandshake key="heart" size={20} />,
-              ];
-              return (
-                <div
-                  key={idx}
-                  className="bg-white rounded-xl p-5 border border-gray-200/90 shadow-2xs hover:shadow-md transition-all group flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="w-10 h-10 rounded-xl bg-[#016332] text-amber-300 flex items-center justify-center mb-3.5 group-hover:bg-[#8B111A] transition-colors">
-                      {icons[idx]}
-                    </div>
-                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-1.5 group-hover:text-[#8B111A] transition-colors">
-                      {item.title}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                      {item.description}
-                    </p>
-                  </div>
-                  <div className="mt-4 pt-2.5 border-t border-gray-100 flex items-center justify-between text-xs font-semibold text-[#016332]">
-                    <span>সহশিক্ষা কার্যক্রম</span>
-                    <span>০{idx + 1}</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="mt-7 text-center">
-            <Link
-              href={studentTraining.buttonHref}
-              className="inline-flex items-center gap-2 bg-[#016332] hover:bg-[#014724] text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-lg shadow-xs transition-colors group"
-            >
-              <span>{studentTraining.buttonText}</span>
-              <ArrowRight
-                size={15}
-                className="text-amber-300 group-hover:translate-x-0.5 transition-transform"
-              />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================================
-          ৯। নোটিশ ও বিজ্ঞপ্তি (Notices & Announcements)
-      ===================================================================== */}
-      <section
-        id="notices"
-        className="py-10 sm:py-14 px-4 sm:px-6 lg:px-8 bg-white border-t border-amber-200/60 scroll-mt-14"
-      >
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-8">
-            <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-[#016332] border border-emerald-300 px-3 py-1 rounded-full text-xs font-semibold mb-2">
-              <Bell size={13} />
-              <span>বিজ্ঞপ্তি বোর্ড</span>
-            </span>
-            <h2 className="text-xl sm:text-2xl md:text-[28px] font-bold text-gray-900">
-              {notices.title}
-            </h2>
-            <p className="text-gray-600 text-xs sm:text-sm mt-1.5">
-              {notices.subtitle}
-            </p>
-            <div className="w-16 h-1 bg-gradient-to-r from-[#016332] to-[#8B111A] rounded-full mx-auto mt-2.5" />
-          </div>
-
-          {/* Notice Categories Grid / Tabs */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
-            {notices.categories.map((cat, idx) => {
-              const isActive = activeNoticeTab === idx;
-              return (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => setActiveNoticeTab(idx)}
-                  className={`p-3.5 rounded-xl font-semibold text-xs sm:text-sm text-left transition-all flex items-center gap-2.5 border cursor-pointer ${
-                    isActive
-                      ? "bg-[#016332] text-white border-[#016332] shadow-xs"
-                      : "bg-[#FAF7F0] text-gray-800 border-amber-200 hover:border-[#016332]"
-                  }`}
-                >
-                  <span
-                    className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 text-xs font-bold ${
-                      isActive
-                        ? "bg-amber-400 text-gray-900"
-                        : "bg-emerald-100 text-[#016332]"
-                    }`}
-                  >
-                    ০{idx + 1}
-                  </span>
-                  <span className="leading-snug">{cat}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Active Notice Display Box */}
-          <div className="bg-[#FAF7F0] rounded-2xl border border-amber-200/90 overflow-hidden">
-            <div className="bg-[#016332] text-white px-5 py-3 flex items-center justify-between">
-              <div className="flex items-center gap-2 font-semibold text-xs sm:text-sm">
-                <Bell size={15} className="text-amber-300" />
-                <span>{notices.categories[activeNoticeTab]}</span>
-              </div>
-              <span className="text-[11px] bg-white/15 px-2.5 py-0.5 rounded-full text-amber-200">
-                সর্বশেষ হালনাগাদ
-              </span>
-            </div>
-
-            <div className="p-8 sm:p-10 text-center flex flex-col items-center justify-center">
-              <div className="w-12 h-12 rounded-full bg-amber-100/70 border border-amber-200 flex items-center justify-center text-[#D9822B] mb-3">
-                <Bell size={20} />
-              </div>
-              <p className="text-base sm:text-lg font-bold text-gray-800">
-                “{notices.emptyMessage}”
-              </p>
-              <p className="text-xs text-gray-500 mt-1">{notices.subtitle}</p>
             </div>
           </div>
         </div>
@@ -720,85 +625,72 @@ export default function HomePrimarySection() {
       ===================================================================== */}
       <section
         id="gallery"
-        className="py-10 sm:py-14 px-4 sm:px-6 lg:px-8 bg-[#FAF7F0] border-t border-amber-200/60 scroll-mt-14"
+        className="bg-white border-y border-gray-200 py-8 sm:py-10 scroll-mt-14"
       >
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-8">
-            <span className="inline-flex items-center gap-1.5 bg-red-50 text-[#8B111A] border border-red-200 px-3 py-1 rounded-full text-xs font-semibold mb-2">
-              <Camera size={13} />
-              <span>ফটো ও কার্যক্রম গ্যালারি</span>
-            </span>
-            <h2 className="text-xl sm:text-2xl md:text-[28px] font-bold text-gray-900">
-              {gallery.title}
-            </h2>
-            <p className="text-gray-600 text-xs sm:text-sm mt-1.5">
-              {gallery.subtitle}
-            </p>
-            <div className="w-16 h-1 bg-gradient-to-r from-[#016332] to-[#8B111A] rounded-full mx-auto mt-2.5" />
-          </div>
+        <div className="max-w-7xl mx-auto px-3 sm:px-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-3 mb-6 border-b-2 border-[#016332]">
+            <div>
+              <div className="flex items-center gap-2.5">
+                <span className="w-1.5 h-6 bg-[#8B111A] inline-block" />
+                <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
+                  {gallery.title}
+                </h2>
+              </div>
+              <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                {gallery.subtitle}
+              </p>
+            </div>
 
-          {/* Filter Pills */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
-            <button
-              type="button"
-              onClick={() => setActiveGalleryCategory("all")}
-              className={`px-3.5 py-1.5 rounded-full text-xs sm:text-[13px] font-semibold transition-all cursor-pointer ${
-                activeGalleryCategory === "all"
-                  ? "bg-[#8B111A] text-white"
-                  : "bg-white text-gray-700 border border-gray-200 hover:border-[#8B111A]"
-              }`}
-            >
-              সকল বিভাগ
-            </button>
-            {gallery.categories.map((cat) => (
+            {/* Category Filter Tabs */}
+            <div className="flex flex-wrap gap-1.5">
               <button
-                key={cat.id}
                 type="button"
-                onClick={() => setActiveGalleryCategory(cat.id)}
-                className={`px-3.5 py-1.5 rounded-full text-xs sm:text-[13px] font-semibold transition-all cursor-pointer ${
-                  activeGalleryCategory === cat.id
-                    ? "bg-[#016332] text-white"
-                    : "bg-white text-gray-700 border border-gray-200 hover:border-[#016332]"
+                onClick={() => setActiveGalleryCategory("all")}
+                className={`px-3 py-1 text-xs font-semibold border cursor-pointer transition-colors ${
+                  activeGalleryCategory === "all"
+                    ? "bg-[#016332] text-white border-[#016332]"
+                    : "bg-[#F9FAF8] text-gray-700 border-gray-300 hover:border-[#016332]"
                 }`}
               >
-                {cat.title}
+                সকল ছবি
               </button>
-            ))}
+              {gallery.categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setActiveGalleryCategory(cat.id)}
+                  className={`px-3 py-1 text-xs font-semibold border cursor-pointer transition-colors ${
+                    activeGalleryCategory === cat.id
+                      ? "bg-[#8B111A] text-white border-[#8B111A]"
+                      : "bg-[#F9FAF8] text-gray-700 border-gray-300 hover:border-[#8B111A]"
+                  }`}
+                >
+                  {cat.title}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Gallery Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filteredGallery.map((item, idx) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredGallery.map((item) => (
               <div
                 key={item.id}
-                className={`group relative rounded-xl overflow-hidden bg-white shadow-xs hover:shadow-md transition-all ${
-                  idx === 0 && activeGalleryCategory === "all"
-                    ? "md:col-span-2 lg:col-span-2"
-                    : ""
-                }`}
+                className="border border-gray-200 bg-[#FAF7F0] overflow-hidden group"
               >
-                <div className="relative h-56 sm:h-64 w-full overflow-hidden">
+                <div className="relative h-52 sm:h-56 w-full overflow-hidden bg-gray-100">
                   <Image
                     src={item.image}
                     alt={item.title}
                     fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover group-hover:scale-103 transition-transform duration-300"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
-                  <div className="absolute top-3 left-3">
-                    <span className="bg-[#016332]/90 text-amber-200 text-[11px] font-semibold px-2.5 py-0.5 rounded-full">
-                      গ্যালারি ০{idx + 1}
-                    </span>
-                  </div>
-                  <div className="absolute bottom-0 inset-x-0 p-4 text-white">
-                    <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-amber-300 transition-colors">
-                      {item.title}
-                    </h3>
-                    <p className="text-xs text-gray-200 mt-0.5">
-                      {item.caption}
-                    </p>
-                  </div>
+                </div>
+                <div className="p-3.5 border-t border-gray-200 bg-white">
+                  <h3 className="text-sm sm:text-base font-bold text-[#016332]">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-gray-600 mt-0.5">{item.caption}</p>
                 </div>
               </div>
             ))}
@@ -807,171 +699,134 @@ export default function HomePrimarySection() {
       </section>
 
       {/* =====================================================================
-          ১১। ভর্তি আহ্বান (Admission Call-to-Action)
+          ১১। ভর্তি আহ্বান & ১২। যোগাযোগ (Admission & Contact Desk)
       ===================================================================== */}
-      <section
-        id="admission"
-        className="py-10 sm:py-14 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#8B111A] to-[#590910] text-white relative overflow-hidden scroll-mt-14"
-      >
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            {/* Left Column: Call to Action */}
-            <div className="lg:col-span-7 space-y-4">
-              <span className="inline-flex items-center gap-1.5 bg-white/15 text-amber-300 px-3 py-1 rounded-full text-xs font-semibold">
-                <GraduationCap size={14} />
-                <span>{admissionCall.title}</span>
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 py-8 sm:py-10 space-y-8">
+        {/* ১১। ভর্তি আহ্বান */}
+        <div
+          id="admission"
+          className="bg-[#016332] text-white border-2 border-[#D9822B] p-5 sm:p-7 scroll-mt-14"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            <div className="lg:col-span-7 space-y-2.5">
+              <span className="inline-block bg-[#8B111A] text-amber-200 text-xs font-bold px-3 py-1 border border-amber-300/40">
+                {admissionCall.title}
               </span>
-
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white leading-snug">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white leading-snug">
                 {admissionCall.headline}
               </h2>
-
-              <p className="text-sm sm:text-[15px] text-amber-100/95 leading-relaxed">
+              <p className="text-xs sm:text-sm text-emerald-100 leading-relaxed">
                 {admissionCall.description}
               </p>
-
-              <div className="bg-black/20 border border-amber-300/25 rounded-xl p-3.5 text-xs sm:text-sm text-amber-200 flex items-start gap-2.5">
-                <FileCheck
-                  size={17}
-                  className="text-amber-300 shrink-0 mt-0.5"
-                />
-                <span>{admissionCall.note}</span>
-              </div>
-
-              <div className="pt-1 flex flex-wrap items-center gap-3">
+              <p className="text-xs sm:text-sm text-amber-200 font-medium bg-black/20 px-3.5 py-2 border-l-3 border-[#D9822B]">
+                {admissionCall.note}
+              </p>
+              <div className="pt-2 flex flex-wrap gap-3">
                 <a
                   href={`tel:${contact.phoneValue}`}
-                  className="inline-flex items-center gap-2 bg-[#016332] hover:bg-[#014f28] text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-lg shadow-sm transition-colors"
+                  className="inline-flex items-center gap-1.5 bg-[#8B111A] hover:bg-[#6e0b13] text-white text-xs sm:text-sm font-bold px-4 py-2 border border-amber-300/40 transition-colors"
                 >
-                  <Phone size={15} className="text-amber-300" />
-                  <span>কল করুন: {contact.phoneValue}</span>
+                  <Phone size={14} />
+                  <span>মোবাইল: {contact.phoneValue}</span>
                 </a>
                 <Link
-                  href="/#contact"
-                  className="inline-flex items-center gap-1.5 bg-white text-[#8B111A] hover:bg-amber-50 font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-lg shadow-sm transition-colors"
+                  href="/apply"
+                  className="inline-flex items-center gap-1.5 bg-white text-[#016332] hover:bg-amber-50 text-xs sm:text-sm font-bold px-4 py-2 transition-colors"
                 >
-                  <span>যোগাযোগ করুন</span>
-                  <ArrowRight size={15} />
+                  <span>অনলাইন ভর্তি ফরম</span>
+                  <ArrowRight size={14} />
                 </Link>
               </div>
             </div>
 
-            {/* Right Column: 4 Admission Info Pillars */}
-            <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              {admissionCall.highlights.map((item, idx) => {
-                const icons = [
-                  <Clock key="clock" size={18} />,
-                  <UserCheck key="user" size={18} />,
-                  <FileCheck key="file" size={18} />,
-                  <HeartHandshake key="fee" size={18} />,
-                ];
-                return (
-                  <div
-                    key={idx}
-                    className="bg-white/10 border border-white/15 rounded-xl p-4"
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-amber-400/20 text-amber-300 flex items-center justify-center mb-2.5">
-                      {icons[idx]}
-                    </div>
-                    <h3 className="text-sm sm:text-base font-bold text-amber-300 mb-1">
-                      {item.label}
-                    </h3>
-                    <p className="text-xs text-amber-50/90 leading-relaxed">
-                      {item.desc}
-                    </p>
-                  </div>
-                );
-              })}
+            <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+              {admissionCall.highlights.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="bg-black/20 border border-emerald-700 p-3.5"
+                >
+                  <h3 className="font-bold text-amber-300 text-xs sm:text-sm mb-1">
+                    ▪ {item.label}
+                  </h3>
+                  <p className="text-emerald-100 leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      </section>
 
-      {/* =====================================================================
-          ১২। যোগাযোগ (Contact Section)
-      ===================================================================== */}
-      <section
-        id="contact"
-        className="py-10 sm:py-14 px-4 sm:px-6 lg:px-8 bg-[#FAF7F0] scroll-mt-14"
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-8">
-            <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-[#016332] border border-emerald-300 px-3 py-1 rounded-full text-xs font-semibold mb-2">
-              <MapPin size={13} />
-              <span>সরাসরি যোগাযোগ</span>
-            </span>
-            <h2 className="text-xl sm:text-2xl md:text-[28px] font-bold text-gray-900">
+        {/* ১২। যোগাযোগ */}
+        <div
+          id="contact"
+          className="bg-white border border-gray-200 shadow-2xs scroll-mt-14"
+        >
+          <div className="bg-[#016332] text-white px-4 sm:px-5 py-2.5 border-b-2 border-[#D9822B]">
+            <h2 className="text-base sm:text-lg font-bold tracking-wide">
               {contact.title}
             </h2>
-            <div className="w-16 h-1 bg-gradient-to-r from-[#016332] to-[#8B111A] rounded-full mx-auto mt-2.5" />
           </div>
 
-          {/* 3 Contact Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-            {/* ঠিকানা */}
-            <div className="bg-white rounded-xl p-5 border border-gray-200/90 shadow-2xs text-center flex flex-col items-center">
-              <div className="w-11 h-11 rounded-xl bg-emerald-50 text-[#016332] flex items-center justify-center mb-3">
-                <MapPin size={22} />
+          <div className="p-5 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            {/* Contact Details Table */}
+            <div className="lg:col-span-5 space-y-4">
+              <div className="border border-gray-200 divide-y divide-gray-200 text-xs sm:text-sm">
+                <div className="p-3.5 flex items-start gap-3 bg-[#FAF7F0]">
+                  <MapPin size={18} className="text-[#8B111A] shrink-0 mt-0.5" />
+                  <div>
+                    <span className="block font-bold text-gray-600 text-xs">
+                      {contact.addressLabel}
+                    </span>
+                    <span className="font-bold text-gray-900 text-sm sm:text-base">
+                      {contact.addressValue}
+                    </span>
+                    <span className="block text-xs text-gray-600 mt-0.5">
+                      মরকুন, (তিস্তাগেট- আনোয়ার সিল্ক মিলস সংলগ্ন), টঙ্গী, গাজীপুর।
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-3.5 flex items-start gap-3 bg-white">
+                  <Phone size={18} className="text-[#016332] shrink-0 mt-0.5" />
+                  <div>
+                    <span className="block font-bold text-gray-600 text-xs">
+                      {contact.phoneLabel}
+                    </span>
+                    <a
+                      href={`tel:${contact.phoneValue}`}
+                      className="font-bold text-[#8B111A] text-base sm:text-lg hover:underline"
+                    >
+                      {contact.phoneValue}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="p-3.5 flex items-start gap-3 bg-[#FAF7F0]">
+                  <Mail size={18} className="text-[#D9822B] shrink-0 mt-0.5" />
+                  <div>
+                    <span className="block font-bold text-gray-600 text-xs">
+                      {contact.emailLabel}
+                    </span>
+                    <a
+                      href={`mailto:${contact.emailValue}`}
+                      className="font-bold text-[#016332] text-sm sm:text-base hover:underline break-all"
+                    >
+                      {contact.emailValue}
+                    </a>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-xs font-semibold text-gray-500 mb-1">
-                {contact.addressLabel}
-              </h3>
-              <p className="text-base sm:text-lg font-bold text-gray-900">
-                {contact.addressValue}
-              </p>
-              <p className="text-xs text-gray-500 mt-0.5">
-                (তিস্তাগেট- আনোয়ার সিল্ক মিলস সংলগ্ন)
-              </p>
             </div>
 
-            {/* মোবাইল নম্বর */}
-            <div className="bg-white rounded-xl p-5 border border-gray-200/90 shadow-2xs text-center flex flex-col items-center">
-              <div className="w-11 h-11 rounded-xl bg-red-50 text-[#8B111A] flex items-center justify-center mb-3">
-                <Phone size={22} />
-              </div>
-              <h3 className="text-xs font-semibold text-gray-500 mb-1">
-                {contact.phoneLabel}
-              </h3>
-              <a
-                href={`tel:${contact.phoneValue}`}
-                className="text-lg sm:text-xl font-bold text-[#8B111A] hover:underline"
-              >
-                {contact.phoneValue}
-              </a>
-              <p className="text-xs text-gray-500 mt-0.5">
-                ভর্তি ও তথ্যের জন্য সরাসরি কল করুন
-              </p>
+            {/* Embedded Google Map */}
+            <div className="lg:col-span-7 border border-gray-200 p-1.5 bg-[#FAF7F0]">
+              <iframe
+                title="জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা ম্যাপ"
+                src="https://www.google.com/maps?q=Morkun,+Tongi,+Gazipur,+Bangladesh&output=embed"
+                className="w-full h-60 sm:h-64 border-0"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
-
-            {/* ই-মেইল */}
-            <div className="bg-white rounded-xl p-5 border border-gray-200/90 shadow-2xs text-center flex flex-col items-center">
-              <div className="w-11 h-11 rounded-xl bg-amber-50 text-[#D9822B] flex items-center justify-center mb-3">
-                <Mail size={22} />
-              </div>
-              <h3 className="text-xs font-semibold text-gray-500 mb-1">
-                {contact.emailLabel}
-              </h3>
-              <a
-                href={`mailto:${contact.emailValue}`}
-                className="text-base sm:text-lg font-bold text-[#016332] hover:underline break-all"
-              >
-                {contact.emailValue}
-              </a>
-              <p className="text-xs text-gray-500 mt-0.5">
-                যেকোনো জিজ্ঞাসায় ই-মেইল পাঠান
-              </p>
-            </div>
-          </div>
-
-          {/* Embedded Google Map */}
-          <div className="bg-white rounded-xl p-2 border border-gray-200/90 shadow-2xs overflow-hidden">
-            <iframe
-              title="জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা ম্যাপ"
-              src="https://www.google.com/maps?q=Morkun,+Tongi,+Gazipur,+Bangladesh&output=embed"
-              className="w-full h-64 sm:h-72 rounded-lg border-0"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
           </div>
         </div>
       </section>
