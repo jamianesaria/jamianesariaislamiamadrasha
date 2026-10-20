@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Hind_Siliguri } from "next/font/google";
 import "./globals.css";
+import CustomScrollbar from "@/components/CustomScrollbar";
 
 const hindSiliguri = Hind_Siliguri({
   weight: ["300", "400", "500", "600", "700"],
@@ -24,6 +25,7 @@ export default function RootLayout({
   return (
     <html lang="bn" className={`${hindSiliguri.variable} scroll-smooth`}>
       <body className="min-h-screen bg-[#FAF7F0] font-sans antialiased text-gray-800">
+        <CustomScrollbar />
         {children}
       </body>
     </html>

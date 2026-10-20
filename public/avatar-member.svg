@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#014222" />
+      <stop offset="100%" stop-color="#026b37" />
+    </linearGradient>
+    <linearGradient id="goldBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F6A623" />
+      <stop offset="100%" stop-color="#D9822B" />
+    </linearGradient>
+  </defs>
+  <rect width="160" height="160" rx="80" fill="url(#bgGrad)" />
+  <circle cx="80" cy="80" r="76" fill="none" stroke="url(#goldBorder)" stroke-width="2.5" opacity="0.6" />
+  
+  <!-- Head & Islamic Kufi/Topi Cap -->
+  <path d="M54 58 C54 38 106 38 106 58 Z" fill="#ffffff" opacity="0.95" />
+  <ellipse cx="80" cy="68" rx="22" ry="24" fill="#ffffff" opacity="0.9" />
+  
+  <!-- Shoulders & Kurta/Jubbah -->
+  <path d="M30 144 C32 108 52 100 80 100 C108 100 128 108 130 144 Z" fill="#ffffff" opacity="0.9" />
+  <path d="M78 100 L78 144 M82 100 L82 144" stroke="#014222" stroke-width="1.5" opacity="0.4" />
+</svg>
+

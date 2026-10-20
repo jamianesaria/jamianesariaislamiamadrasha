@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <linearGradient id="scholarBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6E0B13" />
+      <stop offset="100%" stop-color="#8B111A" />
+    </linearGradient>
+    <linearGradient id="scholarGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd86b" />
+      <stop offset="100%" stop-color="#D9822B" />
+    </linearGradient>
+  </defs>
+  <rect width="160" height="160" rx="80" fill="url(#scholarBg)" />
+  <circle cx="80" cy="80" r="76" fill="none" stroke="url(#scholarGold)" stroke-width="2.5" opacity="0.8" />
+  
+  <!-- Turban / Amamah Top -->
+  <path d="M50 56 C50 32 110 32 110 56 Z" fill="#ffffff" opacity="0.95" />
+  <ellipse cx="80" cy="46" rx="28" ry="10" fill="#ffffff" opacity="0.95" />
+  <ellipse cx="80" cy="68" rx="22" ry="24" fill="#ffffff" opacity="0.9" />
+  
+  <!-- Shoulders & Jubbah with Shawl -->
+  <path d="M28 146 C30 106 50 98 80 98 C110 98 130 106 132 146 Z" fill="#ffffff" opacity="0.92" />
+  <path d="M56 102 L48 146 M104 102 L112 146" stroke="#D9822B" stroke-width="2" opacity="0.6" />
+</svg>
+
