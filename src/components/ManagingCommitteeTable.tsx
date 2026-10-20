@@ -12,27 +12,27 @@ export default function ManagingCommitteeTable() {
   const currentMembers = committeeMembersData[selectedYear] || [];
 
   return (
-    <div className="bg-white rounded border border-gray-200 shadow-xs overflow-hidden">
-      {/* Header Bar matching teal/deep cyan-green from screenshot */}
-      <div className="bg-[#126b59] text-white px-4 py-2.5 flex items-center gap-2 font-bold text-sm sm:text-base shadow-xs">
-        <Users size={18} />
-        <span>ম্যানেজিং কমিটি</span>
+    <div className="bg-white rounded-2xl border border-gray-200/90 shadow-xs overflow-hidden">
+      {/* Header Bar */}
+      <div className="bg-gradient-to-r from-[#016332] to-[#014222] text-white px-5 py-3.5 flex items-center gap-2.5 font-bold text-sm sm:text-base shadow-xs border-b-2 border-[#D9822B]">
+        <Users size={18} className="text-[#ffd86b]" />
+        <span>পরিচালনা পরিষদ ও শিক্ষকবৃন্দ</span>
       </div>
 
-      <div className="p-4 sm:p-5 space-y-4">
-        {/* Year Filter Section matching screenshot */}
+      <div className="p-4 sm:p-6 space-y-4">
+        {/* Year Filter Section */}
         <div className="max-w-md">
           <label
             htmlFor="year-select"
             className="block text-xs font-bold text-gray-700 mb-1"
           >
-            Year
+            নির্বাচিত বছর (Year)
           </label>
           <select
             id="year-select"
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-700 bg-white focus:outline-none focus:border-[#126b59] shadow-2xs cursor-pointer"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs sm:text-sm text-gray-700 bg-white focus:outline-none focus:border-[#016332] shadow-2xs cursor-pointer"
           >
             <option value="">Please Select year</option>
             {committeeYears.map((yr) => (
@@ -43,8 +43,8 @@ export default function ManagingCommitteeTable() {
           </select>
         </div>
 
-        {/* Committee Table matching screenshot */}
-        <div className="border border-gray-200 rounded overflow-hidden">
+        {/* Committee Table */}
+        <div className="border border-gray-200 rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs sm:text-sm">
               <thead>
@@ -61,14 +61,14 @@ export default function ManagingCommitteeTable() {
                   currentMembers.map((member, index) => (
                     <tr
                       key={member.id}
-                      className="hover:bg-teal-50/30 transition-colors group"
+                      className="hover:bg-[#016332]/[0.03] transition-colors group"
                     >
                       <td className="py-3 px-3 text-center font-medium text-gray-600">
                         {index + 1}
                       </td>
 
                       <td className="py-3 px-3 text-center">
-                        <div className="relative w-12 h-14 mx-auto rounded overflow-hidden border border-gray-300 bg-gray-100 shadow-2xs">
+                        <div className="relative w-12 h-14 mx-auto rounded-lg overflow-hidden border border-gray-300 bg-gray-100 shadow-2xs">
                           {member.photo ? (
                             <Image
                               src={member.photo}
@@ -96,7 +96,7 @@ export default function ManagingCommitteeTable() {
                       <td className="py-3 px-3 text-center">
                         <button
                           onClick={() => setSelectedMember(member)}
-                          className="inline-flex items-center justify-center gap-1 bg-[#371b61] hover:bg-[#251044] text-white text-xs font-semibold px-3 py-1.5 rounded transition-colors shadow-2xs cursor-pointer"
+                          className="inline-flex items-center justify-center gap-1 bg-[#016332] hover:bg-[#014a25] text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors shadow-2xs cursor-pointer"
                         >
                           <Eye size={13} />
                           <span>আরও দেখুন</span>
@@ -120,8 +120,8 @@ export default function ManagingCommitteeTable() {
       {/* Member Details Modal */}
       {selectedMember && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-150">
-          <div className="bg-white rounded-lg shadow-2xl max-w-md w-full overflow-hidden border border-gray-200">
-            <div className="bg-[#126b59] text-white px-4 py-3 flex items-center justify-between font-bold">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-200">
+            <div className="bg-gradient-to-r from-[#016332] to-[#014222] text-white px-4 py-3 flex items-center justify-between font-bold border-b-2 border-[#D9822B]">
               <span>সদস্যের বিস্তারিত তথ্য</span>
               <button
                 onClick={() => setSelectedMember(null)}
@@ -134,7 +134,7 @@ export default function ManagingCommitteeTable() {
 
             <div className="p-5 space-y-4 text-sm text-gray-800">
               <div className="flex flex-col sm:flex-row items-center gap-4">
-                <div className="relative w-24 h-28 rounded overflow-hidden border border-gray-300 shadow-sm shrink-0">
+                <div className="relative w-24 h-28 rounded-lg overflow-hidden border border-gray-300 shadow-sm shrink-0">
                   {selectedMember.photo && (
                     <Image
                       src={selectedMember.photo}
@@ -149,7 +149,7 @@ export default function ManagingCommitteeTable() {
                   <h3 className="font-bold text-base sm:text-lg text-[#8B111A]">
                     {selectedMember.name}
                   </h3>
-                  <p className="text-xs font-semibold text-[#126b59] mt-0.5">
+                  <p className="text-xs font-semibold text-[#016332] mt-0.5">
                     {selectedMember.designation}
                   </p>
                   {selectedMember.term && (
@@ -181,7 +181,7 @@ export default function ManagingCommitteeTable() {
               <div className="pt-2 text-right">
                 <button
                   onClick={() => setSelectedMember(null)}
-                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-semibold px-4 py-1.5 rounded transition-colors cursor-pointer"
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-semibold px-4 py-1.5 rounded-lg transition-colors cursor-pointer"
                 >
                   বন্ধ করুন
                 </button>

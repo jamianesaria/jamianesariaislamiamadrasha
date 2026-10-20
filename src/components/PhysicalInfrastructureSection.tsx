@@ -4,10 +4,10 @@ import { Building2, MapPin, Calendar, CheckCircle, ShieldCheck } from "lucide-re
 
 export default function PhysicalInfrastructureSection() {
   return (
-    <article className="bg-white rounded border border-gray-200 shadow-xs overflow-hidden">
-      {/* Header Bar matching teal/deep cyan-green from screenshot */}
-      <div className="bg-[#126b59] text-white px-4 py-2.5 flex items-center gap-2 font-bold text-sm sm:text-base shadow-xs">
-        <Building2 size={18} />
+    <article className="bg-white rounded-2xl border border-gray-200/90 shadow-xs overflow-hidden">
+      {/* Header Bar */}
+      <div className="bg-gradient-to-r from-[#016332] to-[#014222] text-white px-5 py-3.5 flex items-center gap-2.5 font-bold text-sm sm:text-base shadow-xs border-b-2 border-[#D9822B]">
+        <Building2 size={18} className="text-[#ffd86b]" />
         <span>{physicalInfrastructureData.title}</span>
       </div>
 
@@ -34,7 +34,7 @@ export default function PhysicalInfrastructureSection() {
 
           <div className="flex items-center gap-2 mt-2 text-xs sm:text-sm font-semibold text-gray-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
             <Calendar size={14} className="text-[#8B111A]" />
-            <span>প্রতিষ্ঠিত: {siteSettings.established}</span>
+            <span>প্রতিষ্ঠিত: {siteSettings.establishedFull}</span>
           </div>
 
           <div className="flex items-center gap-1.5 mt-2 text-xs sm:text-sm text-gray-500">
@@ -46,7 +46,7 @@ export default function PhysicalInfrastructureSection() {
         {/* Infrastructure Highlights Grid */}
         <div className="pt-6 border-t border-gray-200">
           <h4 className="text-base sm:text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <ShieldCheck size={20} className="text-[#126b59]" />
+            <ShieldCheck size={20} className="text-[#016332]" />
             <span>ভৌত অবকাঠামো ও প্রাতিষ্ঠানিক সুযোগ-সুবিধা</span>
           </h4>
 
@@ -54,10 +54,10 @@ export default function PhysicalInfrastructureSection() {
             {physicalInfrastructureData.features.map((feat, idx) => (
               <div
                 key={idx}
-                className="p-4 rounded-lg border border-gray-200 bg-gray-50/60 hover:bg-teal-50/20 hover:border-teal-200 transition-colors"
+                className="p-4 rounded-xl border border-gray-200 bg-gray-50/60 hover:bg-[#016332]/[0.03] hover:border-[#016332]/30 transition-colors"
               >
                 <div className="flex items-start gap-2.5">
-                  <CheckCircle size={18} className="text-[#126b59] shrink-0 mt-0.5" />
+                  <CheckCircle size={18} className="text-[#016332] shrink-0 mt-0.5" />
                   <div>
                     <h5 className="font-bold text-sm text-[#8B111A]">{feat.title}</h5>
                     <p className="text-xs text-gray-600 mt-1 leading-relaxed">

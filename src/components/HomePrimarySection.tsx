@@ -308,6 +308,16 @@ export default function HomePrimarySection() {
 
                 <div className="grid grid-cols-12 px-4 py-3 bg-white hover:bg-[#FAF7F0]/50 transition-colors">
                   <span className="col-span-4 font-bold text-gray-600">
+                    নিবন্ধন নম্বর
+                  </span>
+                  <div className="col-span-8 text-xs font-semibold text-gray-800 space-y-1">
+                    <div>হাইআতুল উলয়া: <span className="font-bold text-[#016332]">০০৬৮৫</span> | বেফাক: <span className="font-bold text-[#8B111A]">১/৭৪৩</span></div>
+                    <div>এতিমখানা (সমাজসেবা): <span className="font-bold text-[#016332]">ঢ-০৫০৪</span></div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-12 px-4 py-3 bg-[#F9FAF8] hover:bg-[#FAF7F0]/50 transition-colors">
+                  <span className="col-span-4 font-bold text-gray-600">
                     ঠিকানা
                   </span>
                   <span className="col-span-8 font-medium text-gray-800 leading-snug whitespace-pre-line">
@@ -458,7 +468,7 @@ export default function HomePrimarySection() {
                       <span>ভর্তি ও দারস</span>
                     </span>
                     <Link
-                      href={departments.buttonHref}
+                      href={("href" in dept && dept.href) ? String(dept.href) : departments.buttonHref}
                       className="inline-flex items-center gap-1 font-bold text-[#8B111A] group-hover:text-[#016332] transition-colors"
                     >
                       <span>বিস্তারিত</span>
@@ -714,12 +724,20 @@ export default function HomePrimarySection() {
               ))}
             </div>
 
-            <div className="mt-6">
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-gray-100">
               <Link
                 href={studentTraining.buttonHref}
                 className="inline-flex items-center gap-2 bg-[#016332] hover:bg-[#014724] text-white text-xs sm:text-sm font-bold px-5 py-2.5 rounded-md shadow-xs transition-all group"
               >
                 <span>{studentTraining.buttonText}</span>
+                <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+
+              <Link
+                href="/academics#future-plans"
+                className="inline-flex items-center gap-2 bg-[#FAF7F0] hover:bg-[#8B111A] text-[#8B111A] hover:text-white border border-[#D9822B]/50 text-xs sm:text-sm font-bold px-4 py-2.5 rounded-md transition-all group"
+              >
+                <span>ভবিষ্যৎ শিক্ষা পরিকল্পনা (ইফতা, তাফসির, কম্পিউটার ও ভাষা কোর্স)</span>
                 <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
@@ -828,7 +846,23 @@ export default function HomePrimarySection() {
                   ))}
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-gray-200/90 flex flex-wrap items-center justify-between text-xs text-gray-700 gap-1">
+                {/* Quick Bank & bKash info */}
+                <div className="mt-3.5 pt-3 border-t border-gray-200/90 space-y-1.5 text-xs">
+                  <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-md border border-pink-200">
+                    <span className="font-bold text-pink-700">বিকাশ (bKash):</span>
+                    <span className="font-bold text-gray-900">+8801716296379</span>
+                  </div>
+                  <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-md border border-emerald-200">
+                    <span className="font-bold text-[#016332]">গোরাবা ফান্ড (Sonali Bank):</span>
+                    <span className="font-bold text-gray-900">34004081</span>
+                  </div>
+                  <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-md border border-amber-200">
+                    <span className="font-bold text-[#8B111A]">সাধারণ ফান্ড (Krishi Bank):</span>
+                    <span className="font-bold text-gray-900">42080310061842</span>
+                  </div>
+                </div>
+
+                <div className="mt-3 pt-3 border-t border-gray-200/90 flex flex-wrap items-center justify-between text-xs text-gray-700 gap-1">
                   <span className="font-semibold text-gray-900">
                     অনুদান ও তথ্য হটলাইন:
                   </span>
