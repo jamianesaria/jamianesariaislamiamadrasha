@@ -3,6 +3,7 @@ import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
 import HomePrimarySection from "@/components/HomePrimarySection";
 import Footer from "@/components/Footer";
+import WebsiteIntro from "@/components/WebsiteIntro";
 import {
   getHomepageContent,
   getNotices,
@@ -19,6 +20,7 @@ export default async function Home() {
   ]);
 
   return (
+    <WebsiteIntro key={homeData.introVideo.videoUrl} settings={homeData.introVideo}>
     <div className="min-h-screen bg-[#FAF7F0] flex flex-col">
       {/* ১। হেডার: Top Header Banner */}
       <HeaderBanner initialSettings={siteData} />
@@ -42,5 +44,6 @@ export default async function Home() {
       {/* ফুটার */}
       <Footer initialSettings={siteData} initialData={homeData} />
     </div>
+    </WebsiteIntro>
   );
 }

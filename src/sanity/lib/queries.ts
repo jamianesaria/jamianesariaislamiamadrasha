@@ -88,17 +88,27 @@ export async function getSiteSettings() {
 }
 
 // 2. Homepage Content Query
-export const homepageQuery = groq`*[_type == "homepage"][0]`;
+export const homepageQuery = groq`*[_type == "homepage"][0]{
+  ...,
+  introVideo{enabled, videoUrl, posterUrl, title, skipLabel}
+}`;
 
 export async function getHomepageContent() {
   "use cache";
   try {
     const options = await getSanityFetchOptions();
     const data = await client.fetch(homepageQuery, {}, options);
-    if (data && (data.heroHeadline || data.heroBadge)) {
+    if (data && (data.heroHeadline || data.heroBadge || data.introVideo)) {
       return {
         ...fallbackHome,
         ...data,
+        introVideo: {
+          enabled: data.introVideo?.enabled ?? fallbackHome.introVideo.enabled,
+          videoUrl: data.introVideo?.videoUrl || fallbackHome.introVideo.videoUrl,
+          posterUrl: data.introVideo?.posterUrl || fallbackHome.introVideo.posterUrl,
+          title: data.introVideo?.title || fallbackHome.introVideo.title,
+          skipLabel: data.introVideo?.skipLabel || fallbackHome.introVideo.skipLabel,
+        },
         newsTicker:
           Array.isArray(data.newsTicker) && data.newsTicker.length > 0
             ? data.newsTicker

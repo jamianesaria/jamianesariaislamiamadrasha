@@ -19,7 +19,7 @@ export const structure: StructureResolver = (S) =>
       // 2. Singleton: Homepage Content
       S.listItem()
         .id("homepage")
-        .title("হোমপেজ কনটেন্ট (Homepage Content)")
+        .title("হোমপেজ ও সূচনা ভিডিও (Homepage & Intro)")
         .child(
           S.document()
             .schemaType("homepage")

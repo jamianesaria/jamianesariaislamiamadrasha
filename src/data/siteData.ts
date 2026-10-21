@@ -169,6 +169,13 @@ export const breakingNews = [
 ];
 
 export const homePageContent = {
+  introVideo: {
+    enabled: true,
+    videoUrl: "/Student_opening_doors_to_light_20261021201917.mp4",
+    posterUrl: "/intro-poster.jpg",
+    title: "জামিয়ায় স্বাগতম",
+    skipLabel: "ওয়েবসাইটে প্রবেশ করুন",
+  },
   hero: {
     image: "/drone_poster.jpg",
     video: "/drone_shot_of_madrasha.mp4",

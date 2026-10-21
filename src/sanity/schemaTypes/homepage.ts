@@ -6,6 +6,28 @@ export const homepageType = defineType({
   type: "document",
   fields: [
     defineField({
+      name: "introVideo",
+      title: "সূচনা ভিডিও (Opening video)",
+      type: "object",
+      description: "হোমপেজ খোলার সময় প্রতি ব্রাউজার সেশনে একবার দেখানো হয়। ভিডিও শেষে মূল ওয়েবসাইট খুলবে।",
+      fields: [
+        defineField({ name: "enabled", title: "সূচনা ভিডিও চালু (Enabled)", type: "boolean", initialValue: true }),
+        defineField({
+          name: "videoUrl", title: "ভিডিও লিংক (Video URL)", type: "url",
+          initialValue: "/Student_opening_doors_to_light_20261021201917.mp4",
+          description: "ওয়েবসাইটের public ফোল্ডারের / দিয়ে শুরু হওয়া MP4 লিংক অথবা HTTPS ভিডিও লিংক দিন।",
+          validation: (Rule) => Rule.uri({ allowRelative: true, scheme: ["https"] }),
+        }),
+        defineField({
+          name: "posterUrl", title: "ভিডিওর প্রচ্ছদ (Poster URL)", type: "url",
+          initialValue: "/intro-poster.jpg",
+          validation: (Rule) => Rule.uri({ allowRelative: true, scheme: ["https"] }),
+        }),
+        defineField({ name: "title", title: "ভিডিওর পরিচিতি (Accessible title)", type: "string", initialValue: "জামিয়ায় স্বাগতম" }),
+        defineField({ name: "skipLabel", title: "প্রবেশ বোতামের লেখা (Skip label)", type: "string", initialValue: "ওয়েবসাইটে প্রবেশ করুন" }),
+      ],
+    }),
+    defineField({
       name: "newsTicker",
       title: "জরুরি ঘোষণা / টিকার বার্তা (News Ticker Announcements)",
       type: "array",
