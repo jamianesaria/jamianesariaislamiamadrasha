@@ -4,7 +4,7 @@ import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
 import Footer from "@/components/Footer";
 import AdmissionInfoSection from "@/components/AdmissionInfoSection";
-import { getSiteSettings, getHomepageContent, getAdmissionInfo } from "@/sanity/lib/queries";
+import { getSiteSettings, getNewsTicker, getAdmissionInfo } from "@/sanity/lib/queries";
 
 export const metadata: Metadata = {
   title: "ভর্তি তথ্য, নিয়মাবলি ও ভর্তি নির্দেশিকা | জামিয়া নেছারিয়া ইসলামিয়া টঙ্গী",
@@ -13,9 +13,9 @@ export const metadata: Metadata = {
 };
 
 export default async function AdmissionPage() {
-  const [siteData, homeData, admissionData] = await Promise.all([
+  const [siteData, newsTicker, admissionData] = await Promise.all([
     getSiteSettings(),
-    getHomepageContent(),
+    getNewsTicker(),
     getAdmissionInfo(),
   ]);
 
@@ -28,7 +28,7 @@ export default async function AdmissionPage() {
       <NavigationBar />
 
       {/* 3. Breaking News / Notice Ticker Bar */}
-      <BreakingNewsBar newsItems={homeData?.newsTicker} />
+      <BreakingNewsBar newsItems={newsTicker} />
 
       {/* 4. Main Admission Information Content Area */}
       <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 w-full flex-1">
@@ -36,7 +36,7 @@ export default async function AdmissionPage() {
       </main>
 
       {/* 5. Footer */}
-      <Footer initialSettings={siteData} initialData={homeData} />
+      <Footer initialSettings={siteData} />
     </div>
   );
 }

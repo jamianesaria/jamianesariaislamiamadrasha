@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { navigationItems, siteSettings } from "@/data/siteData";
+import { navigationItems, siteSettings } from "@/data/navigationData";
 import { ChevronDown, Menu, X, Phone, GraduationCap } from "lucide-react";
 
 export default function NavigationBar() {

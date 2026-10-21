@@ -300,7 +300,6 @@ function GalleryContent() {
               alt="জামিয়া নেছারিয়া ক্যাম্পাস ও ড্রোন শট"
               fill
               className="object-cover opacity-80 group-hover:scale-105 transition-transform duration-700"
-              priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/20" />
 
@@ -532,7 +531,6 @@ function GalleryContent() {
                 alt={currentPhoto.title}
                 fill
                 className="object-contain"
-                priority
               />
 
               {/* Prev Button */}

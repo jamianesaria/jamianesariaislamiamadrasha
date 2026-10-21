@@ -190,7 +190,6 @@ export default function BlogSection() {
                   src={selectedPost.thumbnail}
                   alt={selectedPost.title}
                   fill
-                  priority
                   className="object-cover"
                 />
               </div>

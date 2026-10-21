@@ -21,7 +21,6 @@ export default function HistoryOrganizationSection() {
               fill
               sizes="144px"
               className="object-contain p-0 scale-105"
-              priority
               quality={100}
             />
           </div>

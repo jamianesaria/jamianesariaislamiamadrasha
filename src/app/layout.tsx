@@ -19,12 +19,11 @@ export const metadata: Metadata = {
     "কুরআন-সুন্নাহর আলোকে দ্বীনি শিক্ষা, নৈতিকতা ও আদর্শ মানুষ গড়ার প্রত্যয়ে। মরকুন, (তিস্তাগেট- আনোয়ার সিল্ক মিলস সংলগ্ন) টঙ্গী, গাজীপুর, বাংলাদেশ। প্রতিষ্ঠাকাল: ১৯৬৯ খ্রিষ্টাব্দ।",
   icons: {
     icon: [
-      { url: "/jamia-logo-v2.png" },
-      { url: "/icon.png?v=3" },
-      { url: "/favicon.ico?v=3" },
+      { url: "/icon.png", sizes: "64x64", type: "image/png" },
+      { url: "/favicon.ico", sizes: "64x64", type: "image/x-icon" },
     ],
-    shortcut: "/jamia-logo-v2.png",
-    apple: "/jamia-logo-v2.png",
+    shortcut: "/favicon.ico",
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
 };
 

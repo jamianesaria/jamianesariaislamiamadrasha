@@ -21,7 +21,6 @@ export default function PhysicalInfrastructureSection() {
               fill
               sizes="112px"
               className="object-contain p-0 scale-105"
-              priority
             />
           </div>
 

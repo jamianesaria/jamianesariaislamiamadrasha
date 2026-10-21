@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { siteSettings } from "@/data/siteData";
+import { siteSettings } from "@/data/navigationData";
 import {
   Shield,
   HeartHandshake,

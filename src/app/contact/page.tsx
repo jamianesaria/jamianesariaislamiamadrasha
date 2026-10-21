@@ -4,7 +4,7 @@ import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
 import Footer from "@/components/Footer";
 import ContactSection from "@/components/ContactSection";
-import { getSiteSettings, getHomepageContent } from "@/sanity/lib/queries";
+import { getSiteSettings, getNewsTicker } from "@/sanity/lib/queries";
 
 export const metadata: Metadata = {
   title: "যোগাযোগ | জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা",
@@ -13,9 +13,9 @@ export const metadata: Metadata = {
 };
 
 export default async function ContactPage() {
-  const [siteData, homeData] = await Promise.all([
+  const [siteData, newsTicker] = await Promise.all([
     getSiteSettings(),
-    getHomepageContent(),
+    getNewsTicker(),
   ]);
 
   return (
@@ -27,7 +27,7 @@ export default async function ContactPage() {
       <NavigationBar />
 
       {/* 3. Breaking News / Notice Ticker Bar */}
-      <BreakingNewsBar newsItems={homeData?.newsTicker} />
+      <BreakingNewsBar newsItems={newsTicker} />
 
       {/* 4. Main Contact Content Area */}
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-6 w-full flex-1">
@@ -35,7 +35,7 @@ export default async function ContactPage() {
       </main>
 
       {/* 5. Footer */}
-      <Footer initialSettings={siteData} initialData={homeData} />
+      <Footer initialSettings={siteData} />
     </div>
   );
 }

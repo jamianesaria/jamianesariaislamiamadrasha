@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { siteSettings } from "@/data/siteData";
+import { siteSettings } from "@/data/navigationData";
 import { 
   Mail, 
   MapPin, 

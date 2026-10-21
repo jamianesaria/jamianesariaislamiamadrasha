@@ -4,7 +4,7 @@ import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
 import Footer from "@/components/Footer";
 import BadriKafilaSection from "@/components/BadriKafilaSection";
-import { getSiteSettings, getHomepageContent } from "@/sanity/lib/queries";
+import { getSiteSettings, getNewsTicker } from "@/sanity/lib/queries";
 
 export const metadata: Metadata = {
   title: "৩১৩ জন বদরি কাফেলা | আজীবন দাতা সদস্য প্রকল্প | জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা",
@@ -13,9 +13,9 @@ export const metadata: Metadata = {
 };
 
 export default async function BadriKafilaPage() {
-  const [siteData, homeData] = await Promise.all([
+  const [siteData, newsTicker] = await Promise.all([
     getSiteSettings(),
-    getHomepageContent(),
+    getNewsTicker(),
   ]);
 
   return (
@@ -27,7 +27,7 @@ export default async function BadriKafilaPage() {
       <NavigationBar />
 
       {/* 3. Breaking News Ticker */}
-      <BreakingNewsBar newsItems={homeData?.newsTicker} />
+      <BreakingNewsBar newsItems={newsTicker} />
 
       {/* 4. Main 313 Badri Kafila Content */}
       <main className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-10 w-full flex-1">
@@ -35,7 +35,7 @@ export default async function BadriKafilaPage() {
       </main>
 
       {/* 5. Footer */}
-      <Footer initialSettings={siteData} initialData={homeData} />
+      <Footer initialSettings={siteData} />
     </div>
   );
 }

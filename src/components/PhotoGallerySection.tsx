@@ -189,7 +189,6 @@ export default function PhotoGallerySection() {
                 src={activePhoto.imageUrl}
                 alt={activePhoto.title}
                 fill
-                priority
                 className="object-contain"
               />
             </div>

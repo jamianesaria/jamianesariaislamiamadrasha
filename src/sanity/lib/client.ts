@@ -7,7 +7,7 @@ export const client = createClient({
   apiVersion,
   useCdn: true,
   stega: {
-    enabled: true,
+    enabled: false,
     studioUrl: "/studio",
   },
 });

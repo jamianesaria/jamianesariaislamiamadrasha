@@ -26,7 +26,6 @@ export default function VacancyNoticeTable() {
               fill
               sizes="96px"
               className="object-contain p-0 scale-105"
-              priority
             />
           </div>
 

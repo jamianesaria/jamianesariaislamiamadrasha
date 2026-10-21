@@ -4,7 +4,7 @@ import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
 import Footer from "@/components/Footer";
 import NoticeBoardSection from "@/components/NoticeBoardSection";
-import { getNotices, getSiteSettings, getHomepageContent } from "@/sanity/lib/queries";
+import { getNotices, getSiteSettings, getNewsTicker } from "@/sanity/lib/queries";
 
 export const metadata: Metadata = {
   title: "নোটিশ ও বিজ্ঞপ্তি | জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা",
@@ -13,10 +13,10 @@ export const metadata: Metadata = {
 };
 
 export default async function NoticesPage() {
-  const [notices, siteData, homeData] = await Promise.all([
+  const [notices, siteData, newsTicker] = await Promise.all([
     getNotices(),
     getSiteSettings(),
-    getHomepageContent(),
+    getNewsTicker(),
   ]);
 
   return (
@@ -28,7 +28,7 @@ export default async function NoticesPage() {
       <NavigationBar />
 
       {/* 3. Breaking News Ticker */}
-      <BreakingNewsBar newsItems={homeData?.newsTicker} />
+      <BreakingNewsBar newsItems={newsTicker} />
 
       {/* 4. Main Notice Content Area */}
       <main className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-9 w-full flex-1">
@@ -36,7 +36,7 @@ export default async function NoticesPage() {
       </main>
 
       {/* 5. Footer */}
-      <Footer initialSettings={siteData} initialData={homeData} />
+      <Footer initialSettings={siteData} />
     </div>
   );
 }

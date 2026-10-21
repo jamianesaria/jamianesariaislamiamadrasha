@@ -2,43 +2,74 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 
+const BENGALI_DIGITS = "০১২৩৪৫৬৭৮৯";
+const toBengaliNumber = (num: number) =>
+  Math.round(num)
+    .toString()
+    .replace(/\d/g, (d) => BENGALI_DIGITS[parseInt(d, 10)]);
+
 export default function CustomScrollbar() {
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+
   const trackRef = useRef<HTMLDivElement>(null);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const progressBarRef = useRef<HTMLDivElement>(null);
+  const thumbRef = useRef<HTMLDivElement>(null);
+  const tooltipTextRef = useRef<HTMLSpanElement>(null);
 
-  // Calculate scroll percentage and trigger auto-hide timer
+  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const rafIdRef = useRef<number | null>(null);
+  const isScrollingRef = useRef(false);
+  const isDraggingRef = useRef(false);
+
+  const applyProgressToDom = useCallback((progress: number) => {
+    const clamped = Math.min(100, Math.max(0, progress));
+    if (progressBarRef.current) {
+      progressBarRef.current.style.height = `calc(${clamped}% - 8px)`;
+    }
+    if (thumbRef.current) {
+      thumbRef.current.style.top = `calc(${clamped}% - ${clamped * 0.3}px)`;
+    }
+    if (tooltipTextRef.current) {
+      tooltipTextRef.current.textContent = `${toBengaliNumber(clamped)}%`;
+    }
+  }, []);
+
+  const updateScrollFromWindow = useCallback(() => {
+    rafIdRef.current = null;
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    const maxScroll = scrollHeight - clientHeight;
+    const currentProgress = maxScroll <= 0 ? 0 : (scrollTop / maxScroll) * 100;
+    applyProgressToDom(currentProgress);
+  }, [applyProgressToDom]);
+
   const handleScroll = useCallback(() => {
-    if (isDragging) return;
+    if (isDraggingRef.current) return;
 
-    // Show scrollbar while scrolling
-    setIsScrolling(true);
+    if (!isScrollingRef.current) {
+      isScrollingRef.current = true;
+      setIsScrolling(true);
+    }
 
     if (scrollTimeoutRef.current) {
       clearTimeout(scrollTimeoutRef.current);
     }
 
-    // Hide scrollbar 1.2s after user stops scrolling
     scrollTimeoutRef.current = setTimeout(() => {
+      isScrollingRef.current = false;
       setIsScrolling(false);
     }, 1200);
 
-    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-    const maxScroll = scrollHeight - clientHeight;
-    if (maxScroll <= 0) {
-      setScrollProgress(0);
-      return;
+    if (rafIdRef.current === null) {
+      rafIdRef.current = window.requestAnimationFrame(updateScrollFromWindow);
     }
-    const currentProgress = (scrollTop / maxScroll) * 100;
-    setScrollProgress(Math.min(100, Math.max(0, currentProgress)));
-  }, [isDragging]);
+  }, [updateScrollFromWindow]);
 
   useEffect(() => {
+    updateScrollFromWindow();
     window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
+    window.addEventListener("resize", handleScroll, { passive: true });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -46,54 +77,59 @@ export default function CustomScrollbar() {
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
       }
+      if (rafIdRef.current !== null) {
+        window.cancelAnimationFrame(rafIdRef.current);
+      }
     };
-  }, [handleScroll]);
+  }, [handleScroll, updateScrollFromWindow]);
 
-  // Scroll to position based on click or drag Y coordinate
-  const scrollToPosition = useCallback((clientY: number) => {
-    if (!trackRef.current) return;
-    const rect = trackRef.current.getBoundingClientRect();
-    const trackHeight = rect.height;
-    const clickY = clientY - rect.top;
-    const percentage = Math.min(1, Math.max(0, clickY / trackHeight));
+  const scrollToPosition = useCallback(
+    (clientY: number, dragging: boolean) => {
+      if (!trackRef.current) return;
+      const rect = trackRef.current.getBoundingClientRect();
+      const trackHeight = rect.height;
+      const clickY = clientY - rect.top;
+      const percentage = Math.min(1, Math.max(0, clickY / trackHeight));
 
-    const { scrollHeight, clientHeight } = document.documentElement;
-    const maxScroll = scrollHeight - clientHeight;
-    const targetScrollTop = percentage * maxScroll;
+      const { scrollHeight, clientHeight } = document.documentElement;
+      const maxScroll = scrollHeight - clientHeight;
+      const targetScrollTop = percentage * maxScroll;
 
-    window.scrollTo({
-      top: targetScrollTop,
-      behavior: isDragging ? "auto" : "smooth",
-    });
+      window.scrollTo({
+        top: targetScrollTop,
+        behavior: dragging ? "auto" : "smooth",
+      });
 
-    setScrollProgress(percentage * 100);
-  }, [isDragging]);
+      applyProgressToDom(percentage * 100);
+    },
+    [applyProgressToDom]
+  );
 
-  // Handle Track Click
   const handleTrackClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    scrollToPosition(e.clientY);
+    scrollToPosition(e.clientY, isDraggingRef.current);
   };
 
-  // Handle Dragging
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    isDraggingRef.current = true;
     setIsDragging(true);
 
     const onMouseMove = (moveEvent: MouseEvent) => {
-      scrollToPosition(moveEvent.clientY);
+      scrollToPosition(moveEvent.clientY, true);
     };
 
     const onMouseUp = () => {
+      isDraggingRef.current = false;
       setIsDragging(false);
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
 
-      // Start fade out timer after drag release
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
       }
       scrollTimeoutRef.current = setTimeout(() => {
+        isScrollingRef.current = false;
         setIsScrolling(false);
       }, 1200);
     };
@@ -102,16 +138,6 @@ export default function CustomScrollbar() {
     window.addEventListener("mouseup", onMouseUp);
   };
 
-  // Bengali number formatter for tooltip
-  const toBengaliNumber = (num: number) =>
-    Math.round(num)
-      .toString()
-      .replace(/\d/g, (d) => "০১২৩৪৫৬৭৮৯"[parseInt(d)]);
-
-  // Clamp thumb position so it doesn't overflow top or bottom bounds
-  const thumbOffset = `calc(${scrollProgress}% - ${scrollProgress * 0.3}px)`;
-
-  // Only visible when actively scrolling, dragging, or hovering near it
   const isVisible = isScrolling || isDragging || isHovering;
 
   return (
@@ -131,11 +157,12 @@ export default function CustomScrollbar() {
       {/* Background Track Guide Line */}
       <div className="absolute top-2 bottom-2 w-[4px] bg-gray-300/40 group-hover:bg-gray-300/70 transition-colors rounded-full" />
 
-      {/* Maroon Scroll Progress Line (comes from up to below as you scroll down, and below to up as you scroll up) */}
+      {/* Maroon Scroll Progress Line */}
       <div
+        ref={progressBarRef}
         className="absolute top-2 w-[4px] rounded-full transition-[height] duration-75 ease-out"
         style={{
-          height: `calc(${scrollProgress}% - 8px)`,
+          height: "0px",
           maxHeight: "calc(100% - 16px)",
           background: "linear-gradient(to bottom, #6E0B13, #8B111A, #A81B26)",
           boxShadow: isHovering || isDragging ? "0 0 8px rgba(139, 17, 26, 0.5)" : "none",
@@ -144,6 +171,7 @@ export default function CustomScrollbar() {
 
       {/* 📖 Emoji Thumb Indicator */}
       <div
+        ref={thumbRef}
         onMouseDown={handleMouseDown}
         className={`absolute z-10 flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border-2 border-[#8B111A] shadow-md transition-transform duration-75 ${
           isDragging
@@ -151,11 +179,10 @@ export default function CustomScrollbar() {
             : "hover:scale-120 cursor-grab"
         }`}
         style={{
-          top: thumbOffset,
+          top: "0%",
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Book Emoji */}
         <span className="text-sm sm:text-base leading-none select-none transition-transform group-hover:scale-105">
           📖
         </span>
@@ -170,9 +197,8 @@ export default function CustomScrollbar() {
         >
           <span className="flex items-center gap-1">
             <span>স্ক্রল:</span>
-            <span>{toBengaliNumber(scrollProgress)}%</span>
+            <span ref={tooltipTextRef}>০%</span>
           </span>
-          {/* Arrow */}
           <div className="absolute -right-1 top-1/2 -translate-y-1/2 w-0 h-0 border-y-4 border-y-transparent border-l-4 border-l-[#8B111A]" />
         </div>
       </div>

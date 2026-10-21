@@ -4,7 +4,7 @@ import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
 import Footer from "@/components/Footer";
 import ManagingCommitteeSection from "@/components/ManagingCommitteeSection";
-import { getCommitteeMembers, getSiteSettings, getHomepageContent } from "@/sanity/lib/queries";
+import { getCommitteeMembers, getSiteSettings, getNewsTicker } from "@/sanity/lib/queries";
 
 export const metadata: Metadata = {
   title: "পরিচালনা পরিষদ ও জমিদাতাবৃন্দ | জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা",
@@ -13,23 +13,23 @@ export const metadata: Metadata = {
 };
 
 export default async function ManagingCommitteePage() {
-  const [committee, siteData, homeData] = await Promise.all([
+  const [committee, siteData, newsTicker] = await Promise.all([
     getCommitteeMembers(),
     getSiteSettings(),
-    getHomepageContent(),
+    getNewsTicker(),
   ]);
 
   return (
     <div className="min-h-screen bg-[#F0F2F5] flex flex-col">
       <HeaderBanner initialSettings={siteData} />
       <NavigationBar />
-      <BreakingNewsBar newsItems={homeData?.newsTicker} />
+      <BreakingNewsBar newsItems={newsTicker} />
 
       <main className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 w-full flex-1">
         <ManagingCommitteeSection initialMembers={committee} initialSettings={siteData} />
       </main>
 
-      <Footer initialSettings={siteData} initialData={homeData} />
+      <Footer initialSettings={siteData} />
     </div>
   );
 }

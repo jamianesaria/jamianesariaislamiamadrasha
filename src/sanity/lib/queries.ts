@@ -37,9 +37,25 @@ export async function getSanityFetchOptions() {
   };
 }
 
-// 1. Site Settings Query
+// 1. Site Settings Query (Projected)
 export const siteSettingsQuery = groq`*[_type == "siteSettings"][0] {
-  ...,
+  title,
+  arabicTitle,
+  englishTitle,
+  establishedYear,
+  slogan,
+  phone,
+  emergencyPhone,
+  email,
+  address,
+  addressFull,
+  regSocialWelfare,
+  regBefaq,
+  regHaiatulUlya,
+  mapEmbedUrl,
+  facebookUrl,
+  youtubeUrl,
+  headerBannerUrl,
   "logoUrl": logo.asset->url
 }`;
 
@@ -87,12 +103,24 @@ export async function getSiteSettings() {
   return fallbackSettings;
 }
 
-// 2. Homepage Content Query
+// 2. Homepage Content Query (Projected)
 export const homepageQuery = groq`*[_type == "homepage"][0]{
-  ...,
   introVideo{enabled, videoUrl, mobileVideoUrl, posterUrl, mobilePosterUrl, title, skipLabel},
   heroVideoUrl,
-  heroPosterUrl
+  heroPosterUrl,
+  newsTicker,
+  heroBadge,
+  heroHeadline,
+  heroSubheadline,
+  statsTotalStudents,
+  statsTeachers,
+  statsHafiz,
+  statsEstablished,
+  principalName,
+  principalDesignation,
+  principalMessage,
+  admissionBannerTitle,
+  admissionBannerDesc
 }`;
 
 export async function getHomepageContent() {
@@ -154,8 +182,48 @@ export async function getHomepageContent() {
   return fallbackHome;
 }
 
-// 3. Notices Query
-export const noticesQuery = groq`*[_type == "notice"] | order(publishDate desc)`;
+// 2b. Lightweight News Ticker Query (for sub-pages)
+export const newsTickerQuery = groq`*[_type == "homepage"][0]{
+  newsTicker,
+  heroSubheadline
+}`;
+
+export async function getNewsTicker(): Promise<string[]> {
+  "use cache";
+  try {
+    const options = await getSanityFetchOptions();
+    const data = await client.fetch(newsTickerQuery, {}, options);
+    if (data && Array.isArray(data.newsTicker) && data.newsTicker.length > 0) {
+      return data.newsTicker;
+    }
+    if (data?.heroSubheadline) {
+      return [data.heroSubheadline];
+    }
+  } catch (err) {
+    console.warn("Using fallback news ticker:", err);
+  }
+  return fallbackHome.hero?.slogan
+    ? [fallbackHome.hero.slogan]
+    : ["নতুন শিক্ষাবর্ষে ভর্তি চলছে"];
+}
+
+// 3. Notices Query (Projected)
+export const noticesQuery = groq`*[_type == "notice"] | order(publishDate desc) {
+  _id,
+  title,
+  memo,
+  category,
+  publishDate,
+  publishDateBn,
+  publishDateHijri,
+  isUrgent,
+  summary,
+  details,
+  instructions,
+  signatoryName,
+  signatoryDesignation,
+  "pdfUrl": pdfFile.asset->url
+}`;
 
 const categoryMap: Record<
   string,
@@ -206,7 +274,7 @@ export async function getNotices() {
             designation: n.signatoryDesignation || "মুহতামিম ও শিক্ষা সচিব",
             institution: "জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা",
           },
-          pdfUrl: n.pdfFile?.asset?.url || "#",
+          pdfUrl: n.pdfUrl || "#",
         };
       });
     }
@@ -216,7 +284,7 @@ export async function getNotices() {
   return fallbackNotices;
 }
 
-// 4. Teachers Query
+// 4. Teachers Query (Projected)
 export const teachersQuery = groq`*[_type == "teacher"] | order(serial asc) {
   _id,
   name,
@@ -255,8 +323,18 @@ export async function getTeachers() {
   return [];
 }
 
-// 5. Committee Members Query
-export const committeeQuery = groq`*[_type == "committeeMember"] | order(serial asc)`;
+// 5. Committee Members Query (Projected)
+export const committeeQuery = groq`*[_type == "committeeMember"] | order(serial asc) {
+  _id,
+  name,
+  designation,
+  mobile,
+  address,
+  isLandDonor,
+  donorContribution,
+  serial,
+  "photo": photo.asset->url
+}`;
 
 export async function getCommitteeMembers() {
   "use cache";
@@ -280,7 +358,7 @@ export async function getCommitteeMembers() {
   return committeeAndFacultyData.managingCommittee.members;
 }
 
-// 6. Academic Departments Query
+// 6. Academic Departments Query (Projected)
 export const departmentsQuery = groq`*[_type == "academicDepartment" && (
   !$homepageOnly || coalesce(showOnHomepage, slug.current != "orphanage", true)
 )] | order(serial asc, _updatedAt desc, _id asc) {
@@ -312,7 +390,7 @@ export async function getAcademicDepartments({ homepageOnly = false }: { homepag
   return [];
 }
 
-// 7. Admission Info Query
+// 7. Admission Info Query (Projected)
 export const admissionInfoQuery = groq`*[_type == "admissionInfo"][0] {
   _id,
   sessionName,
@@ -350,8 +428,19 @@ export async function getAdmissionInfo() {
   return null;
 }
 
-// 8. 313 Badri Kafila Query
-export const badriKafilaQuery = groq`*[_type == "badriKafila"][0]`;
+// 8. 313 Badri Kafila Query (Projected)
+export const badriKafilaQuery = groq`*[_type == "badriKafila"][0] {
+  _id,
+  title,
+  targetSeats,
+  enrolledCount,
+  theologicalOverview,
+  annualDonationAmount,
+  monthlyDonationAmount,
+  onetimeDonationAmount,
+  bkashNumber,
+  bankAccountInfo
+}`;
 
 export async function getBadriKafila() {
   "use cache";
@@ -367,8 +456,15 @@ export async function getBadriKafila() {
   return null;
 }
 
-// 9. Class Routines Query
-export const classRoutinesQuery = groq`*[_type == "classRoutine"] | order(academicYear desc)`;
+// 9. Class Routines Query (Projected)
+export const classRoutinesQuery = groq`*[_type == "classRoutine"] | order(academicYear desc) {
+  _id,
+  title,
+  className,
+  academicYear,
+  scheduleRows,
+  "pdfUrl": pdfFile.asset->url
+}`;
 
 export async function getClassRoutines() {
   "use cache";
@@ -382,8 +478,17 @@ export async function getClassRoutines() {
   }
 }
 
-// 10. Exam Routines Query
-export const examRoutinesQuery = groq`*[_type == "examRoutine"] | order(academicYear desc)`;
+// 10. Exam Routines Query (Projected)
+export const examRoutinesQuery = groq`*[_type == "examRoutine"] | order(academicYear desc) {
+  _id,
+  title,
+  examTerm,
+  academicYear,
+  className,
+  examRows,
+  instructions,
+  "pdfUrl": pdfFile.asset->url
+}`;
 
 export async function getExamRoutines() {
   "use cache";
@@ -397,8 +502,17 @@ export async function getExamRoutines() {
   }
 }
 
-// 11. Exam Results Query
-export const examResultsQuery = groq`*[_type == "examResult" && isPublished == true] | order(academicYear desc)`;
+// 11. Exam Results Query (Projected — published summary metadata only)
+export const examResultsQuery = groq`*[_type == "examResult" && isPublished == true] | order(academicYear desc) {
+  _id,
+  title,
+  academicYear,
+  examTerm,
+  className,
+  isPublished,
+  summaryNotes,
+  "meritListPdfUrl": meritListPdf.asset->url
+}`;
 
 export async function getExamResults() {
   "use cache";
@@ -412,8 +526,15 @@ export async function getExamResults() {
   }
 }
 
-// 12. Gallery Photos Query
-export const galleryPhotosQuery = groq`*[_type == "galleryPhoto"] | order(_createdAt desc)`;
+// 12. Gallery Photos Query (Projected)
+export const galleryPhotosQuery = groq`*[_type == "galleryPhoto"] | order(_createdAt desc) {
+  _id,
+  title,
+  category,
+  caption,
+  date,
+  "imageUrl": image.asset->url
+}`;
 
 export async function getGalleryPhotos() {
   "use cache";
@@ -427,8 +548,15 @@ export async function getGalleryPhotos() {
   }
 }
 
-// 13. Gallery Videos Query
-export const galleryVideosQuery = groq`*[_type == "galleryVideo"] | order(_createdAt desc)`;
+// 13. Gallery Videos Query (Projected)
+export const galleryVideosQuery = groq`*[_type == "galleryVideo"] | order(_createdAt desc) {
+  _id,
+  title,
+  youtubeId,
+  category,
+  duration,
+  date
+}`;
 
 export async function getGalleryVideos() {
   "use cache";

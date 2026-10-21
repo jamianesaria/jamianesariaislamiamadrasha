@@ -3,6 +3,15 @@
 import { useEffect, useState } from "react";
 import { Clock } from "lucide-react";
 
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+function getOrdinal(n: number) {
+  const s = ["th", "st", "nd", "rd"];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
 export default function TimeDateWidget() {
   const [time, setTime] = useState<string>("");
   const [dateStr, setDateStr] = useState<string>("");
@@ -14,24 +23,14 @@ export default function TimeDateWidget() {
       const minutes = String(now.getMinutes()).padStart(2, "0");
       setTime(`${hours}:${minutes}`);
 
-      // e.g. Oct 16th, Fri.
-      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-      
       const day = now.getDate();
-      const getOrdinal = (n: number) => {
-        const s = ["th", "st", "nd", "rd"];
-        const v = n % 100;
-        return n + (s[(v - 20) % 10] || s[v] || s[0]);
-      };
-
-      const monthName = months[now.getMonth()];
-      const dayName = days[now.getDay()];
+      const monthName = MONTHS[now.getMonth()];
+      const dayName = DAYS[now.getDay()];
       setDateStr(`${monthName} ${getOrdinal(day)}, ${dayName}.`);
     };
 
     updateTime();
-    const interval = setInterval(updateTime, 1000);
+    const interval = setInterval(updateTime, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -55,4 +54,3 @@ export default function TimeDateWidget() {
     </div>
   );
 }
-

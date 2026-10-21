@@ -83,7 +83,6 @@ export default function AcademicsPageSection({ initialDepartments }: AcademicsPa
                 width={112}
                 height={112}
                 className="w-full h-full object-contain rounded-full scale-105"
-                priority
               />
             </div>
 

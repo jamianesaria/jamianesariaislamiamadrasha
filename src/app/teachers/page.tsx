@@ -4,7 +4,7 @@ import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
 import Footer from "@/components/Footer";
 import FacultyAndTeachersSection from "@/components/FacultyAndTeachersSection";
-import { getTeachers, getSiteSettings, getHomepageContent } from "@/sanity/lib/queries";
+import { getTeachers, getSiteSettings, getNewsTicker } from "@/sanity/lib/queries";
 
 export const metadata: Metadata = {
   title: "সম্মানিত শিক্ষক মণ্ডলী ও উলামায়ে কেরাম | জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা",
@@ -13,23 +13,23 @@ export const metadata: Metadata = {
 };
 
 export default async function TeachersPage() {
-  const [teachers, siteData, homeData] = await Promise.all([
+  const [teachers, siteData, newsTicker] = await Promise.all([
     getTeachers(),
     getSiteSettings(),
-    getHomepageContent(),
+    getNewsTicker(),
   ]);
 
   return (
     <div className="min-h-screen bg-[#F0F2F5] flex flex-col">
       <HeaderBanner initialSettings={siteData} />
       <NavigationBar />
-      <BreakingNewsBar newsItems={homeData?.newsTicker} />
+      <BreakingNewsBar newsItems={newsTicker} />
 
       <main className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 w-full flex-1">
         <FacultyAndTeachersSection initialTeachers={teachers} initialSettings={siteData} />
       </main>
 
-      <Footer initialSettings={siteData} initialData={homeData} />
+      <Footer initialSettings={siteData} />
     </div>
   );
 }
