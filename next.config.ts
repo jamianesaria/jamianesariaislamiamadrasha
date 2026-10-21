@@ -3,6 +3,8 @@ import type { NextConfig } from "next";
 const IMMUTABLE_PUBLIC_ASSETS = [
   "/intro-desktop-v2.mp4",
   "/intro-mobile-v2.mp4",
+  "/intro-mobile-v3.mp4",
+  "/intro-mobile-poster-v3.jpg",
   "/intro-mobile-poster-v2.jpg",
   "/intro-poster.jpg",
   "/hero-courtyard-v2.mp4",

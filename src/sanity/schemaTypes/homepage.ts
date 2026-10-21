@@ -9,7 +9,7 @@ export const homepageType = defineType({
       name: "introVideo",
       title: "সূচনা ভিডিও (Opening video)",
       type: "object",
-      description: "হোমপেজ খোলার সময় প্রতি ব্রাউজার সেশনে একবার দেখানো হয়। ভিডিও শেষে মূল ওয়েবসাইট খুলবে।",
+      description: "প্রতি ব্রাউজার সেশনে একবার দেখানো হয়। স্বয়ংক্রিয়ভাবে চালু না হলে ভিডিও চালু করার বোতাম দেখাবে। ভিডিও শেষ হলে বা প্রবেশ বোতাম চাপলে মূল পাতা খুলবে।",
       fields: [
         defineField({ name: "enabled", title: "সূচনা ভিডিও চালু (Enabled)", type: "boolean", initialValue: true }),
         defineField({
@@ -20,13 +20,13 @@ export const homepageType = defineType({
         }),
         defineField({
           name: "mobileVideoUrl", title: "মোবাইলের লম্বা ভিডিও (Portrait video)", type: "url",
-          initialValue: "/intro-mobile-v2.mp4",
-          description: "ফোন ও লম্বাভাবে ধরা ট্যাবলেটের জন্য ৯:১৬ অনুপাতের ছোট MP4 দিন। খালি রাখলে মূল ভিডিও ব্যবহার হবে।",
+          initialValue: "/intro-mobile-v3.mp4",
+          description: "৯:১৬ ভিডিওতে নাম ও জরুরি লেখা মাঝের অংশে রাখুন, যাতে লম্বা ফোনেও লেখা না কাটে। খালি রাখলে মূল ভিডিও ব্যবহার হবে।",
           validation: (Rule) => Rule.uri({ allowRelative: true, scheme: ["https"] }),
         }),
         defineField({
           name: "mobilePosterUrl", title: "মোবাইল ভিডিওর প্রচ্ছদ (Portrait poster)", type: "url",
-          initialValue: "/intro-mobile-poster-v2.jpg",
+          initialValue: "/intro-mobile-poster-v3.jpg",
           validation: (Rule) => Rule.uri({ allowRelative: true, scheme: ["https"] }),
         }),
         defineField({
@@ -36,6 +36,8 @@ export const homepageType = defineType({
         }),
         defineField({ name: "title", title: "ভিডিওর পরিচিতি (Accessible title)", type: "string", initialValue: "জামিয়ায় স্বাগতম" }),
         defineField({ name: "skipLabel", title: "প্রবেশ বোতামের লেখা (Skip label)", type: "string", initialValue: "ওয়েবসাইটে প্রবেশ করুন" }),
+        defineField({ name: "playLabel", title: "চালু করার বোতাম (Play label)", type: "string", initialValue: "ভিডিও চালু করুন" }),
+        defineField({ name: "loadingLabel", title: "অপেক্ষার বার্তা (Loading label)", type: "string", initialValue: "ভিডিও প্রস্তুত হচ্ছে…" }),
       ],
     }),
     defineField({

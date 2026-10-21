@@ -105,7 +105,7 @@ export async function getSiteSettings() {
 
 // 2. Homepage Content Query (Projected)
 export const homepageQuery = groq`*[_type == "homepage"][0]{
-  introVideo{enabled, videoUrl, mobileVideoUrl, posterUrl, mobilePosterUrl, title, skipLabel},
+  introVideo{enabled, videoUrl, mobileVideoUrl, posterUrl, mobilePosterUrl, title, skipLabel, playLabel, loadingLabel},
   heroVideoUrl,
   heroPosterUrl,
   newsTicker,
@@ -136,11 +136,17 @@ export async function getHomepageContent() {
           enabled: data.introVideo?.enabled ?? fallbackHome.introVideo.enabled,
           videoUrl: data.introVideo?.videoUrl && data.introVideo.videoUrl !== "/Student_opening_doors_to_light_20261021201917.mp4"
             ? data.introVideo.videoUrl : fallbackHome.introVideo.videoUrl,
-          mobileVideoUrl: data.introVideo?.mobileVideoUrl || (data.introVideo?.videoUrl && data.introVideo.videoUrl !== "/Student_opening_doors_to_light_20261021201917.mp4" && data.introVideo.videoUrl !== fallbackHome.introVideo.videoUrl ? data.introVideo.videoUrl : fallbackHome.introVideo.mobileVideoUrl),
+          mobileVideoUrl: data.introVideo?.mobileVideoUrl === "/intro-mobile-v2.mp4"
+            ? fallbackHome.introVideo.mobileVideoUrl
+            : data.introVideo?.mobileVideoUrl || (data.introVideo?.videoUrl && data.introVideo.videoUrl !== "/Student_opening_doors_to_light_20261021201917.mp4" && data.introVideo.videoUrl !== fallbackHome.introVideo.videoUrl ? data.introVideo.videoUrl : fallbackHome.introVideo.mobileVideoUrl),
           posterUrl: data.introVideo?.posterUrl || fallbackHome.introVideo.posterUrl,
-          mobilePosterUrl: data.introVideo?.mobilePosterUrl || data.introVideo?.posterUrl || fallbackHome.introVideo.mobilePosterUrl,
+          mobilePosterUrl: data.introVideo?.mobilePosterUrl === "/intro-mobile-poster-v2.jpg"
+            ? fallbackHome.introVideo.mobilePosterUrl
+            : data.introVideo?.mobilePosterUrl || data.introVideo?.posterUrl || fallbackHome.introVideo.mobilePosterUrl,
           title: data.introVideo?.title || fallbackHome.introVideo.title,
           skipLabel: data.introVideo?.skipLabel || fallbackHome.introVideo.skipLabel,
+          playLabel: data.introVideo?.playLabel || fallbackHome.introVideo.playLabel,
+          loadingLabel: data.introVideo?.loadingLabel || fallbackHome.introVideo.loadingLabel,
         },
         newsTicker:
           Array.isArray(data.newsTicker) && data.newsTicker.length > 0

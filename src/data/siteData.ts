@@ -172,11 +172,13 @@ export const homePageContent = {
   introVideo: {
     enabled: true,
     videoUrl: "/intro-desktop-v2.mp4",
-    mobileVideoUrl: "/intro-mobile-v2.mp4",
+    mobileVideoUrl: "/intro-mobile-v3.mp4",
     posterUrl: "/intro-poster.jpg",
-    mobilePosterUrl: "/intro-mobile-poster-v2.jpg",
+    mobilePosterUrl: "/intro-mobile-poster-v3.jpg",
     title: "জামিয়ায় স্বাগতম",
     skipLabel: "ওয়েবসাইটে প্রবেশ করুন",
+    playLabel: "ভিডিও চালু করুন",
+    loadingLabel: "ভিডিও প্রস্তুত হচ্ছে…",
   },
   hero: {
     image: "/drone_poster.jpg",

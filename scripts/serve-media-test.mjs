@@ -11,7 +11,7 @@ import { compile } from "@tailwindcss/node";
 
 const require = createRequire(import.meta.url);
 const modules = new Map();
-const stubs = { "lucide-react": "exports.ArrowRight=()=>null;", "@sanity/client/stega": "exports.stegaClean=v=>v;" };
+const stubs = { "lucide-react": "exports.ArrowRight=()=>null;exports.Play=()=>null;", "@sanity/client/stega": "exports.stegaClean=v=>v;" };
 function collect(file) {
   if (modules.has(file)) return file;
   const source = file in stubs ? stubs[file] : readFileSync(file, "utf8");
@@ -42,9 +42,10 @@ function serverLoad(id) {
   return loadedModule.exports;
 }
 const settings = {
-  enabled: true, videoUrl: "/intro-desktop-v2.mp4", mobileVideoUrl: "/intro-mobile-v2.mp4",
-  posterUrl: "/intro-poster.jpg", mobilePosterUrl: "/intro-mobile-poster-v2.jpg",
+  enabled: true, videoUrl: "/intro-desktop-v2.mp4", mobileVideoUrl: "/intro-mobile-v3.mp4",
+  posterUrl: "/intro-poster.jpg", mobilePosterUrl: "/intro-mobile-poster-v3.jpg",
   title: "জামিয়ায় স্বাগতম", skipLabel: "ওয়েবসাইটে প্রবেশ করুন",
+  playLabel: "ভিডিও চালু করুন", loadingLabel: "ভিডিও প্রস্তুত হচ্ছে…",
 };
 function app(R, Intro, Hero) {
   return R.createElement(R.StrictMode, null, R.createElement(Intro, { settings },
