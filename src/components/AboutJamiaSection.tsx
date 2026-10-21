@@ -58,13 +58,13 @@ export default function AboutJamiaSection() {
         <div className="p-6 sm:p-8 bg-gradient-to-b from-[#FAF7F0]/70 to-white">
           <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
             {/* Official Seal */}
-            <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-3 border-[#8B111A] ring-4 ring-amber-100/80 p-1.5 bg-white shadow-md shrink-0 relative">
+            <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-3 border-[#8B111A] ring-4 ring-amber-100/80 p-0.5 bg-white shadow-md shrink-0 relative overflow-hidden">
               <Image
-                src={siteSettings.logoUrl}
+                src={siteSettings.logoUrl || "/jamia-logo-v2.png"}
                 alt={header.title}
                 width={128}
                 height={128}
-                className="w-full h-full object-contain rounded-full"
+                className="w-full h-full object-contain rounded-full scale-105"
                 priority
               />
             </div>

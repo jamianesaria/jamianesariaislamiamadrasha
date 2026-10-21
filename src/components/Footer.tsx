@@ -1,9 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
-import { siteSettings, homePageContent } from "@/data/siteData";
+import { siteSettings as defaultSettings, homePageContent as defaultHome } from "@/data/siteData";
 
-export default function Footer() {
-  const { footer, contact } = homePageContent;
+interface FooterProps {
+  initialSettings?: any;
+  initialData?: any;
+}
+
+export default function Footer({ initialSettings, initialData }: FooterProps = {}) {
+  const settings = initialSettings || defaultSettings;
+  const content = initialData || defaultHome;
+  const footer = content.footer || defaultHome.footer;
+  const contact = content.contact || defaultHome.contact;
 
   return (
     <footer className="w-full bg-gradient-to-b from-[#032613] to-[#021a0d] text-white border-t-3 border-[#D9822B]">
@@ -12,27 +20,27 @@ export default function Footer() {
           {/* Column 1: Brand Identity & Slogan (5 cols) */}
           <div className="md:col-span-5 space-y-3">
             <div className="flex items-center gap-3.5">
-              <div className="w-13 h-13 rounded-full overflow-hidden border-2 border-[#D9822B] bg-white p-0.5 shrink-0 shadow-sm">
+              <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-[#D9822B] bg-white p-0.5 shrink-0 shadow-sm flex items-center justify-center">
                 <Image
-                  src={siteSettings.logoUrl}
-                  alt={footer.title}
-                  width={52}
-                  height={52}
-                  className="w-full h-full object-contain rounded-full"
+                  src={settings.logoUrl || defaultSettings.logoUrl || "/jamia-logo-v2.png"}
+                  alt={footer.title || settings.nameBn}
+                  width={56}
+                  height={56}
+                  className="w-full h-full object-contain rounded-full scale-105"
                 />
               </div>
               <div>
                 <h3 className="text-base sm:text-lg font-bold text-white leading-snug">
-                  {footer.title}
+                  {footer.title || settings.nameBn}
                 </h3>
                 <p className="text-xs text-amber-300 font-semibold mt-0.5">
-                  স্থাপিত: {siteSettings.established} | গভঃ রেজিঃ নং {siteSettings.regNo}
+                  স্থাপিত: {settings.established} | গভঃ রেজিঃ নং {settings.regNo}
                 </p>
               </div>
             </div>
 
             <p className="text-amber-200 text-xs sm:text-sm font-medium pt-1 pl-3 border-l-2 border-[#D9822B]">
-              {footer.slogan}
+              {footer.slogan || settings.footerSloganBn || settings.sloganBn}
             </p>
           </div>
 
@@ -43,7 +51,7 @@ export default function Footer() {
               <span>প্রয়োজনীয় লিংকসমূহ</span>
             </h4>
             <ul className="grid grid-cols-2 gap-y-2 gap-x-3 text-xs sm:text-[13.5px]">
-              {footer.links.map((item, idx) => (
+              {(footer.links || defaultHome.footer.links).map((item: any, idx: number) => (
                 <li key={idx}>
                   <Link
                     href={item.href}
@@ -65,22 +73,22 @@ export default function Footer() {
             </h4>
             <div className="space-y-2 text-xs sm:text-[13.5px] text-emerald-100 bg-black/20 p-3.5 rounded-lg border border-emerald-800/60">
               <p>
-                <span className="font-semibold text-amber-200">{contact.addressLabel}:</span>{" "}
-                {contact.addressValue}
+                <span className="font-semibold text-amber-200">{contact.addressLabel || "ঠিকানা"}:</span>{" "}
+                {settings.address || contact.addressValue}
               </p>
               <p>
-                <span className="font-semibold text-amber-200">{contact.phoneLabel}:</span>{" "}
-                <a href={`tel:${contact.phoneValue}`} className="hover:text-amber-300 font-semibold">
-                  {contact.phoneValue}
+                <span className="font-semibold text-amber-200">{contact.phoneLabel || "মোবাইল"}:</span>{" "}
+                <a href={`tel:${settings.phone || contact.phoneValue}`} className="hover:text-amber-300 font-semibold">
+                  {settings.phone || contact.phoneValue}
                 </a>
               </p>
               <p>
-                <span className="font-semibold text-amber-200">{contact.emailLabel}:</span>{" "}
+                <span className="font-semibold text-amber-200">{contact.emailLabel || "ইমেইল"}:</span>{" "}
                 <a
-                  href={`mailto:${contact.emailValue}`}
+                  href={`mailto:${settings.email || contact.emailValue}`}
                   className="hover:text-amber-300 break-all"
                 >
-                  {contact.emailValue}
+                  {settings.email || contact.emailValue}
                 </a>
               </p>
             </div>
@@ -89,7 +97,7 @@ export default function Footer() {
 
         {/* Bottom Copyright */}
         <div className="pt-5 text-center text-xs text-emerald-200/90">
-          <p>{footer.copyright}</p>
+          <p>{footer.copyright || defaultHome.footer.copyright}</p>
         </div>
       </div>
     </footer>

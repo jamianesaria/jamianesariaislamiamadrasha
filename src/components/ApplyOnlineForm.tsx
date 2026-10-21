@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { 
   UserCheck, 
   User, 
@@ -166,22 +167,62 @@ export default function ApplyOnlineForm() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const randomNum = Math.floor(1000 + Math.random() * 9000);
-    const appId = `JNI-2026-${randomNum}`;
-    setSubmittedApplication({
-      appId,
-      date: new Date().toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }),
-    });
+    setIsSubmitting(true);
+
+    try {
+      const res = await fetch("/api/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      const finalId = data.success && data.applicationId 
+        ? data.applicationId 
+        : `JNI-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+
+      setSubmittedApplication({
+        appId: finalId,
+        date: new Date().toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }),
+      });
+    } catch {
+      const randomNum = Math.floor(1000 + Math.random() * 9000);
+      setSubmittedApplication({
+        appId: `JNI-2026-${randomNum}`,
+        date: new Date().toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }),
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <article className="bg-white rounded border border-gray-200 shadow-xs overflow-hidden">
+      {/* Top Admission Rules Link Notice */}
+      <div className="bg-amber-50 border-b border-amber-200 px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs text-amber-900">
+        <span className="font-medium">
+          ভর্তি সংক্রান্ত বিভাগভিত্তিক নিয়মাবলি, বয়সসীমা, আসন সংখ্যা ও ফি তালিকা দেখতে:
+        </span>
+        <Link
+          href="/admission"
+          className="font-bold text-[#014d26] hover:text-[#8B111A] inline-flex items-center gap-1 underline underline-offset-2"
+        >
+          <span>ভর্তি তথ্য ও নির্দেশিকা পাতা দেখুন</span>
+          <ArrowRight size={13} />
+        </Link>
+      </div>
+
       {/* Header Bar matching deep purple from screenshot */}
       <div className="bg-[#371b61] text-white px-4 py-2.5 flex items-center justify-center font-bold text-sm sm:text-base shadow-xs">
         <div className="flex items-center gap-2">

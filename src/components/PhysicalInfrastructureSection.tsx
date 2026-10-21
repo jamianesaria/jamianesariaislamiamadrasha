@@ -14,13 +14,13 @@ export default function PhysicalInfrastructureSection() {
       <div className="p-6 sm:p-10 space-y-8">
         {/* Center: Madrasa Logo and Identification */}
         <div className="flex flex-col items-center justify-center text-center">
-          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-[#8B111A] p-1 bg-white shadow-md relative overflow-hidden mb-4">
+          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-[#8B111A] p-0.5 bg-white shadow-md relative overflow-hidden mb-4">
             <Image
-              src={siteSettings.logoUrl}
+              src={siteSettings.logoUrl || "/jamia-logo-v2.png"}
               alt={siteSettings.nameBn}
               fill
               sizes="112px"
-              className="object-contain p-1"
+              className="object-contain p-0 scale-105"
               priority
             />
           </div>

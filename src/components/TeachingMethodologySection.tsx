@@ -16,12 +16,12 @@ export default function TeachingMethodologySection() {
       <div className="p-4 sm:p-5 flex flex-col sm:flex-row gap-5 items-center sm:items-start">
         {/* Left: Emblem/Logo inside circular frame */}
         <div className="shrink-0 flex items-center justify-center p-3 bg-red-50/40 rounded-full border border-red-100 shadow-xs">
-          <div className="w-24 h-24 sm:w-28 sm:h-28 relative rounded-full overflow-hidden border-2 border-[#8B111A] bg-white p-1">
+          <div className="w-24 h-24 sm:w-28 sm:h-28 relative rounded-full overflow-hidden border-2 border-[#8B111A] bg-white p-0.5">
             <Image
-              src={siteSettings.logoUrl}
+              src={siteSettings.logoUrl || "/jamia-logo-v2.png"}
               alt={siteSettings.nameBn}
               fill
-              className="object-contain p-1"
+              className="object-contain p-0 scale-105"
             />
           </div>
         </div>

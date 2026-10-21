@@ -23,10 +23,25 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-export default function HomePrimarySection() {
+interface HomePrimarySectionProps {
+  initialData?: typeof homePageContent;
+  initialSettings?: typeof siteSettings;
+  initialNotices?: any[];
+  initialDepartments?: any[];
+}
+
+export default function HomePrimarySection({
+  initialData,
+  initialSettings,
+  initialNotices,
+  initialDepartments,
+}: HomePrimarySectionProps = {}) {
   const [activeNoticeTab, setActiveNoticeTab] = useState<number>(0);
   const [activeGalleryCategory, setActiveGalleryCategory] =
     useState<string>("all");
+
+  const content = (initialData || homePageContent) as typeof homePageContent;
+  const currentSettings = (initialSettings || siteSettings) as typeof siteSettings;
 
   const {
     hero,
@@ -44,13 +59,29 @@ export default function HomePrimarySection() {
     gallery,
     admissionCall,
     contact,
-  } = homePageContent;
+  } = content;
+
+  // Build dynamic academic department list with Sanity images and fallback
+  const departmentList =
+    initialDepartments && initialDepartments.length > 0
+      ? initialDepartments.map((d: any, idx: number) => {
+          const fallback = departments.items[idx] || departments.items[0];
+          return {
+            id: d.id || fallback.id,
+            name: d.name || fallback.name,
+            image: d.imageUrl || fallback.image || "/drone_poster.jpg",
+            description: d.overview || fallback.description,
+            badge: d.badge || fallback.badge,
+            href: `/academics#${d.id || fallback.id}`,
+          };
+        })
+      : departments.items;
 
   const filteredGallery =
     activeGalleryCategory === "all"
-      ? (gallery.items || gallery.categories)
-      : (gallery.items || gallery.categories).filter(
-          (item) => (item.categoryId || item.id) === activeGalleryCategory
+      ? ((gallery as any).items || gallery.categories)
+      : ((gallery as any).items || gallery.categories).filter(
+          (item: any) => (item.categoryId || item.id) === activeGalleryCategory
         );
 
   const bengaliDigits = ["১", "২", "৩", "৪", "৫"];
@@ -119,17 +150,18 @@ export default function HomePrimarySection() {
                 <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
                   {/* Official Madrasa Seal */}
                   <div className="shrink-0 flex flex-col items-center gap-2">
-                    <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-2 border-[#8B111A] ring-4 ring-[#FAF7F0] p-1.5 bg-white shadow-md flex items-center justify-center">
+                    <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-2 border-[#8B111A] ring-4 ring-[#FAF7F0] p-0.5 bg-white shadow-md flex items-center justify-center overflow-hidden">
                       <Image
-                        src={siteSettings.logoUrl}
-                        alt={siteSettings.nameBn}
+                        src={currentSettings.logoUrl || siteSettings.logoUrl || "/jamia-logo-v2.png"}
+                        alt={currentSettings.nameBn || siteSettings.nameBn}
                         width={128}
                         height={128}
-                        className="w-full h-full object-contain rounded-full"
+                        className="w-full h-full object-contain rounded-full scale-105"
+                        priority
                       />
                     </div>
                     <span className="text-[11px] font-bold text-[#016332] bg-[#FAF7F0] border border-gray-200 px-2.5 py-0.5 rounded-full">
-                      গভঃ রেজিঃ {siteSettings.regNo}
+                      গভঃ রেজিঃ {currentSettings.regNo}
                     </span>
                   </div>
 
@@ -340,10 +372,11 @@ export default function HomePrimarySection() {
                   </h2>
                 </div>
                 <Link
-                  href="/functions/notices"
-                  className="text-xs bg-white/15 hover:bg-white/25 text-amber-200 px-2.5 py-0.5 rounded-full transition-colors font-medium"
+                  href="/notices"
+                  className="text-xs bg-white/15 hover:bg-white/25 text-amber-200 px-2.5 py-0.5 rounded-full transition-colors font-medium flex items-center gap-1"
                 >
-                  সকল নোটিশ →
+                  <span>সকল নোটিশ</span>
+                  <span>→</span>
                 </Link>
               </div>
 
@@ -376,13 +409,19 @@ export default function HomePrimarySection() {
                 </div>
 
                 {/* Active Notice Box */}
-                <div className="border-2 border-dashed border-[#D9822B]/50 rounded-lg bg-[#FAF7F0] p-5 text-center space-y-1.5">
+                <div className="border border-emerald-200 rounded-lg bg-emerald-50/50 p-4 text-center space-y-2">
                   <span className="inline-block text-[11px] font-bold text-[#016332] bg-[#016332]/10 px-2.5 py-0.5 rounded-full">
                     {notices.categories[activeNoticeTab]}
                   </span>
-                  <p className="text-sm font-bold text-gray-800 pt-1">
-                    “{notices.emptyMessage}”
+                  <p className="text-xs font-semibold text-gray-800">
+                    কেন্দ্রীয় নোটিশ বোর্ডে নতুন ও সর্বশেষ বিজ্ঞপ্তি প্রকাশিত হয়েছে।
                   </p>
+                  <Link
+                    href="/notices"
+                    className="inline-flex items-center gap-1 text-xs font-bold text-[#8B111A] hover:text-[#016332] hover:underline pt-1"
+                  >
+                    <span>বিস্তারিত প্রজ্ঞাপন ও ডাউনলোড দেখুন →</span>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -422,7 +461,7 @@ export default function HomePrimarySection() {
 
           {/* All 5 Academic Departments with Photos */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-5">
-            {departments.items.map((dept, idx) => (
+            {departmentList.map((dept, idx) => (
               <div
                 key={dept.id}
                 className={`bg-white rounded-xl border border-gray-200/90 overflow-hidden flex flex-col justify-between group hover:border-[#016332] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 shadow-xs ${
@@ -432,7 +471,7 @@ export default function HomePrimarySection() {
                 {/* Department Photo */}
                 <div className="relative h-46 sm:h-48 w-full overflow-hidden bg-gray-100">
                   <Image
-                    src={dept.image}
+                    src={dept.image || "/drone_poster.jpg"}
                     alt={dept.name}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 20vw"
@@ -804,7 +843,7 @@ export default function HomePrimarySection() {
                   <div className="pt-2">
                     <div className="relative h-48 sm:h-56 md:h-64 w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100 group shadow-xs">
                       <Image
-                        src={orphanageSupport.image}
+                        src={orphanageSupport.image || "/drone_poster.jpg"}
                         alt="জামিয়া নেছারিয়া এতিমখানা ও হিফজুল কুরআন বিভাগ"
                         fill
                         sizes="(max-width: 1024px) 100vw, 60vw"
@@ -999,7 +1038,7 @@ export default function HomePrimarySection() {
               <div className="lg:col-span-5 space-y-2">
                 <div className="relative h-60 sm:h-72 md:h-80 w-full overflow-hidden rounded-xl border border-gray-200 bg-gray-100 group shadow-xs">
                   <Image
-                    src={hostelProject.image}
+                    src={hostelProject.image || "/drone_poster.jpg"}
                     alt={hostelProject.title}
                     fill
                     sizes="(max-width: 1024px) 100vw, 40vw"
@@ -1127,14 +1166,14 @@ export default function HomePrimarySection() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
-            {filteredGallery.map((item) => (
+            {filteredGallery.map((item: any) => (
               <div
                 key={item.id}
                 className="border border-gray-200/90 rounded-xl bg-white overflow-hidden group shadow-xs hover:shadow-md hover:border-[#016332]/60 hover:-translate-y-0.5 transition-all duration-300"
               >
                 <div className="relative h-52 sm:h-56 w-full overflow-hidden bg-gray-100">
                   <Image
-                    src={item.image}
+                    src={item.image || "/drone_poster.jpg"}
                     alt={item.title}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"

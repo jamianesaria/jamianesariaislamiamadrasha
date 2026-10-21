@@ -3,33 +3,40 @@ import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
 import Footer from "@/components/Footer";
-import ApplyOnlineForm from "@/components/ApplyOnlineForm";
+import AdmissionInfoSection from "@/components/AdmissionInfoSection";
+import { getSiteSettings, getHomepageContent, getAdmissionInfo } from "@/sanity/lib/queries";
 
 export const metadata: Metadata = {
-  title: "Online Admission Registration | জামিয়া নেছারিয়া ইসলামিয়া টঙ্গী",
-  description: "জামিয়া নেছারিয়া ইসলামিয়া টঙ্গীতে অনলাইনে ভর্তির আবেদন ফরম (Online Registration)।",
+  title: "ভর্তি তথ্য, নিয়মাবলি ও ভর্তি নির্দেশিকা | জামিয়া নেছারিয়া ইসলামিয়া টঙ্গী",
+  description:
+    "জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানার নতুন শিক্ষাবর্ষের ভর্তি তথ্য, বিভাগভিত্তিক যোগ্যতা, বয়সসীমা, ভর্তি ফি ও মাসিক খরচ তালিকা, প্রয়োজনীয় কাগজপত্র ও ভর্তি নির্দেশিকা।",
 };
 
-export default function AdmissionPage() {
+export default async function AdmissionPage() {
+  const [siteData, homeData, admissionData] = await Promise.all([
+    getSiteSettings(),
+    getHomepageContent(),
+    getAdmissionInfo(),
+  ]);
+
   return (
     <div className="min-h-screen bg-[#F0F2F5] flex flex-col">
       {/* 1. Top Identity Banner */}
-      <HeaderBanner />
+      <HeaderBanner initialSettings={siteData} />
 
       {/* 2. Main Navigation Bar */}
       <NavigationBar />
 
       {/* 3. Breaking News / Notice Ticker Bar */}
-      <BreakingNewsBar />
+      <BreakingNewsBar newsItems={homeData?.newsTicker} />
 
-      {/* 4. Main Online Registration Form Content Area */}
-      <main className="max-w-5xl mx-auto px-3 sm:px-4 py-6 w-full flex-1">
-        <ApplyOnlineForm />
+      {/* 4. Main Admission Information Content Area */}
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 w-full flex-1">
+        <AdmissionInfoSection initialAdmissionData={admissionData} />
       </main>
 
       {/* 5. Footer */}
-      <Footer />
+      <Footer initialSettings={siteData} initialData={homeData} />
     </div>
   );
 }
-

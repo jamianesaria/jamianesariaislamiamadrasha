@@ -19,13 +19,13 @@ export default function VacancyNoticeTable() {
       <div className="p-6 sm:p-8 space-y-6">
         {/* Center: Madrasa Logo & Header */}
         <div className="flex flex-col items-center justify-center text-center">
-          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-[#8B111A] p-1 bg-white shadow-md relative overflow-hidden mb-3">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-[#8B111A] p-0.5 bg-white shadow-md relative overflow-hidden mb-3">
             <Image
-              src={siteSettings.logoUrl}
+              src={siteSettings.logoUrl || "/jamia-logo-v2.png"}
               alt={siteSettings.nameBn}
               fill
               sizes="96px"
-              className="object-contain p-1"
+              className="object-contain p-0 scale-105"
               priority
             />
           </div>

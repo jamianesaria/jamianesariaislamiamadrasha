@@ -3,26 +3,44 @@ import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
 import HomePrimarySection from "@/components/HomePrimarySection";
 import Footer from "@/components/Footer";
+import {
+  getHomepageContent,
+  getNotices,
+  getSiteSettings,
+  getAcademicDepartments,
+} from "@/sanity/lib/queries";
 
-export default function Home() {
+export default async function Home() {
+  const [homeData, notices, siteData, departments] = await Promise.all([
+    getHomepageContent(),
+    getNotices(),
+    getSiteSettings(),
+    getAcademicDepartments({ homepageOnly: true }),
+  ]);
+
   return (
     <div className="min-h-screen bg-[#FAF7F0] flex flex-col">
-      {/* ১। হেডার: Top Header Banner (public/header.jpeg) */}
-      <HeaderBanner />
+      {/* ১। হেডার: Top Header Banner */}
+      <HeaderBanner initialSettings={siteData} />
 
       {/* নেভিগেশন বার */}
       <NavigationBar />
 
-      {/* ব্রেকিং নিউজ / বিশেষ ঘোষণা */}
-      <BreakingNewsBar />
+      {/* ব্রেকিং নিউজ / বিশেষ ঘোষণা (Sanity CMS Live Data) */}
+      <BreakingNewsBar newsItems={homeData?.newsTicker} />
 
-      {/* ২ থেকে ১২ নং সেকশন: প্রধান ব্যানার, স্বাগতম, এক নজরে জামিয়া, লক্ষ্য ও উদ্দেশ্য, শিক্ষা বিভাগসমূহ, পাঠ্যক্রম, ছাত্র প্রশিক্ষণ, নোটিশ, গ্যালারি, ভর্তি আহ্বান ও যোগাযোগ */}
+      {/* ২ থেকে ১২ নং সেকশন */}
       <main className="w-full flex-1">
-        <HomePrimarySection />
+        <HomePrimarySection
+          initialData={homeData}
+          initialSettings={siteData}
+          initialNotices={notices}
+          initialDepartments={departments}
+        />
       </main>
 
-      {/* ফুটার — ওয়েবসাইটের সর্বশেষ অংশ */}
-      <Footer />
+      {/* ফুটার */}
+      <Footer initialSettings={siteData} initialData={homeData} />
     </div>
   );
 }

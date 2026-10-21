@@ -28,3 +28,13 @@ Keep a qualifying candidate through the reporting pass even if you resolve or wo
 Before the final response, run one reporting pass. If candidates remain, from this file's directory run `node node_modules/next/dist/bin/next internal agent-feedback-instructions` once without piping or truncating its output. Follow its output or error guidance. If a network sandbox blocks it, retry with network access; if it still returns no output, continue normally.
 
 <!-- END:nextjs-agent-feedback -->
+
+<!-- BEGIN:sanity-agent-rules -->
+## Sanity CMS & Frontend Synchronization Rule
+
+- Whenever any AI agent modifies, adds, or restructures any text, section, card, list, table, or media element on the frontend, the agent MUST update the corresponding Sanity CMS schema, query, and data mapping accordingly.
+- The embedded Sanity Studio at `/studio` must remain functional, accessible locally and in production.
+- Any new document types or fields must be reflected in the Sanity Desk Structure (`src/sanity/structure.ts`) with clear Bengali and English labels.
+- All Sanity queries must have graceful fallbacks (e.g. referencing default records from `src/data/siteData.ts`) so that if the network or CMS is loading, the public website renders smoothly without crashing.
+- Private student examination results, marks, and admission applications must never be exposed via public unauthenticated GROQ queries or public client bundles. Form submissions must use secure server-side API handlers (`/api/*`) utilizing server-only write tokens.
+<!-- END:sanity-agent-rules -->

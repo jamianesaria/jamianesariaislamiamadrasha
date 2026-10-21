@@ -19,7 +19,11 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-export default function AcademicsPageSection() {
+interface AcademicsPageSectionProps {
+  initialDepartments?: any[];
+}
+
+export default function AcademicsPageSection({ initialDepartments }: AcademicsPageSectionProps = {}) {
   const {
     header,
     overview,
@@ -72,13 +76,13 @@ export default function AcademicsPageSection() {
 
         <div className="p-6 sm:p-8 bg-gradient-to-b from-[#FAF7F0]/70 to-white">
           <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
-            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-3 border-[#8B111A] ring-4 ring-amber-100/80 p-1.5 bg-white shadow-md shrink-0">
+            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-3 border-[#8B111A] ring-4 ring-amber-100/80 p-0.5 bg-white shadow-md shrink-0 overflow-hidden">
               <Image
-                src={siteSettings.logoUrl}
+                src={siteSettings.logoUrl || "/jamia-logo-v2.png"}
                 alt={header.institutionName}
                 width={112}
                 height={112}
-                className="w-full h-full object-contain rounded-full"
+                className="w-full h-full object-contain rounded-full scale-105"
                 priority
               />
             </div>

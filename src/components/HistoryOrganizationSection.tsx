@@ -14,13 +14,13 @@ export default function HistoryOrganizationSection() {
       <div className="p-6 sm:p-10 space-y-8">
         {/* Center: Madrasa Emblem Logo matching screenshot */}
         <div className="flex flex-col items-center justify-center text-center">
-          <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[3px] border-[#8B111A] p-1 bg-white shadow-lg ring-4 ring-amber-100/80 relative overflow-hidden mb-4">
+          <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[3px] border-[#8B111A] p-0.5 bg-white shadow-lg ring-4 ring-amber-100/80 relative overflow-hidden mb-4">
             <Image
-              src={siteSettings.logoUrl}
+              src={siteSettings.logoUrl || "/jamia-logo-v2.png"}
               alt={siteSettings.nameBn}
               fill
               sizes="144px"
-              className="object-contain p-0.5"
+              className="object-contain p-0 scale-105"
               priority
               quality={100}
             />

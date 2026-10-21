@@ -1,19 +1,25 @@
 import Image from "next/image";
 import Link from "next/link";
-import { siteSettings } from "@/data/siteData";
+import { siteSettings as defaultSettings } from "@/data/siteData";
 
-export default function HeaderBanner() {
+interface HeaderBannerProps {
+  initialSettings?: any;
+}
+
+export default function HeaderBanner({ initialSettings }: HeaderBannerProps = {}) {
+  const settings = initialSettings || defaultSettings;
+
   return (
     <header className="w-full bg-[#016332] relative overflow-hidden">
       <div className="w-[92%] sm:w-[88%] md:w-[86%] lg:w-[85%] max-w-[1440px] mx-auto">
         <Link
           href="/"
           className="block w-full relative aspect-[1329/230] sm:aspect-[1329/215] md:aspect-[1329/205] overflow-hidden bg-[#016332]"
-          title={`${siteSettings.nameBn} - হোমপেজ`}
+          title={`${settings.nameBn || settings.title || defaultSettings.nameBn} - হোমপেজ`}
         >
           <Image
-            src={siteSettings.headerBannerUrl}
-            alt={`${siteSettings.nameBn} - ${siteSettings.nameEn}`}
+            src={settings.headerBannerUrl || defaultSettings.headerBannerUrl || "/header.jpeg"}
+            alt={`${settings.nameBn || settings.title || defaultSettings.nameBn} - ${settings.nameEn || settings.englishTitle || defaultSettings.nameEn}`}
             width={1329}
             height={585}
             sizes="(max-width: 1536px) 88vw, 1440px"

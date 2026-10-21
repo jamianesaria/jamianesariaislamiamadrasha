@@ -13,10 +13,13 @@
 
   body {
     background-color: #f3f4f6;
-    color: #1f2937;
-    font-family: 'Hind Siliguri', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #111827;
+    font-family: var(--font-hind-siliguri), 'Hind Siliguri', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     overflow-x: hidden;
     max-width: 100vw;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   html {
@@ -52,4 +55,30 @@
 
 .animate-marquee:hover {
   animation-play-state: paused;
+}
+
+/* Print optimizations for official madrasa notices & admission forms */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-notice-content,
+  #printable-notice-content *,
+  #printable-admission-form,
+  #printable-admission-form * {
+    visibility: visible;
+  }
+  #printable-notice-content,
+  #printable-admission-form {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
 }

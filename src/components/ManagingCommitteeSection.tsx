@@ -29,12 +29,24 @@ interface CommitteeMemberItem {
   address?: string;
 }
 
-export default function ManagingCommitteeSection() {
+interface ManagingCommitteeSectionProps {
+  initialMembers?: any[];
+  initialSettings?: any;
+}
+
+export default function ManagingCommitteeSection({
+  initialMembers,
+  initialSettings,
+}: ManagingCommitteeSectionProps = {}) {
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [selectedMember, setSelectedMember] = useState<CommitteeMemberItem | null>(null);
 
   const { header, landDonors, managingCommittee, pledge } = committeeAndFacultyData;
+  const currentMembers =
+    initialMembers && initialMembers.length > 0
+      ? initialMembers
+      : managingCommittee.members;
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -44,7 +56,7 @@ export default function ManagingCommitteeSection() {
     }, 2000);
   };
 
-  const filteredMembers = managingCommittee.members.filter((m) => {
+  const filteredMembers = currentMembers.filter((m) => {
     const q = searchQuery.trim().toLowerCase();
     if (!q) return true;
     return (

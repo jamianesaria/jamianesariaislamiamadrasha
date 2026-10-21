@@ -1,6 +1,7 @@
 import { breakingNews } from "@/data/siteData";
 
-export default function BreakingNewsBar() {
+export default function BreakingNewsBar({ newsItems }: { newsItems?: string[] }) {
+  const items = newsItems && newsItems.length > 0 ? newsItems : breakingNews;
   return (
     <div className="w-full bg-[#FAF7F0] border-b border-[#e5dfd0] shadow-2xs">
       <div className="max-w-7xl mx-auto flex items-center overflow-hidden">
@@ -13,7 +14,7 @@ export default function BreakingNewsBar() {
         {/* Ticker marquee */}
         <div className="flex-1 overflow-hidden py-2 px-3 bg-white/80">
           <div className="animate-marquee inline-block whitespace-nowrap text-xs sm:text-[13.5px] text-gray-800 font-medium">
-            {breakingNews.map((news, idx) => (
+            {items.map((news, idx) => (
               <span key={idx} className="mx-6 inline-flex items-center gap-2">
                 <span className="text-[#8B111A] font-bold">❖</span>
                 <span>{news}</span>

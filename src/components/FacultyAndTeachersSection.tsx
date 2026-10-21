@@ -38,7 +38,15 @@ interface TeacherItem {
   photo?: string;
 }
 
-export default function FacultyAndTeachersSection() {
+interface FacultyAndTeachersSectionProps {
+  initialTeachers?: any[];
+  initialSettings?: any;
+}
+
+export default function FacultyAndTeachersSection({
+  initialTeachers,
+  initialSettings,
+}: FacultyAndTeachersSectionProps = {}) {
   const [activeCategory, setActiveCategory] = useState<TeacherCategory>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -56,6 +64,33 @@ export default function FacultyAndTeachersSection() {
 
   // Build unified teacher and staff list
   const allTeachersList = useMemo<TeacherItem[]>(() => {
+    if (initialTeachers && initialTeachers.length >= 20) {
+      return initialTeachers.map((t, idx) => {
+        let cat = t.department || "kitab";
+        if (cat === "officers") cat = "other";
+        let title = "মুহাদ্দিস ও কিতাব বিভাগ";
+        if (cat === "bukhari") title = "বুখারীর বিশেষ দরস";
+        else if (cat === "hifz") title = "হিফজ ও নাজেরা বিভাগ";
+        else if (cat === "maktab") title = "নূরানী মক্তব বিভাগ";
+        else if (cat === "other") title = "অন্যান্য শিক্ষক ও কর্মকর্তা";
+        else if (cat === "staff") title = "জামিয়ার স্টাফবৃন্দ";
+
+        return {
+          id: t.id || `teacher-${idx}`,
+          serial: t.serial ? String(t.serial) : String(idx + 1),
+          name: t.name,
+          designation: t.designation,
+          category: cat,
+          categoryTitle: title,
+          district: t.district || "",
+          mobile: t.mobile || "",
+          institution: t.institution || "",
+          note: t.qualification || "",
+          photo: t.photo || "/avatar-scholar.svg",
+        };
+      });
+    }
+
     const list: TeacherItem[] = [];
 
     // Bukhari Scholars
@@ -150,7 +185,7 @@ export default function FacultyAndTeachersSection() {
     });
 
     return list;
-  }, [bukhariScholars, faculty, staff]);
+  }, [initialTeachers, bukhariScholars, faculty, staff]);
 
   // Filtered teachers based on category & search
   const filteredTeachers = useMemo(() => {
