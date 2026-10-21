@@ -171,14 +171,16 @@ export const breakingNews = [
 export const homePageContent = {
   introVideo: {
     enabled: true,
-    videoUrl: "/Student_opening_doors_to_light_20261021201917.mp4",
+    videoUrl: "/intro-desktop-v2.mp4",
+    mobileVideoUrl: "/intro-mobile-v2.mp4",
     posterUrl: "/intro-poster.jpg",
+    mobilePosterUrl: "/intro-mobile-poster-v2.jpg",
     title: "জামিয়ায় স্বাগতম",
     skipLabel: "ওয়েবসাইটে প্রবেশ করুন",
   },
   hero: {
     image: "/drone_poster.jpg",
-    video: "/drone_shot_of_madrasha.mp4",
+    video: "/hero-courtyard-v2.mp4",
     title: "জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা",
     slogan: "কুরআন-সুন্নাহর আলোকে দ্বীনি শিক্ষা, নৈতিকতা ও আদর্শ মানুষ গড়ার প্রত্যয়ে",
   },

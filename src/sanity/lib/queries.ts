@@ -90,7 +90,9 @@ export async function getSiteSettings() {
 // 2. Homepage Content Query
 export const homepageQuery = groq`*[_type == "homepage"][0]{
   ...,
-  introVideo{enabled, videoUrl, posterUrl, title, skipLabel}
+  introVideo{enabled, videoUrl, mobileVideoUrl, posterUrl, mobilePosterUrl, title, skipLabel},
+  heroVideoUrl,
+  heroPosterUrl
 }`;
 
 export async function getHomepageContent() {
@@ -98,14 +100,17 @@ export async function getHomepageContent() {
   try {
     const options = await getSanityFetchOptions();
     const data = await client.fetch(homepageQuery, {}, options);
-    if (data && (data.heroHeadline || data.heroBadge || data.introVideo)) {
+    if (data && (data.heroHeadline || data.heroBadge || data.introVideo || data.heroVideoUrl || data.heroPosterUrl)) {
       return {
         ...fallbackHome,
         ...data,
         introVideo: {
           enabled: data.introVideo?.enabled ?? fallbackHome.introVideo.enabled,
-          videoUrl: data.introVideo?.videoUrl || fallbackHome.introVideo.videoUrl,
+          videoUrl: data.introVideo?.videoUrl && data.introVideo.videoUrl !== "/Student_opening_doors_to_light_20261021201917.mp4"
+            ? data.introVideo.videoUrl : fallbackHome.introVideo.videoUrl,
+          mobileVideoUrl: data.introVideo?.mobileVideoUrl || (data.introVideo?.videoUrl && data.introVideo.videoUrl !== "/Student_opening_doors_to_light_20261021201917.mp4" && data.introVideo.videoUrl !== fallbackHome.introVideo.videoUrl ? data.introVideo.videoUrl : fallbackHome.introVideo.mobileVideoUrl),
           posterUrl: data.introVideo?.posterUrl || fallbackHome.introVideo.posterUrl,
+          mobilePosterUrl: data.introVideo?.mobilePosterUrl || data.introVideo?.posterUrl || fallbackHome.introVideo.mobilePosterUrl,
           title: data.introVideo?.title || fallbackHome.introVideo.title,
           skipLabel: data.introVideo?.skipLabel || fallbackHome.introVideo.skipLabel,
         },
@@ -117,6 +122,8 @@ export async function getHomepageContent() {
               : ["নতুন শিক্ষাবর্ষে ভর্তি চলছে"],
         hero: {
           ...fallbackHome.hero,
+          video: data.heroVideoUrl || fallbackHome.hero.video,
+          image: data.heroPosterUrl || fallbackHome.hero.image,
           title: data.heroHeadline || fallbackHome.hero.title,
           slogan: data.heroSubheadline || fallbackHome.hero.slogan,
         },

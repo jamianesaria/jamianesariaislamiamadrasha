@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import HeroVideo from "./HeroVideo";
 import { homePageContent, siteSettings } from "@/data/siteData";
 import {
   ArrowRight,
@@ -94,17 +95,7 @@ export default function HomePrimarySection({
       ===================================================================== */}
       <section className="w-full relative overflow-hidden">
         <div className="relative w-full h-[320px] sm:h-[400px] md:h-[460px] lg:h-[520px] xl:h-[560px] overflow-hidden bg-[#021c0e]">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            poster={hero.image}
-            className="absolute inset-0 w-full h-full object-cover object-[center_68%]"
-            style={{ objectFit: "cover", objectPosition: "center 68%", width: "100%", height: "100%" }}
-          >
-            <source src={hero.video || "/drone_shot_of_madrasha.mp4"} type="video/mp4" />
-          </video>
+          <HeroVideo src={hero.video} poster={hero.image} />
 
           {/* Clean dark gradient at the lower part of video */}
           <div className="absolute inset-x-0 bottom-0 pt-16 pb-4 sm:pb-6 px-4 bg-gradient-to-t from-[#021c0e]/90 via-[#021c0e]/50 to-transparent pointer-events-none">

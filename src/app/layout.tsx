@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Hind_Siliguri } from "next/font/google";
 import "./globals.css";
 import CustomScrollbar from "@/components/CustomScrollbar";
@@ -6,7 +7,7 @@ import SanityVisualEditing from "@/components/SanityVisualEditing";
 
 const hindSiliguri = Hind_Siliguri({
   weight: ["300", "400", "500", "600", "700"],
-  subsets: ["bengali", "latin"],
+  subsets: ["bengali"],
   variable: "--font-hind-siliguri",
   display: "swap",
 });
@@ -41,7 +42,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-[#FAF7F0] font-sans antialiased text-gray-800">
         <CustomScrollbar />
         {children}
-        <SanityVisualEditing />
+        <Suspense fallback={null}><SanityVisualEditing /></Suspense>
       </body>
     </html>
   );

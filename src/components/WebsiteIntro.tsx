@@ -1,14 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
-import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { stegaClean } from "@sanity/client/stega";
+import { IntroPlaybackContext } from "./IntroPlaybackContext";
 
 interface IntroSettings {
   enabled: boolean;
   videoUrl: string;
+  mobileVideoUrl: string;
   posterUrl: string;
+  mobilePosterUrl: string;
   title: string;
   skipLabel: string;
 }
@@ -37,12 +39,15 @@ export default function WebsiteIntro({ settings, children }: { settings: IntroSe
     try { return sessionStorage.getItem(sessionKey) !== "seen"; } catch { return true; }
   }, [sessionKey]);
   const pending = useSyncExternalStore(subscribe, getSnapshot, () => true);
-  const visible = settings.enabled && pending;
+  const eligible = settings.enabled && pending;
+  const [playing, setPlaying] = useState(false);
+  const visible = eligible && playing;
   const [leaving, setLeaving] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const skipRef = useRef<HTMLButtonElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const finishTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const startupTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const finish = useCallback(() => {
     if (finishTimer.current !== null) return;
@@ -52,8 +57,40 @@ export default function WebsiteIntro({ settings, children }: { settings: IntroSe
       completedIntros.add(sessionKey);
       try { sessionStorage.setItem(sessionKey, "seen"); } catch { /* Memory fallback for restricted browsers. */ }
       window.dispatchEvent(new Event(changeEvent));
-    }, 350);
+    }, 150);
   }, [sessionKey]);
+
+  useEffect(() => {
+    if (!eligible || !getSnapshot()) return;
+    const video = videoRef.current;
+    if (!video) return;
+    let cancelled = false;
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+    // Don't interrupt visitors after a slow hydration or spend their data on an intro.
+    if (performance.now() > 3000 || connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType || "")) {
+      finish();
+    } else {
+      const portrait = window.matchMedia("(orientation: portrait)").matches;
+      video.src = stegaClean(portrait && settings.mobileVideoUrl ? settings.mobileVideoUrl : videoUrl);
+      video.poster = stegaClean(portrait && settings.mobilePosterUrl ? settings.mobilePosterUrl : posterUrl);
+      video.muted = true;
+      startupTimer.current = setTimeout(finish, 1500);
+      void video.play().catch(() => { if (!cancelled) finish(); });
+    }
+    const watchdog = setTimeout(finish, 6000);
+    return () => {
+      cancelled = true;
+      if (startupTimer.current !== null) clearTimeout(startupTimer.current);
+      clearTimeout(watchdog);
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+      if (finishTimer.current !== null) {
+        clearTimeout(finishTimer.current);
+        finishTimer.current = null;
+      }
+    };
+  }, [eligible, finish, getSnapshot, posterUrl, settings.mobilePosterUrl, settings.mobileVideoUrl, videoUrl]);
 
   useEffect(() => {
     if (!visible) return;
@@ -66,12 +103,7 @@ export default function WebsiteIntro({ settings, children }: { settings: IntroSe
       content.setAttribute("aria-hidden", "true");
     }
     skipRef.current?.focus({ preventScroll: true });
-    // A blocked autoplay, missing file, or stalled connection must never trap a visitor.
-    const watchdog = setTimeout(finish, 10000);
-    void videoRef.current?.play().catch(finish);
     return () => {
-      clearTimeout(watchdog);
-      if (finishTimer.current !== null) clearTimeout(finishTimer.current);
       document.body.style.overflow = previousOverflow;
       if (content) {
         content.inert = false;
@@ -85,10 +117,11 @@ export default function WebsiteIntro({ settings, children }: { settings: IntroSe
 
   return (
     <>
-      {visible && (
+      {eligible && (
         <div
-          className="website-intro fixed inset-0 z-[10000] grid h-dvh place-items-center overflow-hidden isolate bg-[#151309] transition-opacity duration-[350ms] motion-reduce:hidden print:hidden"
-          style={{ opacity: leaving ? 0 : 1, pointerEvents: leaving ? "none" : undefined }}
+          className="website-intro fixed inset-0 z-[10000] grid h-dvh place-items-center overflow-hidden isolate bg-[#151309] transition-opacity duration-150 motion-reduce:hidden print:hidden"
+          style={{ visibility: visible ? "visible" : "hidden", opacity: leaving ? 0 : 1, pointerEvents: leaving || !visible ? "none" : undefined }}
+          aria-hidden={!visible}
           data-leaving={leaving}
           role="dialog"
           aria-modal="true"
@@ -101,17 +134,22 @@ export default function WebsiteIntro({ settings, children }: { settings: IntroSe
             }
           }}
         >
-          <Image src={posterUrl} alt="" fill priority unoptimized className="pointer-events-none scale-115 object-cover blur-[36px] brightness-[0.4]" aria-hidden="true" />
           <video
             ref={videoRef}
-            className="relative size-full min-h-0 min-w-0 object-contain object-center"
-            src={videoUrl}
-            poster={posterUrl}
+            className="relative size-full min-h-0 min-w-0 object-contain object-center portrait:object-cover"
             width={1280}
             height={720}
             muted
             playsInline
             preload="none"
+            onPlaying={() => {
+              if (startupTimer.current !== null) clearTimeout(startupTimer.current);
+              if (finishTimer.current === null) setPlaying(true);
+            }}
+            onWaiting={() => {
+              if (startupTimer.current !== null) clearTimeout(startupTimer.current);
+              startupTimer.current = setTimeout(finish, 1500);
+            }}
             onEnded={finish}
             onError={finish}
             aria-hidden="true"
@@ -129,7 +167,9 @@ export default function WebsiteIntro({ settings, children }: { settings: IntroSe
         </div>
       )}
       <noscript><style>{".website-intro { display: none !important; }"}</style></noscript>
-      <div ref={contentRef}>{children}</div>
+      <IntroPlaybackContext value={eligible}>
+        <div ref={contentRef}>{children}</div>
+      </IntroPlaybackContext>
     </>
   );
 }

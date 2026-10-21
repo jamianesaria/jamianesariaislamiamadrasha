@@ -14,8 +14,19 @@ export const homepageType = defineType({
         defineField({ name: "enabled", title: "সূচনা ভিডিও চালু (Enabled)", type: "boolean", initialValue: true }),
         defineField({
           name: "videoUrl", title: "ভিডিও লিংক (Video URL)", type: "url",
-          initialValue: "/Student_opening_doors_to_light_20261021201917.mp4",
+          initialValue: "/intro-desktop-v2.mp4",
           description: "ওয়েবসাইটের public ফোল্ডারের / দিয়ে শুরু হওয়া MP4 লিংক অথবা HTTPS ভিডিও লিংক দিন।",
+          validation: (Rule) => Rule.uri({ allowRelative: true, scheme: ["https"] }),
+        }),
+        defineField({
+          name: "mobileVideoUrl", title: "মোবাইলের লম্বা ভিডিও (Portrait video)", type: "url",
+          initialValue: "/intro-mobile-v2.mp4",
+          description: "ফোন ও লম্বাভাবে ধরা ট্যাবলেটের জন্য ৯:১৬ অনুপাতের ছোট MP4 দিন। খালি রাখলে মূল ভিডিও ব্যবহার হবে।",
+          validation: (Rule) => Rule.uri({ allowRelative: true, scheme: ["https"] }),
+        }),
+        defineField({
+          name: "mobilePosterUrl", title: "মোবাইল ভিডিওর প্রচ্ছদ (Portrait poster)", type: "url",
+          initialValue: "/intro-mobile-poster-v2.jpg",
           validation: (Rule) => Rule.uri({ allowRelative: true, scheme: ["https"] }),
         }),
         defineField({
@@ -26,6 +37,16 @@ export const homepageType = defineType({
         defineField({ name: "title", title: "ভিডিওর পরিচিতি (Accessible title)", type: "string", initialValue: "জামিয়ায় স্বাগতম" }),
         defineField({ name: "skipLabel", title: "প্রবেশ বোতামের লেখা (Skip label)", type: "string", initialValue: "ওয়েবসাইটে প্রবেশ করুন" }),
       ],
+    }),
+    defineField({
+      name: "heroVideoUrl", title: "মূল ব্যানারের ভিডিও (Hero video)", type: "url",
+      initialValue: "/hero-courtyard-v2.mp4",
+      validation: (Rule) => Rule.uri({ allowRelative: true, scheme: ["https"] }),
+    }),
+    defineField({
+      name: "heroPosterUrl", title: "মূল ব্যানারের প্রচ্ছদ (Hero poster)", type: "url",
+      initialValue: "/drone_poster.jpg",
+      validation: (Rule) => Rule.uri({ allowRelative: true, scheme: ["https"] }),
     }),
     defineField({
       name: "newsTicker",

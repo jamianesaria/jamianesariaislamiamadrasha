@@ -8,6 +8,12 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   reactCompiler: true,
+  async headers() {
+    return ["/intro-desktop-v2.mp4", "/intro-mobile-v2.mp4", "/intro-mobile-poster-v2.jpg", "/hero-courtyard-v2.mp4"].map((source) => ({
+      source,
+      headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+    }));
+  },
   turbopack: {
     rules: {
       "*.css": {

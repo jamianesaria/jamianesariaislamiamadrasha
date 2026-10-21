@@ -1,7 +1,6 @@
-"use client";
-
+import { draftMode } from "next/headers";
 import { VisualEditing } from "next-sanity/visual-editing";
 
-export default function SanityVisualEditing() {
-  return <VisualEditing />;
+export default async function SanityVisualEditing() {
+  return (await draftMode()).isEnabled ? <VisualEditing /> : null;
 }
