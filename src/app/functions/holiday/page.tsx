@@ -13,7 +13,7 @@ export const generateMetadata = editableMetadata("/functions/holiday", {
 });
 
 async function HolidayPage() {
-  const records = (await getCalendar()).filter((record) => stegaClean(record.kind) === "holiday").map((record, index) => ({ ...record, _type: "calendarEvent", id: index + 1, title: record.title, dateTime: record.dateBn || record.date, description: record.description }));
+  const records = (await getCalendar()).filter((record) => stegaClean(record.kind) === "holiday").map((record) => ({ ...record, _type: "calendarEvent", id: record._id, title: record.title, dateTime: record.dateBn || record.date, description: record.description }));
   return (
     <div className="min-h-screen bg-[#F0F2F5] flex flex-col">
       {/* 1. Top Identity Banner */}

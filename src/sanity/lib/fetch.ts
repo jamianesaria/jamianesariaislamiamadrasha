@@ -1,6 +1,7 @@
 import "server-only";
 import { cacheLife, cacheTag } from "next/cache";
-import { draftMode } from "next/headers";
+import { cookies, draftMode } from "next/headers";
+import { resolvePerspectiveFromCookies } from "next-sanity/live";
 import type { QueryParams } from "@sanity/client";
 import { client } from "./client";
 import { sanityFetch } from "./live";
@@ -19,7 +20,8 @@ export async function fetchSiteQuery<T = unknown>(query: string, params: QueryPa
   if (draft.isEnabled) {
     const token = process.env.SANITY_API_READ_TOKEN || process.env.SANITY_API_TOKEN;
     if (!token) throw new Error("Draft preview requires a server-side Sanity read token.");
-    return client.fetch<T>(query, params, { perspective: "drafts", stega: true, token, useCdn: false, cache: "no-store", resultSourceMap: "withKeyArraySelector" });
+    const perspective = await resolvePerspectiveFromCookies({ cookies: await cookies() });
+    return client.fetch<T>(query, params, { perspective, stega: true, token, useCdn: false, cache: "no-store", resultSourceMap: "withKeyArraySelector" });
   }
   return publishedQuery<T>(query, params);
 }

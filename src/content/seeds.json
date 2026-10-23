@@ -23037,6 +23037,22 @@
         "label": "এই নির্বাচনের কোনো ফলাফল এখনো প্রকাশিত হয়নি।",
         "source": "text:3575",
         "text": "এই নির্বাচনের কোনো ফলাফল এখনো প্রকাশিত হয়নি।"
+      },
+      {
+        "_key": "e1mas90j",
+        "_type": "contentEntry",
+        "kind": "text",
+        "label": "ভর্তি পরীক্ষার ফলাফল",
+        "source": "ui.resultAdmissionTitle",
+        "text": "ভর্তি পরীক্ষার ফলাফল"
+      },
+      {
+        "_key": "e8iq4bh",
+        "_type": "contentEntry",
+        "kind": "text",
+        "label": "পরীক্ষার ফলাফল ও মেধা তালিকা",
+        "source": "ui.resultAcademicTitle",
+        "text": "পরীক্ষার ফলাফল ও মেধা তালিকা"
       }
     ],
     "route": "/results/academic",

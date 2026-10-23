@@ -49,6 +49,7 @@ export default async function HomePrimarySection({
   initialBlogPosts,
 }: HomePrimarySectionProps = {}) {
   const fieldAttribute = await getFieldAttribute();
+  const editing = Boolean(fieldAttribute({ _id: "homepage", _type: "homepage" }, "heroHeadline"));
   const homePageContent = await getEditableData("copy.data.homePageContent", _fallback_homePageContent);
   const siteSettings = await getEditableData("siteSettings", _fallback_siteSettings);
   const sampleBlogPosts = await getEditableData("copy.data.sampleBlogPosts", _fallback_sampleBlogPosts);
@@ -106,7 +107,7 @@ export default async function HomePrimarySection({
           <HeroVideo src={hero.video} poster={hero.image} sanity={fieldAttribute({ _id: "homepage", _type: "homepage" }, "heroVideoUrl")} />
 
           {/* Clean dark gradient at the lower part of video */}
-          <div className="absolute inset-x-0 bottom-0 pt-16 pb-4 sm:pb-6 px-4 bg-gradient-to-t from-[#021c0e]/90 via-[#021c0e]/50 to-transparent pointer-events-none">
+          <div className="absolute inset-x-0 bottom-0 pt-16 pb-4 sm:pb-6 px-4 bg-gradient-to-t from-[#021c0e]/90 via-[#021c0e]/50 to-transparent pointer-events-none" style={{ pointerEvents: editing ? "auto" : undefined }}>
             <div className="max-w-7xl mx-auto text-center">
               <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-[36px] font-bold text-white tracking-tight leading-snug drop-shadow-md">
                 {hero.title}

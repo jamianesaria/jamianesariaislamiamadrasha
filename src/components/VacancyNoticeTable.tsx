@@ -4,16 +4,18 @@ import { useState } from "react";
 
 import { siteSettings as _fallback_siteSettings, vacancyListTableData as _fallback_vacancyListTableData, VacancyItem } from "@/data/siteData";
 import { Briefcase, Calendar, MapPin, X, FileText, Download } from "lucide-react";
-import { EditableImage as Image, useEditableData, EditableText } from "@/content/client";
+import { EditableImage as Image, useEditableData, EditableText, useFieldAttribute } from "@/content/client";
 import { fieldSource } from "@/content/model";
 
 
 export default function VacancyNoticeTable({ records }: { records?: VacancyItem[] }) {
+  const attribute = useFieldAttribute();
   const siteSettings = useEditableData("siteSettings", _fallback_siteSettings);
   const vacancyListTableData = useEditableData("copy.data.vacancyListTableData", _fallback_vacancyListTableData);
 
   const vacancies = records ?? vacancyListTableData;
-  const [selectedVacancy, setSelectedVacancy] = useState<VacancyItem | null>(null);
+  const [selectedVacancyRecord, setSelectedVacancy] = useState<VacancyItem | null>(null);
+  const selectedVacancy = selectedVacancyRecord ? vacancies.find(vacancy => vacancy.id === selectedVacancyRecord.id) ?? null : null;
 
   return (
     <article className="bg-white rounded border border-gray-200 shadow-xs overflow-hidden">
@@ -96,6 +98,7 @@ export default function VacancyNoticeTable({ records }: { records?: VacancyItem[
                     {/* 5. View Details Button matching purple style */}
                     <td className="py-3.5 px-3 text-center">
                       <button
+                        data-sanity={attribute({ _id: "copy.ui.VacancyNoticeTable", _type: "pageContent" }, 'entries[_key=="eqiretf"].text')}
                         onClick={() => setSelectedVacancy(vacancy)}
                         className="inline-flex items-center justify-center gap-1 bg-[#6a1b9a] hover:bg-[#4a148c] text-white text-xs font-semibold px-3 py-1.5 rounded transition-colors shadow-2xs cursor-pointer"
                       >

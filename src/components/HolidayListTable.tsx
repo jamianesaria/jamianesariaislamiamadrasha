@@ -10,7 +10,8 @@ export default function HolidayListTable({ records }: { records?: HolidayItem[] 
   const holidayListTableData = useEditableData("copy.data.holidayListTableData", _fallback_holidayListTableData);
 
   const holidays = records ?? holidayListTableData;
-  const [selectedHoliday, setSelectedHoliday] = useState<HolidayItem | null>(null);
+  const [selectedHolidayRecord, setSelectedHoliday] = useState<HolidayItem | null>(null);
+  const selectedHoliday = selectedHolidayRecord ? holidays.find(holiday => holiday.id === selectedHolidayRecord.id) ?? null : null;
 
   return (
     <div className="bg-white rounded border border-gray-200 shadow-xs overflow-hidden">

@@ -720,7 +720,7 @@ export const recentEvents = [
 
 // Events List for /functions/event-list
 export interface EventItem {
-  id: number;
+  id: string | number;
   photo?: string;
   eventName: string;
   dateTime: string;
@@ -1154,7 +1154,7 @@ export const noticeListTableData: NoticeItem[] = [
 
 // Holidays List for /functions/holiday
 export interface HolidayItem {
-  id: number;
+  id: string | number;
   title: string;
   dateTime: string;
   description?: string;
@@ -1705,7 +1705,7 @@ export const physicalInfrastructureData = {
 
 // Vacancy Notice Data for /about/vacancy
 export interface VacancyItem {
-  id: number;
+  id: string | number;
   postName: string;
   postingDate: string;
   dateline: string;

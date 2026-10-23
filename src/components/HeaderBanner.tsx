@@ -2,7 +2,7 @@
 import Link from "next/link";
 import type { PublicSettings } from "@/content/public-types";
 import { siteSettings as _fallback_defaultSettings } from "@/data/siteData";
-import { EditableImage as Image, getEditableData } from "@/content/server";
+import { EditableImage as Image, getEditableData, getFieldAttribute } from "@/content/server";
 import { fieldSource } from "@/content/model";
 
 
@@ -15,12 +15,14 @@ export default async function HeaderBanner({ initialSettings }: HeaderBannerProp
   const defaultSettings = await getEditableData("siteSettings", _fallback_defaultSettings);
 
   const settings = initialSettings || defaultSettings;
+  const attribute = await getFieldAttribute();
 
   return (
     <header className="w-full bg-[#016332] relative overflow-hidden">
       <div className="w-[92%] sm:w-[88%] md:w-[86%] lg:w-[85%] max-w-[1440px] mx-auto">
         <Link
           href="/"
+          data-sanity={attribute(settings, "headerBannerUrl")}
           className="block w-full relative aspect-[1329/230] sm:aspect-[1329/215] md:aspect-[1329/205] overflow-hidden bg-[#016332]"
           title={`${settings.nameBn || defaultSettings.nameBn} - হোমপেজ`}
         >

@@ -13,7 +13,7 @@ export const generateMetadata = editableMetadata("/functions/event-list", {
 });
 
 async function EventListPage() {
-  const records = (await getCalendar()).filter((record) => stegaClean(record.kind) === "event").map((record, index) => ({ ...record, _type: "calendarEvent", id: index + 1, photo: record.imageUrl, eventName: record.title, dateTime: record.dateBn || record.date, venue: record.location, description: record.description }));
+  const records = (await getCalendar()).filter((record) => stegaClean(record.kind) === "event").map((record) => ({ ...record, _type: "calendarEvent", id: record._id, photo: record.imageUrl, eventName: record.title, dateTime: record.dateBn || record.date, venue: record.location, description: record.description }));
   return (
     <div className="min-h-screen bg-[#F0F2F5] flex flex-col">
       {/* 1. Top Identity Banner */}

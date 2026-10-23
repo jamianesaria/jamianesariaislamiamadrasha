@@ -4,6 +4,7 @@ import { mkdirSync } from "node:fs";
 import env from "@next/env";
 import { createClient } from "@sanity/client";
 import { createPreviewSecret } from "@sanity/preview-url-secret/create-secret";
+import { perspectiveCookieName } from "@sanity/preview-url-secret/constants";
 env.loadEnvConfig(process.cwd());
 const { chromium }=await import(process.env.PLAYWRIGHT_MODULE||"playwright");
 const base=process.env.QA_BASE_URL||"http://localhost:3020";
@@ -28,13 +29,18 @@ try{
  await page.getByText(marker).waitFor();
  assert.ok(await page.locator('[data-sanity*="headerBanner"]').count(),"Header image resolves to its upload field");
  const publicPage=await publicContext.newPage();await publicPage.goto(base+"/contact",{waitUntil:"domcontentloaded"});
+ assert.ok((await publicPage.content()).includes(id),"Published page copy must be loaded from Sanity rather than only hardcoded fallbacks");
  assert.equal(await publicPage.getByText(marker).count(),0,"Draft must not appear publicly");
+ await page.reload({waitUntil:"domcontentloaded"});await page.getByText(marker).waitFor();
+ await preview.addCookies([{name:perspectiveCookieName,value:"published",url:base,httpOnly:true,secure:base.startsWith("https:"),sameSite:base.startsWith("https:")?"None":"Lax"}]);
+ await page.reload({waitUntil:"domcontentloaded"});assert.equal(await page.getByText(marker).count(),0,"Published preview perspective must exclude the draft");
+ await preview.addCookies([{name:perspectiveCookieName,value:"drafts",url:base,httpOnly:true,secure:base.startsWith("https:"),sameSite:base.startsWith("https:")?"None":"Lax"}]);
  await page.reload({waitUntil:"domcontentloaded"});await page.getByText(marker).waitFor();
  await page.screenshot({path:".cms-work/public-qa/draft-contact.png"});
  const disabled=await preview.request.get(base+"/api/draft-mode/disable");assert.equal(disabled.status(),200);
  await page.goto(base+"/contact",{waitUntil:"domcontentloaded"});assert.equal(await page.getByText(marker).count(),0);
  assert.deepEqual(errors,[]);
- console.log("Real Next draft authentication, rendered field override, image source mapping, refresh persistence, public isolation and preview exit passed.");
+ console.log("Real Next draft authentication, published page-copy loading, draft/published perspective switching, field and image mapping, refresh persistence, public isolation and preview exit passed.");
 }finally{
  await browser.close();
  const current=await client.getDocument(draftId);

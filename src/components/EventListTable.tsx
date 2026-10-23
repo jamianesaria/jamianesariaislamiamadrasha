@@ -12,7 +12,8 @@ export default function EventListTable({ records }: { records?: EventItem[] }) {
   const eventListTableData = useEditableData("copy.data.eventListTableData", _fallback_eventListTableData);
 
   const events = records ?? eventListTableData;
-  const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null);
+  const [selectedEventRecord, setSelectedEvent] = useState<EventItem | null>(null);
+  const selectedEvent = selectedEventRecord ? events.find(event => event.id === selectedEventRecord.id) ?? null : null;
 
   return (
     <div className="bg-white rounded border border-gray-200 shadow-xs overflow-hidden">

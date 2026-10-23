@@ -12,7 +12,7 @@ export const generateMetadata = editableMetadata("/about/vacancy", {
 });
 
 async function VacancyPage() {
-  const records = (await getVacancies()).map((record, index) => ({ ...record, _type: "vacancy", id: index + 1, postName: record.title, postingDate: record.postedAt || "", dateline: record.deadline, requirements: record.qualification, salary: record.salary, pdfUrl: record.pdfUrl }));
+  const records = (await getVacancies()).map((record) => ({ ...record, _type: "vacancy", id: record._id, postName: record.title, postingDate: record.postedAt || "", dateline: record.deadline, requirements: record.qualification, salary: record.salary, pdfUrl: record.pdfUrl }));
   return (
     <div className="min-h-screen bg-[#F0F2F5] flex flex-col">
       {/* 1. Top Identity Banner */}
