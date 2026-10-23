@@ -37,3 +37,5 @@ The dependency audit reports upstream advisories in the existing Sanity/CLI depe
 ## Release gate
 
 Push the latest local commits, monitor the GitHub Vercel status, then verify the deployed custom domain, native Studio sign-in screen, published routes and server-side submissions/preview. A successful local build alone is not a live deployment check. A personal interactive Studio sign-in is still required to verify the owner's exact role and permission experience; API and adapter tests do not establish that personal session.
+
+Production verification on 23 October 2026 passed on https://nesariamadrasa.com after configuring the server-only Sanity token and private dataset name in the owning Vercel project and redeploying. Admission/contact/Badri persistence, retry handling, authenticated draft rendering, public isolation, preview exit and the desktop/phone public-route checks passed. The checked live browser responses contained no server token. See `management-progress.md` for the tested deployment and the remaining personal-session boundary.
