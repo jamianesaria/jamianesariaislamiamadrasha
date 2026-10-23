@@ -52,8 +52,9 @@ function valueAt(document,path){let value=document;for(const segment of studioPa
 async function cleanDraft(id,rev){const current=await client.getDocument(id);if(!current){ownDrafts.delete(id);return;}if(current._rev!==rev){console.log(JSON.stringify({preservedExternalDraftChange:id}));ownDrafts.delete(id);return;}await client.transaction().patch(id,p=>p.ifRevisionId(rev).unset(['_visualAuditUnused'])).delete(id).commit();ownDrafts.delete(id);}
 async function inspect(frame){
  const raw=await frame.evaluate(()=>{
+  for(const el of document.querySelectorAll('[data-visual-qa-node]'))el.removeAttribute('data-visual-qa-node');
   const text=[],attributes=[];const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let node,index=0;
-  while((node=walker.nextNode())){const el=node.parentElement;if(!el||el.closest('script,style,svg,sanity-visual-editing'))continue;const rect=el.getBoundingClientRect();if(!rect.width||!rect.height)continue;const id=el.getAttribute('data-visual-qa-node')||String(index++);el.setAttribute('data-visual-qa-node',id);text.push({text:node.textContent,tag:el.tagName,qa:id,main:!!el.closest('main,article'),heading:!!el.closest('h1,h2,h3,h4,h5,h6'),interactive:!!el.closest('a,button'),annotated:!!el.closest('[data-sanity]'),image:false});}
+  while((node=walker.nextNode())){const el=node.parentElement;if(!el||el.closest('script,style,svg,sanity-visual-editing'))continue;const rect=el.getBoundingClientRect();if(!rect.width||!rect.height)continue;const id=el.getAttribute('data-visual-qa-node')||String(index++);el.setAttribute('data-visual-qa-node',id);text.push({text:node.textContent,tag:el.tagName,qa:id,main:!!el.closest('main,article'),heading:!!el.closest('h1,h2,h3,h4,h5,h6'),paragraph:!!el.closest('p'),clipped:!!el.closest('.truncate,[class*="line-clamp"]'),interactive:!!el.closest('a,button'),annotated:!!el.closest('[data-sanity]'),image:false});}
   for(const el of document.querySelectorAll('[data-sanity]')){if(!el.hasAttribute('data-visual-qa-node'))el.setAttribute('data-visual-qa-node',String(index++));attributes.push({data:el.getAttribute('data-sanity'),tag:el.tagName,qa:el.getAttribute('data-visual-qa-node'),main:!!el.closest('main,article'),image:el.tagName==='IMG',src:el.getAttribute('src')});}
   return{text,attributes};
  });
@@ -69,6 +70,7 @@ async function inspect(frame){
  return {sources,broken,unmappedHeadings:raw.text.filter(t=>t.main&&t.heading&&!t.annotated&&!vercelStegaDecodeAll(t.text)?.length&&t.text.trim().length>5).map(t=>t.text.trim()).filter((v,i,a)=>a.indexOf(v)===i)};
 }
 async function clickField(hostPage,frame,source){
+ await hostPage.mouse.move(1437,997);await frame.waitForTimeout(200);
  const before=await hostPage.evaluate(()=>window.__focus.length);
  const locator=frame.locator(`[data-visual-qa-node="${source.qa}"]`);
  await locator.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));
@@ -91,6 +93,7 @@ try{
  const enable=new URL(base+'/api/draft-mode/enable');enable.searchParams.set('sanity-preview-secret',secret);enable.searchParams.set('sanity-preview-pathname','/contact');
  assert.equal((await context.request.get(enable.toString(),{timeout:90000})).status(),200);
  const page=await context.newPage();let currentRoute='';page.on('pageerror',e=>errors.push({route:currentRoute,message:e.message,stack:e.stack}));
+ page.on('console',message=>{if(message.type()==='error'&&/same key|hydration|Minified React|Error:/i.test(message.text()))errors.push({route:currentRoute,message:message.text()});});
  await page.route(base+'/__visual-audit-host',route=>route.fulfill({status:200,contentType:'text/html',body:host}));
  await page.goto(base+'/__visual-audit-host');
  for(const route of routes){
@@ -98,6 +101,7 @@ try{
   const report={route,errors:[]};reports.push(report);
   try{
    await page.setViewportSize({width:1440,height:1000});
+   await page.mouse.move(1437,997);await page.goto(base+'/__visual-audit-host');
    await page.evaluate(()=>{window.__statuses=[];});
    let frame=page.frames().find(f=>f!==page.mainFrame());
    const response=await frame.goto(base+route,{waitUntil:'domcontentloaded',timeout:90000});assert.equal(response.status(),200);
@@ -111,7 +115,7 @@ try{
    const selected=candidates.find(s=>s.node.id.startsWith('copy.ui.')&&s.tag!=='OPTION')||candidates[0];
    assert.ok(selected,'Page-specific rendered content needs a source mapping');
    report.textClick=await clickField(page,frame,selected);
-   const paragraph=candidates.find(s=>!s.interactive&&s.text.length>40&&/[,.।!?]/u.test(s.text));if(paragraph){const segment=paragraph.rawText.slice(paragraph.segmentStart,paragraph.segmentEnd);const offset=[...segment.matchAll(/[,.।!?]/gu)].at(-1).index;report.punctuationClick=await clickField(page,frame,{...paragraph,clickOffset:paragraph.segmentStart+offset});}
+   const paragraph=candidates.find(s=>s.paragraph&&!s.clipped&&!s.interactive&&s.text.length>40&&/[,.।!?]/u.test(s.text));if(paragraph){const segment=paragraph.rawText.slice(paragraph.segmentStart,paragraph.segmentEnd);const offset=[...segment.matchAll(/[,.।!?]/gu)].at(-1).index;report.punctuationClick=await clickField(page,frame,{...paragraph,clickOffset:paragraph.segmentStart+offset});}
    const button=candidates.find(s=>s.interactive&&s.tag!=='OPTION');if(button){try{report.buttonClick=await clickField(page,frame,button);}catch(e){report.buttonClickError=e.message.split('\n')[0];}}
    const repeated=candidates.find(s=>!['pageContent','siteSettings','homepage'].includes(documents.get(s.node.id)?._type));if(repeated){try{report.recordClick=await clickField(page,frame,repeated);}catch(e){report.recordClickError=e.message.split('\n')[0];}}
    const headline=scan.sources.find(s=>s.text&&s.main&&s.heading);if(headline){try{report.headlineClick=await clickField(page,frame,headline);}catch(e){report.headlineClickError=e.message.split('\n')[0];}}

@@ -17,8 +17,10 @@ export const getCopyState = cache(async (): Promise<CopyState> => {
     return { documents: Object.fromEntries(documents.map((document) => [document._id.replace(/^drafts\./, ""), { ...document, route: stegaClean(document.route || "/"), entries: (document.entries || []).map((entry) => ({ ...entry, source: stegaClean(entry.source), kind: stegaClean(entry.kind), ...(entry.imageUrl ? { imageUrl: stegaClean(entry.imageUrl) } : {}) })) }])), preview };
   } catch { return { documents: {}, preview: false }; }
 });
-export async function EditableText({ document, entry, fallback }: { document: string; entry: string; fallback: string }) {
-  return entryFor(await getCopyState(), document, entry)?.text ?? fallback;
+export async function EditableText({ document, entry, fallback, plain = false }: { document: string; entry: string; fallback: string; plain?: boolean }) {
+  const state = await getCopyState();
+  const text = entryFor(state, document, entry)?.text ?? fallback;
+  return state.preview && !plain ? <span data-sanity={annotation(state, { document, key: entry, field: "text" })}>{text}</span> : text;
 }
 export async function EditableImage(props: CopyImageProps) { const resolved = imageProps(await getCopyState(), props); return <Image {...resolved} alt={resolved.alt} />; }
 export async function getFieldAttribute() { const state = await getCopyState(); return (object: unknown, key: string | number) => annotation(state, fieldSource(object, key)); }

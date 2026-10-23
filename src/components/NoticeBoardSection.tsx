@@ -483,9 +483,9 @@ function NoticeBoardContent({ initialNotices }: { initialNotices?: NoticeFullIte
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
                 className="bg-white border border-stone-300 text-stone-800 text-xs sm:text-sm font-semibold rounded-xl px-3 py-2 outline-none focus:border-[#016332] cursor-pointer shadow-2xs"
               >
-                <option value="newest"><EditableText document="copy.ui.NoticeBoardSection" entry="e1aj97to" fallback={"সর্বশেষ আগে"} /></option>
-                <option value="oldest"><EditableText document="copy.ui.NoticeBoardSection" entry="e1a5fk3e" fallback={"পুরাতন বিজ্ঞপ্তি"} /></option>
-                <option value="urgent"><EditableText document="copy.ui.NoticeBoardSection" entry="e44vg0l" fallback={"জরুরি বিজ্ঞপ্তি আগে"} /></option>
+                <option value="newest"><EditableText plain document="copy.ui.NoticeBoardSection" entry="e1aj97to" fallback={"সর্বশেষ আগে"} /></option>
+                <option value="oldest"><EditableText plain document="copy.ui.NoticeBoardSection" entry="e1a5fk3e" fallback={"পুরাতন বিজ্ঞপ্তি"} /></option>
+                <option value="urgent"><EditableText plain document="copy.ui.NoticeBoardSection" entry="e44vg0l" fallback={"জরুরি বিজ্ঞপ্তি আগে"} /></option>
               </select>
             </div>
 

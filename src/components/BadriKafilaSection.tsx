@@ -899,13 +899,13 @@ export default function BadriKafilaSection() {
                   onChange={(e) => setFormData({ ...formData, donationPlan: e.target.value })}
                   className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-white border border-stone-300 rounded-xl focus:border-[#016332] outline-none shadow-2xs cursor-pointer"
                 >
-                  <option value="annual-3000"><EditableText document="copy.ui.BadriKafilaSection" entry="ekdpzzr" fallback={"বার্ষিক এককালীন ৩,০০০/- টাকা (নির্ধারিত ন্যূনতম)"} /></option>
-                  <option value="annual-5000"><EditableText document="copy.ui.BadriKafilaSection" entry="ebpzn95" fallback={"বার্ষিক এককালীন ৫,০০০/- টাকা"} /></option>
-                  <option value="annual-10000"><EditableText document="copy.ui.BadriKafilaSection" entry="etrfknr" fallback={"বার্ষিক এককালীন ১০,০০০/- টাকা"} /></option>
-                  <option value="monthly-250"><EditableText document="copy.ui.BadriKafilaSection" entry="e1lovovp" fallback={"মাসিক ২৫০/- টাকা হারে"} /></option>
-                  <option value="monthly-500"><EditableText document="copy.ui.BadriKafilaSection" entry="e2gpm5t" fallback={"মাসিক ৫০০/- টাকা হারে"} /></option>
-                  <option value="monthly-1000"><EditableText document="copy.ui.BadriKafilaSection" entry="e4zdh04" fallback={"মাসিক ১,০০০/- টাকা হারে"} /></option>
-                  <option value="custom"><EditableText document="copy.ui.BadriKafilaSection" entry="e109n2ju" fallback={"অন্য কোনো অংক (নিচে লিখুন)"} /></option>
+                  <option value="annual-3000"><EditableText plain document="copy.ui.BadriKafilaSection" entry="ekdpzzr" fallback={"বার্ষিক এককালীন ৩,০০০/- টাকা (নির্ধারিত ন্যূনতম)"} /></option>
+                  <option value="annual-5000"><EditableText plain document="copy.ui.BadriKafilaSection" entry="ebpzn95" fallback={"বার্ষিক এককালীন ৫,০০০/- টাকা"} /></option>
+                  <option value="annual-10000"><EditableText plain document="copy.ui.BadriKafilaSection" entry="etrfknr" fallback={"বার্ষিক এককালীন ১০,০০০/- টাকা"} /></option>
+                  <option value="monthly-250"><EditableText plain document="copy.ui.BadriKafilaSection" entry="e1lovovp" fallback={"মাসিক ২৫০/- টাকা হারে"} /></option>
+                  <option value="monthly-500"><EditableText plain document="copy.ui.BadriKafilaSection" entry="e2gpm5t" fallback={"মাসিক ৫০০/- টাকা হারে"} /></option>
+                  <option value="monthly-1000"><EditableText plain document="copy.ui.BadriKafilaSection" entry="e4zdh04" fallback={"মাসিক ১,০০০/- টাকা হারে"} /></option>
+                  <option value="custom"><EditableText plain document="copy.ui.BadriKafilaSection" entry="e109n2ju" fallback={"অন্য কোনো অংক (নিচে লিখুন)"} /></option>
                 </select>
               </div>
 

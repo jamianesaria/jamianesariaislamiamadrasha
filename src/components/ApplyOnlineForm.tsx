@@ -563,7 +563,7 @@ export default function ApplyOnlineForm() {
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
                 >
-                  <option value="Bangladesh"><EditableText document="copy.ui.ApplyOnlineForm" entry="e7n09ji" fallback={"Bangladesh"} /></option>
+                  <option value="Bangladesh"><EditableText plain document="copy.ui.ApplyOnlineForm" entry="e7n09ji" fallback={"Bangladesh"} /></option>
                 </select>
               </div>
 
@@ -581,7 +581,7 @@ export default function ApplyOnlineForm() {
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
                 >
-                  <option value=""><EditableText document="copy.ui.ApplyOnlineForm" entry="e1s90hid" fallback={"Select Division"} /></option>
+                  <option value=""><EditableText plain document="copy.ui.ApplyOnlineForm" entry="e1s90hid" fallback={"Select Division"} /></option>
                   {divisions.map((div) => (
                     <option key={div} value={div}>
                       {div}
@@ -607,7 +607,7 @@ export default function ApplyOnlineForm() {
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
                 >
-                  <option value=""><EditableText document="copy.ui.ApplyOnlineForm" entry="e1lismnc" fallback={"Select District"} /></option>
+                  <option value=""><EditableText plain document="copy.ui.ApplyOnlineForm" entry="e1lismnc" fallback={"Select District"} /></option>
                   {districts.map((dist) => (
                     <option key={dist} value={dist}>
                       {dist}
@@ -630,7 +630,7 @@ export default function ApplyOnlineForm() {
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
                 >
-                  <option value=""><EditableText document="copy.ui.ApplyOnlineForm" entry="e1nbkejo" fallback={"Select Upazila/Thana"} /></option>
+                  <option value=""><EditableText plain document="copy.ui.ApplyOnlineForm" entry="e1nbkejo" fallback={"Select Upazila/Thana"} /></option>
                   {upazilas.map((upa) => (
                     <option key={upa} value={upa}>
                       {upa}
@@ -737,7 +737,7 @@ export default function ApplyOnlineForm() {
                   disabled={formData.sameAsPresent}
                   className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white disabled:bg-gray-100 focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
                 >
-                  <option value="Bangladesh"><EditableText document="copy.ui.ApplyOnlineForm" entry="eiiep7r" fallback={"Bangladesh"} /></option>
+                  <option value="Bangladesh"><EditableText plain document="copy.ui.ApplyOnlineForm" entry="eiiep7r" fallback={"Bangladesh"} /></option>
                 </select>
               </div>
 
@@ -756,7 +756,7 @@ export default function ApplyOnlineForm() {
                   disabled={formData.sameAsPresent}
                   className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white disabled:bg-gray-100 focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
                 >
-                  <option value=""><EditableText document="copy.ui.ApplyOnlineForm" entry="e9upicm" fallback={"Select Division"} /></option>
+                  <option value=""><EditableText plain document="copy.ui.ApplyOnlineForm" entry="e9upicm" fallback={"Select Division"} /></option>
                   {divisions.map((div) => (
                     <option key={div} value={div}>
                       {div}
@@ -783,7 +783,7 @@ export default function ApplyOnlineForm() {
                   disabled={formData.sameAsPresent}
                   className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white disabled:bg-gray-100 focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
                 >
-                  <option value=""><EditableText document="copy.ui.ApplyOnlineForm" entry="eud2vzn" fallback={"Select District"} /></option>
+                  <option value=""><EditableText plain document="copy.ui.ApplyOnlineForm" entry="eud2vzn" fallback={"Select District"} /></option>
                   {districts.map((dist) => (
                     <option key={dist} value={dist}>
                       {dist}
@@ -807,7 +807,7 @@ export default function ApplyOnlineForm() {
                   disabled={formData.sameAsPresent}
                   className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white disabled:bg-gray-100 focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
                 >
-                  <option value=""><EditableText document="copy.ui.ApplyOnlineForm" entry="e1m9zpdw" fallback={"Select Upazila/Thana"} /></option>
+                  <option value=""><EditableText plain document="copy.ui.ApplyOnlineForm" entry="e1m9zpdw" fallback={"Select Upazila/Thana"} /></option>
                   {upazilas.map((upa) => (
                     <option key={upa} value={upa}>
                       {upa}
@@ -899,7 +899,7 @@ export default function ApplyOnlineForm() {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
               >
-                <option value=""><EditableText document="copy.ui.ApplyOnlineForm" entry="e1io3gke" fallback={"Select Class"} /></option>
+                <option value=""><EditableText plain document="copy.ui.ApplyOnlineForm" entry="e1io3gke" fallback={"Select Class"} /></option>
                 {availableClasses.map((cls) => (
                   <option key={cls.id} value={cls.name}>
                     {cls.name}
@@ -923,7 +923,7 @@ export default function ApplyOnlineForm() {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
               >
-                <option value=""><EditableText document="copy.ui.ApplyOnlineForm" entry="e1vf7f0y" fallback={"Select Group"} /></option>
+                <option value=""><EditableText plain document="copy.ui.ApplyOnlineForm" entry="e1vf7f0y" fallback={"Select Group"} /></option>
                 {groups.map((grp) => (
                   <option key={grp} value={grp}>
                     {grp}
@@ -947,7 +947,7 @@ export default function ApplyOnlineForm() {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
               >
-                <option value=""><EditableText document="copy.ui.ApplyOnlineForm" entry="e19rcwi" fallback={"Select Year"} /></option>
+                <option value=""><EditableText plain document="copy.ui.ApplyOnlineForm" entry="e19rcwi" fallback={"Select Year"} /></option>
                 {admissionYears.map((yr) => (
                   <option key={yr} value={yr}>
                     {yr}
