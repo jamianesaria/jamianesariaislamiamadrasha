@@ -45,6 +45,7 @@ export const teacherType = defineType({
       title: "মোবাইল নম্বর",
       type: "string",
     }),
+    defineField({ name: "honor", title: "উপাধি / বিশেষ পরিচিতি", type: "string" }),
     defineField({
       name: "district",
       title: "নিজ জেলা (District)",

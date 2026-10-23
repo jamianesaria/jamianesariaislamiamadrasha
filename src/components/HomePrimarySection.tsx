@@ -1,9 +1,11 @@
-import Image from "next/image";
+
 import Link from "next/link";
+import type { BlogPostItem, NoticeFullItem } from "@/data/siteData";
+import type { AcademicDepartment } from "@/sanity/lib/departments";
 import HeroVideo from "./HeroVideo";
 import HomeNoticeTabs from "./HomeNoticeTabs";
 import HomeGalleryFilter from "./HomeGalleryFilter";
-import { homePageContent, siteSettings, sampleBlogPosts } from "@/data/siteData";
+import { homePageContent as _fallback_homePageContent, siteSettings as _fallback_siteSettings, sampleBlogPosts as _fallback_sampleBlogPosts } from "@/data/siteData";
 import {
   ArrowRight,
   Phone,
@@ -24,25 +26,36 @@ import {
   User,
   Calendar,
 } from "lucide-react";
+import { EditableImage as Image, getEditableData, getFieldAttribute, EditableText } from "@/content/server";
+import { fieldSource } from "@/content/model";
+
+const homePageContent = _fallback_homePageContent;
+const siteSettings = _fallback_siteSettings;
+
 
 interface HomePrimarySectionProps {
   initialData?: typeof homePageContent;
   initialSettings?: typeof siteSettings;
-  initialNotices?: any[];
-  initialDepartments?: any[];
-  initialBlogPosts?: any[];
+  initialNotices?: NoticeFullItem[];
+  initialDepartments?: AcademicDepartment[];
+  initialBlogPosts?: BlogPostItem[];
 }
 
-export default function HomePrimarySection({
+export default async function HomePrimarySection({
   initialData,
   initialSettings,
   initialNotices,
   initialDepartments,
   initialBlogPosts,
 }: HomePrimarySectionProps = {}) {
+  const fieldAttribute = await getFieldAttribute();
+  const homePageContent = await getEditableData("copy.data.homePageContent", _fallback_homePageContent);
+  const siteSettings = await getEditableData("siteSettings", _fallback_siteSettings);
+  const sampleBlogPosts = await getEditableData("copy.data.sampleBlogPosts", _fallback_sampleBlogPosts);
+
   const content = (initialData || homePageContent) as typeof homePageContent;
   const currentSettings = (initialSettings || siteSettings) as typeof siteSettings;
-  const blogPosts = initialBlogPosts && initialBlogPosts.length > 0 ? initialBlogPosts : sampleBlogPosts;
+  const blogPosts = initialBlogPosts ?? sampleBlogPosts;
 
   const {
     hero,
@@ -65,9 +78,11 @@ export default function HomePrimarySection({
   // Build dynamic academic department list with Sanity images and fallback
   const departmentList =
     initialDepartments && initialDepartments.length > 0
-      ? initialDepartments.map((d: any, idx: number) => {
+      ? initialDepartments.map((d, idx) => {
           const fallback = departments.items[idx] || departments.items[0];
           return {
+            _id: d._id,
+            _type: d._type,
             id: d.id || fallback.id,
             name: d.name || fallback.name,
             image: d.imageUrl || fallback.image || "/drone_poster.jpg",
@@ -88,7 +103,7 @@ export default function HomePrimarySection({
       ===================================================================== */}
       <section className="w-full relative overflow-hidden">
         <div className="relative w-full h-[320px] sm:h-[400px] md:h-[460px] lg:h-[520px] xl:h-[560px] overflow-hidden bg-[#021c0e]">
-          <HeroVideo src={hero.video} poster={hero.image} />
+          <HeroVideo src={hero.video} poster={hero.image} sanity={fieldAttribute({ _id: "homepage", _type: "homepage" }, "heroVideoUrl")} />
 
           {/* Clean dark gradient at the lower part of video */}
           <div className="absolute inset-x-0 bottom-0 pt-16 pb-4 sm:pb-6 px-4 bg-gradient-to-t from-[#021c0e]/90 via-[#021c0e]/50 to-transparent pointer-events-none">
@@ -125,9 +140,7 @@ export default function HomePrimarySection({
                     {welcome.title}
                   </h2>
                 </div>
-                <span className="text-xs bg-white/10 border border-amber-300/30 text-amber-200 px-2.5 py-0.5 rounded-full font-medium">
-                  স্থাপিত: ১৯৬৯ খ্রিষ্টাব্দ
-                </span>
+                <span className="text-xs bg-white/10 border border-amber-300/30 text-amber-200 px-2.5 py-0.5 rounded-full font-medium"><EditableText document="copy.ui.HomePrimarySection" entry="eei2jgx" fallback={"স্থাপিত: ১৯৬৯ খ্রিষ্টাব্দ"} /></span>
               </div>
 
               <div className="p-5 sm:p-7">
@@ -135,7 +148,7 @@ export default function HomePrimarySection({
                   {/* Official Madrasa Seal */}
                   <div className="shrink-0 flex flex-col items-center gap-2">
                     <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-2 border-[#8B111A] ring-4 ring-[#FAF7F0] p-0.5 bg-white shadow-md flex items-center justify-center overflow-hidden">
-                      <Image
+                      <Image document="copy.ui.HomePrimarySection" entry="efkaj2k" source={fieldSource(currentSettings, "logoUrl")}
                         src={currentSettings.logoUrl || siteSettings.logoUrl || "/jamia-logo-v2.png"}
                         alt={currentSettings.nameBn || siteSettings.nameBn}
                         width={128}
@@ -143,8 +156,7 @@ export default function HomePrimarySection({
                         className="w-full h-full object-contain rounded-full scale-105"
                       />
                     </div>
-                    <span className="text-[11px] font-bold text-[#016332] bg-[#FAF7F0] border border-gray-200 px-2.5 py-0.5 rounded-full">
-                      গভঃ রেজিঃ {currentSettings.regNo}
+                    <span className="text-[11px] font-bold text-[#016332] bg-[#FAF7F0] border border-gray-200 px-2.5 py-0.5 rounded-full"><EditableText document="copy.ui.HomePrimarySection" entry="e1ex5607" fallback={"গভঃ রেজিঃ "} />{currentSettings.regNo}
                     </span>
                   </div>
 
@@ -192,17 +204,13 @@ export default function HomePrimarySection({
                     {missionAndObjectives.title}
                   </h2>
                 </div>
-                <span className="text-xs text-amber-200 hidden sm:inline font-medium">
-                  কুরআন ও সুন্নাহর আদর্শ
-                </span>
+                <span className="text-xs text-amber-200 hidden sm:inline font-medium"><EditableText document="copy.ui.HomePrimarySection" entry="efg2s8r" fallback={"কুরআন ও সুন্নাহর আদর্শ"} /></span>
               </div>
 
               <div className="p-5 sm:p-7 space-y-5">
                 {/* Main Goal Box */}
                 <div className="bg-gradient-to-r from-[#FAF7F0] to-[#fffdf9] border border-[#e6dec8] border-l-4 border-l-[#8B111A] rounded-r-lg p-4 sm:p-5 shadow-2xs">
-                  <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-[#8B111A] bg-[#8B111A]/10 px-2 py-0.5 rounded mb-1.5">
-                    মূল লক্ষ্য
-                  </span>
+                  <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-[#8B111A] bg-[#8B111A]/10 px-2 py-0.5 rounded mb-1.5"><EditableText document="copy.ui.HomePrimarySection" entry="e1pes0np" fallback={"মূল লক্ষ্য"} /></span>
                   <p className="text-sm sm:text-[15.5px] font-semibold text-gray-900 leading-relaxed">
                     {missionAndObjectives.mainGoal}
                   </p>
@@ -261,27 +269,19 @@ export default function HomePrimarySection({
 
               <div className="divide-y divide-gray-100 text-xs sm:text-sm">
                 <div className="grid grid-cols-12 px-4 py-3 bg-white hover:bg-[#FAF7F0]/50 transition-colors">
-                  <span className="col-span-4 font-bold text-gray-600">
-                    প্রতিষ্ঠাকাল
-                  </span>
-                  <span className="col-span-8 font-bold text-gray-900">
-                    : {atAGlance.established}
+                  <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e1tm18qj" fallback={"প্রতিষ্ঠাকাল"} /></span>
+                  <span className="col-span-8 font-bold text-gray-900"><EditableText document="copy.ui.HomePrimarySection" entry="ezgrggs" fallback={": "} />{atAGlance.established}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-12 px-4 py-3 bg-[#F9FAF8] hover:bg-[#FAF7F0]/50 transition-colors">
-                  <span className="col-span-4 font-bold text-gray-600">
-                    মুতাওয়াল্লী
-                  </span>
-                  <span className="col-span-8 font-bold text-gray-900">
-                    : {atAGlance.mutawalli}
+                  <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="el2ufwt" fallback={"মুতাওয়াল্লী"} /></span>
+                  <span className="col-span-8 font-bold text-gray-900"><EditableText document="copy.ui.HomePrimarySection" entry="e1oq8e6q" fallback={": "} />{atAGlance.mutawalli}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-12 px-4 py-3 bg-white hover:bg-[#FAF7F0]/50 transition-colors">
-                  <span className="col-span-4 font-bold text-gray-600">
-                    জমিদাতাগন
-                  </span>
+                  <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e1i3k9cx" fallback={"জমিদাতাগন"} /></span>
                   <div className="col-span-8 font-semibold text-gray-900 space-y-1">
                     {atAGlance.landDonors.map((donor, idx) => (
                       <div
@@ -295,46 +295,33 @@ export default function HomePrimarySection({
                 </div>
 
                 <div className="grid grid-cols-12 px-4 py-3 bg-[#F9FAF8] hover:bg-[#FAF7F0]/50 transition-colors">
-                  <span className="col-span-4 font-bold text-gray-600">
-                    সভাপতি
-                  </span>
-                  <span className="col-span-8 font-bold text-gray-900">
-                    : {atAGlance.president}
+                  <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="ev78mb9" fallback={"সভাপতি"} /></span>
+                  <span className="col-span-8 font-bold text-gray-900"><EditableText document="copy.ui.HomePrimarySection" entry="efuzlg1" fallback={": "} />{atAGlance.president}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-12 px-4 py-3 bg-white hover:bg-[#FAF7F0]/50 transition-colors">
-                  <span className="col-span-4 font-bold text-gray-600">
-                    মুহতামিম
-                  </span>
-                  <span className="col-span-8 font-bold text-[#016332]">
-                    : {atAGlance.muhtamim}
+                  <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e42q6vk" fallback={"মুহতামিম"} /></span>
+                  <span className="col-span-8 font-bold text-[#016332]"><EditableText document="copy.ui.HomePrimarySection" entry="evttax9" fallback={": "} />{atAGlance.muhtamim}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-12 px-4 py-3 bg-[#F9FAF8] hover:bg-[#FAF7F0]/50 transition-colors">
-                  <span className="col-span-4 font-bold text-gray-600">
-                    শিক্ষা কার্যক্রম
-                  </span>
-                  <span className="col-span-8 font-semibold text-gray-900 leading-snug">
-                    : {atAGlance.academicPrograms}
+                  <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e12q7x5k" fallback={"শিক্ষা কার্যক্রম"} /></span>
+                  <span className="col-span-8 font-semibold text-gray-900 leading-snug"><EditableText document="copy.ui.HomePrimarySection" entry="ehivn56" fallback={": "} />{atAGlance.academicPrograms}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-12 px-4 py-3 bg-white hover:bg-[#FAF7F0]/50 transition-colors">
-                  <span className="col-span-4 font-bold text-gray-600">
-                    নিবন্ধন নম্বর
-                  </span>
+                  <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e116wvzk" fallback={"নিবন্ধন নম্বর"} /></span>
                   <div className="col-span-8 text-xs font-semibold text-gray-800 space-y-1">
-                    <div>হাইআতুল উলয়া: <span className="font-bold text-[#016332]">০০৬৮৫</span> | বেফাক: <span className="font-bold text-[#8B111A]">১/৭৪৩</span></div>
-                    <div>এতিমখানা (সমাজসেবা): <span className="font-bold text-[#016332]">ঢ-০৫০৪</span></div>
+                    <div><EditableText document="copy.ui.HomePrimarySection" entry="e1x8rbwy" fallback={"হাইআতুল উলয়া: "} /><span className="font-bold text-[#016332]"><EditableText document="copy.ui.HomePrimarySection" entry="eje7drx" fallback={"০০৬৮৫"} /></span><EditableText document="copy.ui.HomePrimarySection" entry="eiubbvy" fallback={" | বেফাক: "} /><span className="font-bold text-[#8B111A]"><EditableText document="copy.ui.HomePrimarySection" entry="e9a51v7" fallback={"১/৭৪৩"} /></span></div>
+                    <div><EditableText document="copy.ui.HomePrimarySection" entry="e16v2far" fallback={"এতিমখানা (সমাজসেবা): "} /><span className="font-bold text-[#016332]"><EditableText document="copy.ui.HomePrimarySection" entry="eaofc4i" fallback={"ঢ-০৫০৪"} /></span></div>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-12 px-4 py-3 bg-[#F9FAF8] hover:bg-[#FAF7F0]/50 transition-colors">
-                  <span className="col-span-4 font-bold text-gray-600">
-                    ঠিকানা
-                  </span>
+                  <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e1d7lh4n" fallback={"ঠিকানা"} /></span>
                   <span className="col-span-8 font-medium text-gray-800 leading-snug whitespace-pre-line">
                     {atAGlance.address}
                   </span>
@@ -358,12 +345,12 @@ export default function HomePrimarySection({
                   href="/notices"
                   className="text-xs bg-white/15 hover:bg-white/25 text-amber-200 px-2.5 py-0.5 rounded-full transition-colors font-medium flex items-center gap-1"
                 >
-                  <span>সকল নোটিশ</span>
-                  <span>→</span>
+                  <span><EditableText document="copy.ui.HomePrimarySection" entry="e1p1znwx" fallback={"সকল নোটিশ"} /></span>
+                  <span><EditableText document="copy.ui.HomePrimarySection" entry="e1hfng90" fallback={"→"} /></span>
                 </Link>
               </div>
 
-              <HomeNoticeTabs subtitle={notices.subtitle} categories={notices.categories} />
+              <HomeNoticeTabs subtitle={notices.subtitle} categories={notices.categories} records={initialNotices} />
             </div>
           </aside>
         </div>
@@ -386,9 +373,7 @@ export default function HomePrimarySection({
                   {departments.title}
                 </h2>
               </div>
-              <p className="text-xs sm:text-sm text-gray-600 mt-1 pl-4">
-                মক্তব ও হিফজ থেকে কিতাব ও মাদানি নেসাব পর্যন্ত সমন্বিত দ্বীনি শিক্ষা
-              </p>
+              <p className="text-xs sm:text-sm text-gray-600 mt-1 pl-4"><EditableText document="copy.ui.HomePrimarySection" entry="e10iolec" fallback={"মক্তব ও হিফজ থেকে কিতাব ও মাদানি নেসাব পর্যন্ত সমন্বিত দ্বীনি শিক্ষা"} /></p>
             </div>
             <Link
               href={departments.buttonHref}
@@ -410,7 +395,7 @@ export default function HomePrimarySection({
               >
                 {/* Department Photo */}
                 <div className="relative h-46 sm:h-48 w-full overflow-hidden bg-gray-100">
-                  <Image
+                  <Image document="copy.ui.HomePrimarySection" entry="eh2v1pw" source={fieldSource(dept, "image")}
                     src={dept.image || "/drone_poster.jpg"}
                     alt={dept.name}
                     fill
@@ -419,8 +404,7 @@ export default function HomePrimarySection({
                   />
                   <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
                   <div className="absolute top-2.5 left-2.5">
-                    <span className="text-[11px] font-bold bg-[#8B111A] text-white px-2.5 py-0.5 rounded shadow-xs border border-white/20">
-                      বিভাগ - ০{idx + 1}
+                    <span className="text-[11px] font-bold bg-[#8B111A] text-white px-2.5 py-0.5 rounded shadow-xs border border-white/20"><EditableText document="copy.ui.HomePrimarySection" entry="e1tly5lg" fallback={"বিভাগ - ০"} />{idx + 1}
                     </span>
                   </div>
                   <div className="absolute top-2.5 right-2.5">
@@ -444,13 +428,13 @@ export default function HomePrimarySection({
                   <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
                     <span className="text-gray-500 font-semibold flex items-center gap-1">
                       <BookOpen size={12} className="text-[#016332]" />
-                      <span>ভর্তি ও দারস</span>
+                      <span><EditableText document="copy.ui.HomePrimarySection" entry="e1jxzol5" fallback={"ভর্তি ও দারস"} /></span>
                     </span>
                     <Link
                       href={("href" in dept && dept.href) ? String(dept.href) : departments.buttonHref}
                       className="inline-flex items-center gap-1 font-bold text-[#8B111A] group-hover:text-[#016332] transition-colors"
                     >
-                      <span>বিস্তারিত</span>
+                      <span><EditableText document="copy.ui.HomePrimarySection" entry="e14ha0s7" fallback={"বিস্তারিত"} /></span>
                       <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
                     </Link>
                   </div>
@@ -466,8 +450,7 @@ export default function HomePrimarySection({
                 <GraduationCap size={18} />
               </div>
               <p className="text-gray-700 leading-relaxed">
-                <span className="font-bold text-[#016332]">ভর্তি ও পাঠদান সংক্রান্ত তথ্য:</span> মক্তব, হিফজ, হিফজ রিভিশন, কিতাব ও মাদানি নেসাবে শিক্ষার্থী ভর্তি ও ক্লাস রুটিন সম্পর্কে বিস্তারিত জানতে যোগাযোগ করুন।
-              </p>
+                <span className="font-bold text-[#016332]"><EditableText document="copy.ui.HomePrimarySection" entry="e1afe2fe" fallback={"ভর্তি ও পাঠদান সংক্রান্ত তথ্য:"} /></span><EditableText document="copy.ui.HomePrimarySection" entry="e15s35cy" fallback={" মক্তব, হিফজ, হিফজ রিভিশন, কিতাব ও মাদানি নেসাবে শিক্ষার্থী ভর্তি ও ক্লাস রুটিন সম্পর্কে বিস্তারিত জানতে যোগাযোগ করুন।"} /></p>
             </div>
             <Link
               href={departments.buttonHref}
@@ -582,8 +565,7 @@ export default function HomePrimarySection({
                       {getIcon(feature.id)}
                     </div>
                     <span className="text-xs font-bold text-[#8B111A] bg-[#FAF7F0] border border-gray-200 px-2.5 py-0.5 rounded-full">
-                      {bengaliLetters[idx]}.
-                    </span>
+                      {bengaliLetters[idx]}<EditableText document="copy.ui.HomePrimarySection" entry="e1sbtljh" fallback={"."} /></span>
                   </div>
                   <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1.5 leading-snug group-hover:text-[#016332] transition-colors">
                     {feature.title}
@@ -643,7 +625,7 @@ export default function HomePrimarySection({
             <div className="lg:col-span-5 bg-[#FAF7F0] rounded-xl border border-[#e6dec8] p-4 sm:p-5">
               <h4 className="text-xs sm:text-sm font-bold text-[#016332] pb-2.5 mb-3.5 border-b border-gray-200 flex items-center gap-2">
                 <BookOpen size={15} className="text-[#8B111A]" />
-                <span>পাঠ্যক্রমের অন্তর্ভুক্ত প্রধান বিষয়সমূহ :</span>
+                <span><EditableText document="copy.ui.HomePrimarySection" entry="e1tegs5r" fallback={"পাঠ্যক্রমের অন্তর্ভুক্ত প্রধান বিষয়সমূহ :"} /></span>
               </h4>
               <div className="grid grid-cols-2 gap-2.5 text-xs sm:text-[13.5px] font-semibold text-gray-800">
                 {curriculum.subjects.map((sub, idx) => (
@@ -690,8 +672,7 @@ export default function HomePrimarySection({
                   key={idx}
                   className="rounded-xl border border-gray-200 bg-gradient-to-br from-[#FAF7F0] to-white p-4.5 border-l-4 border-l-[#016332] shadow-2xs hover:shadow-md transition-all"
                 >
-                  <span className="inline-block text-[11px] font-bold text-[#8B111A] bg-[#8B111A]/10 px-2.5 py-0.5 rounded-full mb-2">
-                    কার্যক্রম - ০{idx + 1}
+                  <span className="inline-block text-[11px] font-bold text-[#8B111A] bg-[#8B111A]/10 px-2.5 py-0.5 rounded-full mb-2"><EditableText document="copy.ui.HomePrimarySection" entry="ewae4sd" fallback={"কার্যক্রম - ০"} />{idx + 1}
                   </span>
                   <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1.5">
                     {item.title}
@@ -716,7 +697,7 @@ export default function HomePrimarySection({
                 href="/academics#future-plans"
                 className="inline-flex items-center gap-2 bg-[#FAF7F0] hover:bg-[#8B111A] text-[#8B111A] hover:text-white border border-[#D9822B]/50 text-xs sm:text-sm font-bold px-4 py-2.5 rounded-md transition-all group"
               >
-                <span>ভবিষ্যৎ শিক্ষা পরিকল্পনা (ইফতা, তাফসির, কম্পিউটার ও ভাষা কোর্স)</span>
+                <span><EditableText document="copy.ui.HomePrimarySection" entry="e5kr87n" fallback={"ভবিষ্যৎ শিক্ষা পরিকল্পনা (ইফতা, তাফসির, কম্পিউটার ও ভাষা কোর্স)"} /></span>
                 <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
@@ -741,9 +722,7 @@ export default function HomePrimarySection({
                   {orphanageSupport.title}
                 </h2>
               </div>
-              <span className="text-xs text-amber-200 bg-black/20 border border-amber-300/30 px-2.5 py-0.5 rounded-full hidden sm:inline font-medium">
-                লিল্লাহ বোর্ডিং ও মানবসেবা কার্যক্রম
-              </span>
+              <span className="text-xs text-amber-200 bg-black/20 border border-amber-300/30 px-2.5 py-0.5 rounded-full hidden sm:inline font-medium"><EditableText document="copy.ui.HomePrimarySection" entry="e1c0qlkv" fallback={"লিল্লাহ বোর্ডিং ও মানবসেবা কার্যক্রম"} /></span>
             </div>
 
             <div className="p-5 sm:p-7 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
@@ -782,7 +761,7 @@ export default function HomePrimarySection({
                 {orphanageSupport.image && (
                   <div className="pt-2">
                     <div className="relative h-48 sm:h-56 md:h-64 w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100 group shadow-xs">
-                      <Image
+                      <Image document="copy.ui.HomePrimarySection" entry="elwzeyd" source={fieldSource(orphanageSupport, "image")}
                         src={orphanageSupport.image || "/drone_poster.jpg"}
                         alt="জামিয়া নেছারিয়া এতিমখানা ও হিফজুল কুরআন বিভাগ"
                         fill
@@ -803,10 +782,8 @@ export default function HomePrimarySection({
               {/* Right Column: Support Pillars Ledger */}
               <div className="lg:col-span-5 bg-[#FAF7F0]/90 border border-[#D9822B]/30 rounded-xl p-4 sm:p-5 shadow-2xs">
                 <h4 className="text-xs sm:text-sm font-bold text-[#016332] pb-2.5 mb-3.5 border-b border-gray-200 flex items-center justify-between">
-                  <span>সহযোগিতার গুরুত্বপূর্ণ খাতসমূহ :</span>
-                  <span className="text-[11px] font-semibold text-[#8B111A] bg-[#8B111A]/10 px-2 py-0.5 rounded-full">
-                    সদকাহ ও অনুদান
-                  </span>
+                  <span><EditableText document="copy.ui.HomePrimarySection" entry="e1g5sq6y" fallback={"সহযোগিতার গুরুত্বপূর্ণ খাতসমূহ :"} /></span>
+                  <span className="text-[11px] font-semibold text-[#8B111A] bg-[#8B111A]/10 px-2 py-0.5 rounded-full"><EditableText document="copy.ui.HomePrimarySection" entry="e5re446" fallback={"সদকাহ ও অনুদান"} /></span>
                 </h4>
 
                 <div className="space-y-2.5">
@@ -828,23 +805,21 @@ export default function HomePrimarySection({
                 {/* Quick Bank & bKash info */}
                 <div className="mt-3.5 pt-3 border-t border-gray-200/90 space-y-1.5 text-xs">
                   <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-md border border-pink-200">
-                    <span className="font-bold text-pink-700">বিকাশ (bKash):</span>
-                    <span className="font-bold text-gray-900">+8801716296379</span>
+                    <span className="font-bold text-pink-700"><EditableText document="copy.ui.HomePrimarySection" entry="e1j8zhu" fallback={"বিকাশ (bKash):"} /></span>
+                    <span className="font-bold text-gray-900"><EditableText document="copy.ui.HomePrimarySection" entry="ect6l3a" fallback={"+8801716296379"} /></span>
                   </div>
                   <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-md border border-emerald-200">
-                    <span className="font-bold text-[#016332]">গোরাবা ফান্ড (Sonali Bank):</span>
-                    <span className="font-bold text-gray-900">34004081</span>
+                    <span className="font-bold text-[#016332]"><EditableText document="copy.ui.HomePrimarySection" entry="egx3n0a" fallback={"গোরাবা ফান্ড (Sonali Bank):"} /></span>
+                    <span className="font-bold text-gray-900"><EditableText document="copy.ui.HomePrimarySection" entry="e1ci49uj" fallback={"34004081"} /></span>
                   </div>
                   <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-md border border-amber-200">
-                    <span className="font-bold text-[#8B111A]">সাধারণ ফান্ড (Krishi Bank):</span>
-                    <span className="font-bold text-gray-900">42080310061842</span>
+                    <span className="font-bold text-[#8B111A]"><EditableText document="copy.ui.HomePrimarySection" entry="e1yojx1b" fallback={"সাধারণ ফান্ড (Krishi Bank):"} /></span>
+                    <span className="font-bold text-gray-900"><EditableText document="copy.ui.HomePrimarySection" entry="e1tk2fez" fallback={"42080310061842"} /></span>
                   </div>
                 </div>
 
                 <div className="mt-3 pt-3 border-t border-gray-200/90 flex flex-wrap items-center justify-between text-xs text-gray-700 gap-1">
-                  <span className="font-semibold text-gray-900">
-                    অনুদান ও তথ্য হটলাইন:
-                  </span>
+                  <span className="font-semibold text-gray-900"><EditableText document="copy.ui.HomePrimarySection" entry="elepabj" fallback={"অনুদান ও তথ্য হটলাইন:"} /></span>
                   <a
                     href={`tel:${contact.phoneValue}`}
                     className="font-bold text-[#8B111A] bg-white border border-[#8B111A]/25 px-2.5 py-1 rounded-md hover:bg-[#8B111A] hover:text-white transition-colors flex items-center gap-1"
@@ -893,9 +868,7 @@ export default function HomePrimarySection({
                         key={idx}
                         className="bg-white border border-gray-200/90 rounded-lg p-3 flex items-start gap-2 shadow-2xs"
                       >
-                        <span className="w-4 h-4 rounded-full bg-[#8B111A]/10 text-[#8B111A] font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
-                          ✓
-                        </span>
+                        <span className="w-4 h-4 rounded-full bg-[#8B111A]/10 text-[#8B111A] font-bold text-xs flex items-center justify-center shrink-0 mt-0.5"><EditableText document="copy.ui.HomePrimarySection" entry="esc0dec" fallback={"✓"} /></span>
                         <span className="leading-snug font-medium">{pt}</span>
                       </div>
                     ))}
@@ -923,9 +896,7 @@ export default function HomePrimarySection({
 
                 <div className="lg:col-span-4 bg-white border-2 border-[#D9822B]/40 rounded-xl p-5 text-center space-y-2 shadow-xs relative overflow-hidden">
                   <div className="h-1 w-full bg-gradient-to-r from-[#016332] via-[#D9822B] to-[#8B111A] absolute top-0 left-0" />
-                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block pt-1">
-                    সদস্য লক্ষ্যমাত্রা
-                  </span>
+                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block pt-1"><EditableText document="copy.ui.HomePrimarySection" entry="eskjvce" fallback={"সদস্য লক্ষ্যমাত্রা"} /></span>
                   <div className="text-3xl sm:text-4xl font-extrabold text-[#8B111A] tracking-tight">
                     {badriKafila.targetNumber}
                   </div>
@@ -941,7 +912,7 @@ export default function HomePrimarySection({
                       className="inline-flex items-center justify-center gap-1.5 w-full bg-[#FAF7F0] border border-[#D9822B]/40 hover:border-[#8B111A] hover:bg-[#8B111A] hover:text-white rounded-md text-xs font-bold text-gray-800 py-2 transition-colors"
                     >
                       <Phone size={12} />
-                      <span>সরাসরি যোগাযোগ: {contact.phoneValue}</span>
+                      <span><EditableText document="copy.ui.HomePrimarySection" entry="e14iez5n" fallback={"সরাসরি যোগাযোগ: "} />{contact.phoneValue}</span>
                     </a>
                   </div>
                 </div>
@@ -977,7 +948,7 @@ export default function HomePrimarySection({
               {/* Left Column (5 cols): Hero Image */}
               <div className="lg:col-span-5 space-y-2">
                 <div className="relative h-60 sm:h-72 md:h-80 w-full overflow-hidden rounded-xl border border-gray-200 bg-gray-100 group shadow-xs">
-                  <Image
+                  <Image document="copy.ui.HomePrimarySection" entry="ee3osf8" source={fieldSource(hostelProject, "image")}
                     src={hostelProject.image || "/drone_poster.jpg"}
                     alt={hostelProject.title}
                     fill
@@ -996,9 +967,7 @@ export default function HomePrimarySection({
               {/* Right Column (7 cols): Content, Callout, & Action Button */}
               <div className="lg:col-span-7 space-y-4">
                 <div className="space-y-3">
-                  <span className="inline-block bg-[#016332]/10 text-[#016332] text-xs font-bold px-3 py-1 rounded-full border border-[#016332]/20">
-                    আবাসন-সংকট নিরসন ও সম্প্রসারণ উদ্যোগ
-                  </span>
+                  <span className="inline-block bg-[#016332]/10 text-[#016332] text-xs font-bold px-3 py-1 rounded-full border border-[#016332]/20"><EditableText document="copy.ui.HomePrimarySection" entry="e2fhmyz" fallback={"আবাসন-সংকট নিরসন ও সম্প্রসারণ উদ্যোগ"} /></span>
 
                   {/* Client's exact text 1 */}
                   <p className="text-sm sm:text-base text-gray-800 leading-relaxed font-medium">
@@ -1007,9 +976,7 @@ export default function HomePrimarySection({
 
                   {/* Client's exact text 2: Highlight Appeal Callout */}
                   <div className="bg-gradient-to-r from-[#FAF7F0] to-white border-l-4 border-l-[#8B111A] rounded-r-lg p-3.5 sm:p-4 my-2 border-y border-r border-gray-200/90 shadow-2xs">
-                    <p className="text-sm sm:text-[15.5px] font-bold text-[#8B111A] leading-relaxed">
-                      “{hostelProject.appeal}”
-                    </p>
+                    <p className="text-sm sm:text-[15.5px] font-bold text-[#8B111A] leading-relaxed"><EditableText document="copy.ui.HomePrimarySection" entry="e1gy4flx" fallback={"“"} />{hostelProject.appeal}<EditableText document="copy.ui.HomePrimarySection" entry="e1liepn7" fallback={"”"} /></p>
                   </div>
 
                   <p className="text-xs sm:text-sm text-gray-600 leading-relaxed text-justify">
@@ -1024,7 +991,7 @@ export default function HomePrimarySection({
                       key={idx}
                       className="bg-[#FAF7F0] border border-gray-200/90 rounded-lg p-2.5 flex items-start gap-2"
                     >
-                      <span className="text-[#016332] font-bold mt-0.5">▪</span>
+                      <span className="text-[#016332] font-bold mt-0.5"><EditableText document="copy.ui.HomePrimarySection" entry="e1mj07lh" fallback={"▪"} /></span>
                       <span className="leading-snug font-medium">{pt}</span>
                     </div>
                   ))}
@@ -1045,7 +1012,7 @@ export default function HomePrimarySection({
                     className="inline-flex items-center gap-1.5 bg-white border border-gray-300 hover:border-[#016332] text-gray-800 text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-md transition-colors shadow-2xs"
                   >
                     <Phone size={13} className="text-[#016332]" />
-                    <span>সহায়তা হটলাইন: {contact.phoneValue}</span>
+                    <span><EditableText document="copy.ui.HomePrimarySection" entry="eh1z5wk" fallback={"সহায়তা হটলাইন: "} />{contact.phoneValue}</span>
                   </a>
                 </div>
               </div>
@@ -1065,7 +1032,7 @@ export default function HomePrimarySection({
           title={gallery.title}
           subtitle={gallery.subtitle}
           categories={gallery.categories}
-          items={(gallery as any).items || gallery.categories}
+          items={gallery.items || gallery.categories}
         />
       </section>
 
@@ -1082,26 +1049,22 @@ export default function HomePrimarySection({
             <div>
               <div className="flex items-center gap-2.5">
                 <span className="w-2 h-7 bg-[#8B111A] rounded-xs inline-block" />
-                <h2 className="text-xl sm:text-2xl md:text-[26px] font-bold text-gray-900">
-                  মাদরাসা ব্লগ ও সমকালীন প্রবন্ধ
-                </h2>
+                <h2 className="text-xl sm:text-2xl md:text-[26px] font-bold text-gray-900"><EditableText document="copy.ui.HomePrimarySection" entry="e7zgkra" fallback={"মাদরাসা ব্লগ ও সমকালীন প্রবন্ধ"} /></h2>
               </div>
-              <p className="text-xs sm:text-sm text-gray-600 mt-1 pl-4">
-                দ্বীনি চিন্তা, শিক্ষা, তারবিয়াত ও স্বাস্থ্য সচেতনতা বিষয়ক নিয়মিত জ্ঞানগর্ভ লেখা
-              </p>
+              <p className="text-xs sm:text-sm text-gray-600 mt-1 pl-4"><EditableText document="copy.ui.HomePrimarySection" entry="e20j9kt" fallback={"দ্বীনি চিন্তা, শিক্ষা, তারবিয়াত ও স্বাস্থ্য সচেতনতা বিষয়ক নিয়মিত জ্ঞানগর্ভ লেখা"} /></p>
             </div>
             <Link
               href="/blog"
               className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#8B111A] hover:text-white bg-[#8B111A]/8 hover:bg-[#8B111A] border border-[#8B111A]/25 px-3.5 py-2 rounded-md transition-all self-start sm:self-auto group"
             >
-              <span>সকল ব্লগ দেখুন</span>
+              <span><EditableText document="copy.ui.HomePrimarySection" entry="e1gwg59o" fallback={"সকল ব্লগ দেখুন"} /></span>
               <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </div>
 
           {/* 3 Featured Blog Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogPosts.slice(0, 3).map((post: any) => (
+            {blogPosts.slice(0, 3).map((post) => (
               <article
                 key={post.id}
                 className="bg-white rounded-xl border border-gray-200/90 hover:border-[#016332] overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
@@ -1109,7 +1072,7 @@ export default function HomePrimarySection({
                 <div>
                   {/* Thumbnail with Category & Read Time Badges */}
                   <div className="relative aspect-16/10 w-full bg-gray-100 overflow-hidden">
-                    <Image
+                    <Image document="copy.ui.HomePrimarySection" entry="e1x47el6" source={fieldSource(post, "thumbnail")}
                       src={post.thumbnail}
                       alt={post.title}
                       fill
@@ -1139,7 +1102,7 @@ export default function HomePrimarySection({
                         <User size={13} />
                         <span>{post.author}</span>
                       </span>
-                      <span>•</span>
+                      <span><EditableText document="copy.ui.HomePrimarySection" entry="e69jeu9" fallback={"•"} /></span>
                       <span className="flex items-center gap-1">
                         <Calendar size={13} />
                         <span>{post.date}</span>
@@ -1166,7 +1129,7 @@ export default function HomePrimarySection({
                     href={`/blog#post-${post.id}`}
                     className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-bold text-[#8B111A] hover:text-[#016332] transition-colors"
                   >
-                    <span>সম্পূর্ণ পড়ুন</span>
+                    <span><EditableText document="copy.ui.HomePrimarySection" entry="e1ndf4r1" fallback={"সম্পূর্ণ পড়ুন"} /></span>
                     <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
                   </Link>
                   <span className="text-[11px] text-gray-400 font-medium">
@@ -1180,19 +1143,13 @@ export default function HomePrimarySection({
           {/* Quick Explore Strip */}
           <div className="mt-8 bg-emerald-50/60 border border-emerald-200/60 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
             <div className="flex items-center gap-2.5">
-              <span className="w-8 h-8 rounded-full bg-[#016332] text-white flex items-center justify-center shrink-0 text-sm font-bold shadow-xs">
-                ✍️
-              </span>
-              <p className="text-xs sm:text-sm text-gray-700">
-                শিক্ষক, শিক্ষার্থী ও অভিভাবকদের জন্য নিয়মিত জ্ঞানগর্ভ প্রবন্ধ ও ইসলামি জীবনধারার সঠিক নির্দেশনা প্রকাশিত হয়।
-              </p>
+              <span className="w-8 h-8 rounded-full bg-[#016332] text-white flex items-center justify-center shrink-0 text-sm font-bold shadow-xs"><EditableText document="copy.ui.HomePrimarySection" entry="eqdf34s" fallback={"✍️"} /></span>
+              <p className="text-xs sm:text-sm text-gray-700"><EditableText document="copy.ui.HomePrimarySection" entry="eeoglzc" fallback={"শিক্ষক, শিক্ষার্থী ও অভিভাবকদের জন্য নিয়মিত জ্ঞানগর্ভ প্রবন্ধ ও ইসলামি জীবনধারার সঠিক নির্দেশনা প্রকাশিত হয়।"} /></p>
             </div>
             <Link
               href="/blog"
               className="shrink-0 bg-[#016332] hover:bg-[#024a24] text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors shadow-xs"
-            >
-              সকল ব্লগ পাতা খুলুন
-            </Link>
+            ><EditableText document="copy.ui.HomePrimarySection" entry="ew12ncc" fallback={"সকল ব্লগ পাতা খুলুন"} /></Link>
           </div>
         </div>
       </section>
@@ -1226,13 +1183,13 @@ export default function HomePrimarySection({
                   className="inline-flex items-center gap-1.5 bg-[#8B111A] hover:bg-[#6e0b13] text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-md border border-amber-300/40 transition-all shadow-xs"
                 >
                   <Phone size={14} />
-                  <span>মোবাইল: {contact.phoneValue}</span>
+                  <span><EditableText document="copy.ui.HomePrimarySection" entry="eymegf" fallback={"মোবাইল: "} />{contact.phoneValue}</span>
                 </a>
                 <Link
                   href="/apply"
                   className="inline-flex items-center gap-1.5 bg-white text-[#016332] hover:bg-amber-50 text-xs sm:text-sm font-bold px-4 py-2.5 rounded-md transition-all shadow-xs group"
                 >
-                  <span>অনলাইন ভর্তি ফরম</span>
+                  <span><EditableText document="copy.ui.HomePrimarySection" entry="e13js1nw" fallback={"অনলাইন ভর্তি ফরম"} /></span>
                   <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
                 </Link>
               </div>
@@ -1244,8 +1201,7 @@ export default function HomePrimarySection({
                   key={idx}
                   className="bg-black/25 border border-emerald-600/60 rounded-lg p-3.5 hover:border-amber-300/50 transition-colors"
                 >
-                  <h3 className="font-bold text-amber-300 text-xs sm:text-sm mb-1">
-                    ▪ {item.label}
+                  <h3 className="font-bold text-amber-300 text-xs sm:text-sm mb-1"><EditableText document="copy.ui.HomePrimarySection" entry="er6niji" fallback={"▪ "} />{item.label}
                   </h3>
                   <p className="text-emerald-100 leading-relaxed">{item.desc}</p>
                 </div>
@@ -1281,9 +1237,7 @@ export default function HomePrimarySection({
                     <span className="font-bold text-gray-900 text-sm sm:text-base">
                       {contact.addressValue}
                     </span>
-                    <span className="block text-xs text-gray-600 mt-0.5">
-                      মরকুন, (তিস্তাগেট- আনোয়ার সিল্ক মিলস সংলগ্ন), টঙ্গী, গাজীপুর।
-                    </span>
+                    <span className="block text-xs text-gray-600 mt-0.5"><EditableText document="copy.ui.HomePrimarySection" entry="e1s5vgdf" fallback={"মরকুন, (তিস্তাগেট- আনোয়ার সিল্ক মিলস সংলগ্ন), টঙ্গী, গাজীপুর।"} /></span>
                   </div>
                 </div>
 
@@ -1328,16 +1282,14 @@ export default function HomePrimarySection({
                     </svg>
                   </div>
                   <div>
-                    <span className="block font-bold text-gray-600 text-xs">
-                      অফিশিয়াল ফেসবুক পেজ
-                    </span>
+                    <span className="block font-bold text-gray-600 text-xs"><EditableText document="copy.ui.HomePrimarySection" entry="ekrn6ww" fallback={"অফিশিয়াল ফেসবুক পেজ"} /></span>
                     <a
                       href={currentSettings.facebookUrl || "https://www.facebook.com/jamianesaria/"}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-bold text-[#1877F2] text-sm sm:text-base hover:underline inline-flex items-center gap-1 mt-0.5"
                     >
-                      <span>facebook.com/jamianesaria</span>
+                      <span><EditableText document="copy.ui.HomePrimarySection" entry="e1rku567" fallback={"facebook.com/jamianesaria"} /></span>
                       <ArrowRight size={13} />
                     </a>
                   </div>

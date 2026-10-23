@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
@@ -6,13 +6,13 @@ import Footer from "@/components/Footer";
 import AdmissionInfoSection from "@/components/AdmissionInfoSection";
 import { getSiteSettings, getNewsTicker, getAdmissionInfo } from "@/sanity/lib/queries";
 
-export const metadata: Metadata = {
+export const generateMetadata = editableMetadata("/admission", {
   title: "ভর্তি তথ্য, নিয়মাবলি ও ভর্তি নির্দেশিকা | জামিয়া নেছারিয়া ইসলামিয়া টঙ্গী",
   description:
     "জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানার নতুন শিক্ষাবর্ষের ভর্তি তথ্য, বিভাগভিত্তিক যোগ্যতা, বয়সসীমা, ভর্তি ফি ও মাসিক খরচ তালিকা, প্রয়োজনীয় কাগজপত্র ও ভর্তি নির্দেশিকা।",
-};
+});
 
-export default async function AdmissionPage() {
+async function AdmissionPage() {
   const [siteData, newsTicker, admissionData] = await Promise.all([
     getSiteSettings(),
     getNewsTicker(),
@@ -40,3 +40,4 @@ export default async function AdmissionPage() {
     </div>
   );
 }
+export default editableRoute("/admission", AdmissionPage);

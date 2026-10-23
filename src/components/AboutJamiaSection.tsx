@@ -1,6 +1,6 @@
-import Image from "next/image";
+
 import Link from "next/link";
-import { aboutPageData, siteSettings } from "@/data/siteData";
+import { aboutPageData as _fallback_aboutPageData, siteSettings as _fallback_siteSettings } from "@/data/siteData";
 import {
   BookOpen,
   Calendar,
@@ -17,11 +17,18 @@ import {
   FileCheck2,
   Phone,
 } from "lucide-react";
+import { EditableImage as Image, getEditableData, EditableText } from "@/content/server";
+import { fieldSource } from "@/content/model";
 
-export default function AboutJamiaSection() {
+
+
+export default async function AboutJamiaSection() {
+  const aboutPageData = await getEditableData("copy.data.aboutPageData", _fallback_aboutPageData);
+  const siteSettings = await getEditableData("siteSettings", _fallback_siteSettings);
+
   const { header, sections } = aboutPageData;
 
-  const tocItems = [
+  const tocItems = await getEditableData("copy.ui.AboutJamiaSection", [
     { id: "identity", num: "১", label: "জামিয়ার পরিচয়" },
     { id: "history", num: "২", label: "প্রতিষ্ঠাকাল ও ইতিহাস" },
     { id: "founders", num: "৩", label: "প্রতিষ্ঠাতা ও জমিদাতাগণ" },
@@ -32,7 +39,7 @@ export default function AboutJamiaSection() {
     { id: "registration", num: "৮", label: "নিবন্ধন পরিচিতি" },
     { id: "activities", num: "৯", label: "বর্তমান কার্যক্রম" },
     { id: "commitment", num: "১০", label: "আমাদের অঙ্গীকার" },
-  ];
+  ], ["local","tocItems"]);
 
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -43,23 +50,19 @@ export default function AboutJamiaSection() {
         <div className="bg-gradient-to-r from-[#014d26] via-[#016332] to-[#02733b] text-white px-4 sm:px-6 py-3 border-b-2 border-[#D9822B] flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">
             <BookOpen size={18} className="text-amber-300 shrink-0" />
-            <span className="font-bold text-sm sm:text-base tracking-wide">
-              জামিয়া পরিচিতি — পূর্ণাঙ্গ প্রাতিষ্ঠানিক বিবরণী
-            </span>
+            <span className="font-bold text-sm sm:text-base tracking-wide"><EditableText document="copy.ui.AboutJamiaSection" entry="e1f5kqrb" fallback={"জামিয়া পরিচিতি — পূর্ণাঙ্গ প্রাতিষ্ঠানিক বিবরণী"} /></span>
           </div>
           <Link
             href="/"
             className="text-xs font-semibold text-amber-200 hover:text-white bg-black/20 px-3 py-1 rounded-full border border-amber-300/30 transition-colors"
-          >
-            ← হোমপেজে ফিরে যান
-          </Link>
+          ><EditableText document="copy.ui.AboutJamiaSection" entry="e1431uxj" fallback={"← হোমপেজে ফিরে যান"} /></Link>
         </div>
 
         <div className="p-6 sm:p-8 bg-gradient-to-b from-[#FAF7F0]/70 to-white">
           <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
             {/* Official Seal */}
             <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-3 border-[#8B111A] ring-4 ring-amber-100/80 p-0.5 bg-white shadow-md shrink-0 relative overflow-hidden">
-              <Image
+              <Image document="copy.ui.AboutJamiaSection" entry="eoadomy" source={fieldSource(siteSettings, "logoUrl")}
                 src={siteSettings.logoUrl || "/jamia-logo-v2.png"}
                 alt={header.title}
                 width={128}
@@ -87,15 +90,9 @@ export default function AboutJamiaSection() {
 
               {/* Quick Official Registration Strip */}
               <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-2 text-xs">
-                <span className="bg-[#016332]/10 text-[#016332] border border-[#016332]/20 font-bold px-3 py-1 rounded-md">
-                  আল-হাইআতুল উলয়া নিবন্ধন: ০০৬৮৫
-                </span>
-                <span className="bg-[#8B111A]/10 text-[#8B111A] border border-[#8B111A]/20 font-bold px-3 py-1 rounded-md">
-                  বেফাক নিবন্ধন: ১/৭৪৩
-                </span>
-                <span className="bg-amber-500/15 text-amber-900 border border-amber-500/30 font-bold px-3 py-1 rounded-md">
-                  এতিমখানা নিবন্ধন (সমাজসেবা অধিদপ্তর): ঢ-০৫০৪
-                </span>
+                <span className="bg-[#016332]/10 text-[#016332] border border-[#016332]/20 font-bold px-3 py-1 rounded-md"><EditableText document="copy.ui.AboutJamiaSection" entry="egsag8g" fallback={"আল-হাইআতুল উলয়া নিবন্ধন: ০০৬৮৫"} /></span>
+                <span className="bg-[#8B111A]/10 text-[#8B111A] border border-[#8B111A]/20 font-bold px-3 py-1 rounded-md"><EditableText document="copy.ui.AboutJamiaSection" entry="e9c3s87" fallback={"বেফাক নিবন্ধন: ১/৭৪৩"} /></span>
+                <span className="bg-amber-500/15 text-amber-900 border border-amber-500/30 font-bold px-3 py-1 rounded-md"><EditableText document="copy.ui.AboutJamiaSection" entry="evak6cg" fallback={"এতিমখানা নিবন্ধন (সমাজসেবা অধিদপ্তর): ঢ-০৫০৪"} /></span>
               </div>
             </div>
           </div>
@@ -111,9 +108,7 @@ export default function AboutJamiaSection() {
           <div className="bg-white rounded-xl border border-gray-200/90 shadow-sm overflow-hidden">
             <div className="bg-gradient-to-r from-[#750d15] via-[#8B111A] to-[#9e141e] text-white px-4 py-2.5 border-b-2 border-[#D9822B] flex items-center gap-2">
               <Compass size={16} className="text-amber-300" />
-              <h2 className="text-sm font-bold tracking-wide">
-                এক নজরে সূচিপত্র
-              </h2>
+              <h2 className="text-sm font-bold tracking-wide"><EditableText document="copy.ui.AboutJamiaSection" entry="enzrzhv" fallback={"এক নজরে সূচিপত্র"} /></h2>
             </div>
 
             <nav className="p-2 divide-y divide-gray-100">
@@ -136,24 +131,22 @@ export default function AboutJamiaSection() {
           <div className="bg-gradient-to-br from-[#014d26] to-[#016332] text-white rounded-xl p-4 border border-[#D9822B]/50 shadow-sm space-y-3 hidden lg:block">
             <h3 className="text-sm font-bold text-amber-200 flex items-center gap-1.5">
               <GraduationCap size={16} />
-              <span>শিক্ষা কার্যক্রম ও ভর্তি</span>
+              <span><EditableText document="copy.ui.AboutJamiaSection" entry="e163nxqq" fallback={"শিক্ষা কার্যক্রম ও ভর্তি"} /></span>
             </h3>
-            <p className="text-xs text-emerald-100 leading-relaxed">
-              মক্তব, হিফজ, হিফজ রিভিশন, কিতাব ও মাদানি নেসাব বিভাগের বিস্তারিত পাঠ্যক্রম দেখুন।
-            </p>
+            <p className="text-xs text-emerald-100 leading-relaxed"><EditableText document="copy.ui.AboutJamiaSection" entry="e58isle" fallback={"মক্তব, হিফজ, হিফজ রিভিশন, কিতাব ও মাদানি নেসাব বিভাগের বিস্তারিত পাঠ্যক্রম দেখুন।"} /></p>
             <div className="space-y-2 pt-1">
               <Link
                 href="/academics"
                 className="w-full inline-flex items-center justify-center gap-1.5 bg-white text-[#016332] hover:bg-amber-50 text-xs font-bold py-2 px-3 rounded-md transition-colors"
               >
-                <span>শিক্ষা বিভাগ ও পাঠ্যক্রম</span>
+                <span><EditableText document="copy.ui.AboutJamiaSection" entry="ejstd05" fallback={"শিক্ষা বিভাগ ও পাঠ্যক্রম"} /></span>
                 <ArrowRight size={13} />
               </Link>
               <Link
                 href="/apply"
                 className="w-full inline-flex items-center justify-center gap-1.5 bg-[#8B111A] hover:bg-[#6e0b13] text-white text-xs font-bold py-2 px-3 rounded-md border border-amber-300/30 transition-colors"
               >
-                <span>অনলাইন ভর্তি আবেদন</span>
+                <span><EditableText document="copy.ui.AboutJamiaSection" entry="ey16mx5" fallback={"অনলাইন ভর্তি আবেদন"} /></span>
               </Link>
             </div>
           </div>
@@ -213,22 +206,16 @@ export default function AboutJamiaSection() {
               {/* Era Badges */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pb-2">
                 <div className="bg-[#FAF7F0] border border-[#D9822B]/30 rounded-lg p-3 text-center">
-                  <span className="text-xs text-gray-500 block">খ্রিষ্টাব্দ সন</span>
-                  <span className="text-base sm:text-lg font-extrabold text-[#016332]">
-                    ১৯৬৯ খ্রিষ্টাব্দ
-                  </span>
+                  <span className="text-xs text-gray-500 block"><EditableText document="copy.ui.AboutJamiaSection" entry="e1rlb7hq" fallback={"খ্রিষ্টাব্দ সন"} /></span>
+                  <span className="text-base sm:text-lg font-extrabold text-[#016332]"><EditableText document="copy.ui.AboutJamiaSection" entry="eakpy0h" fallback={"১৯৬৯ খ্রিষ্টাব্দ"} /></span>
                 </div>
                 <div className="bg-[#FAF7F0] border border-[#D9822B]/30 rounded-lg p-3 text-center">
-                  <span className="text-xs text-gray-500 block">বাংলা সন</span>
-                  <span className="text-base sm:text-lg font-extrabold text-[#8B111A]">
-                    ১৩৭৬ বাংলা
-                  </span>
+                  <span className="text-xs text-gray-500 block"><EditableText document="copy.ui.AboutJamiaSection" entry="e1xhh3rv" fallback={"বাংলা সন"} /></span>
+                  <span className="text-base sm:text-lg font-extrabold text-[#8B111A]"><EditableText document="copy.ui.AboutJamiaSection" entry="e1b09lem" fallback={"১৩৭৬ বাংলা"} /></span>
                 </div>
                 <div className="bg-[#FAF7F0] border border-[#D9822B]/30 rounded-lg p-3 text-center">
-                  <span className="text-xs text-gray-500 block">হিজরি সন</span>
-                  <span className="text-base sm:text-lg font-extrabold text-[#016332]">
-                    ১৩৮৮ হিজরি
-                  </span>
+                  <span className="text-xs text-gray-500 block"><EditableText document="copy.ui.AboutJamiaSection" entry="eba415b" fallback={"হিজরি সন"} /></span>
+                  <span className="text-base sm:text-lg font-extrabold text-[#016332]"><EditableText document="copy.ui.AboutJamiaSection" entry="e1r997kr" fallback={"১৩৮৮ হিজরি"} /></span>
                 </div>
               </div>
 
@@ -264,12 +251,9 @@ export default function AboutJamiaSection() {
                     className="bg-gradient-to-br from-[#FAF7F0] to-white border border-[#D9822B]/40 rounded-xl p-4 shadow-2xs flex flex-col justify-between"
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <span className="w-7 h-7 rounded-full bg-[#8B111A] text-white text-xs font-bold flex items-center justify-center">
-                        ০{idx + 1}
+                      <span className="w-7 h-7 rounded-full bg-[#8B111A] text-white text-xs font-bold flex items-center justify-center"><EditableText document="copy.ui.AboutJamiaSection" entry="e1inmm8u" fallback={"০"} />{idx + 1}
                       </span>
-                      <span className="text-[11px] font-bold text-[#016332] bg-[#016332]/10 px-2.5 py-0.5 rounded-full">
-                        শ্রদ্ধেয় জমিদাতা
-                      </span>
+                      <span className="text-[11px] font-bold text-[#016332] bg-[#016332]/10 px-2.5 py-0.5 rounded-full"><EditableText document="copy.ui.AboutJamiaSection" entry="e19e30hs" fallback={"শ্রদ্ধেয় জমিদাতা"} /></span>
                     </div>
                     <h3 className="text-sm sm:text-base font-bold text-gray-900">
                       {donor.name}
@@ -330,9 +314,7 @@ export default function AboutJamiaSection() {
 
             <div className="p-5 sm:p-7 space-y-5">
               <div className="bg-gradient-to-r from-[#FAF7F0] to-white border border-[#e6dec8] border-l-4 border-l-[#8B111A] rounded-r-lg p-4 sm:p-5">
-                <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-[#8B111A] bg-[#8B111A]/10 px-2 py-0.5 rounded mb-1">
-                  মূল লক্ষ্য
-                </span>
+                <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-[#8B111A] bg-[#8B111A]/10 px-2 py-0.5 rounded mb-1"><EditableText document="copy.ui.AboutJamiaSection" entry="e1rx9bpk" fallback={"মূল লক্ষ্য"} /></span>
                 <p className="text-sm sm:text-base font-bold text-gray-900 leading-relaxed">
                   {sections.mission.mainGoal}
                 </p>
@@ -457,9 +439,7 @@ export default function AboutJamiaSection() {
                   {sections.registration.title}
                 </h2>
               </div>
-              <span className="text-xs bg-amber-400/20 text-amber-200 border border-amber-300/40 px-2.5 py-0.5 rounded-full font-semibold">
-                সরকারি ও বোর্ড অনুমোদন
-              </span>
+              <span className="text-xs bg-amber-400/20 text-amber-200 border border-amber-300/40 px-2.5 py-0.5 rounded-full font-semibold"><EditableText document="copy.ui.AboutJamiaSection" entry="e52swxl" fallback={"সরকারি ও বোর্ড অনুমোদন"} /></span>
             </div>
 
             <div className="p-5 sm:p-7 space-y-5">
@@ -537,7 +517,7 @@ export default function AboutJamiaSection() {
                   className="inline-flex items-center gap-2 bg-[#016332] hover:bg-[#014724] text-white text-xs sm:text-sm font-bold px-5 py-2.5 rounded-md shadow-xs transition-all group"
                 >
                   <GraduationCap size={16} />
-                  <span>শিক্ষা বিভাগ ও পাঠ্যক্রম পৃষ্ঠায় যান</span>
+                  <span><EditableText document="copy.ui.AboutJamiaSection" entry="e8ljkiw" fallback={"শিক্ষা বিভাগ ও পাঠ্যক্রম পৃষ্ঠায় যান"} /></span>
                   <ArrowRight
                     size={14}
                     className="group-hover:translate-x-0.5 transition-transform"
@@ -565,21 +545,19 @@ export default function AboutJamiaSection() {
               </p>
 
               <div className="bg-black/25 border-l-4 border-[#D9822B] p-4 rounded-r-lg">
-                <p className="text-sm sm:text-base font-bold text-amber-200 leading-relaxed">
-                  “{sections.commitment.paragraphs[1]}”
-                </p>
+                <p className="text-sm sm:text-base font-bold text-amber-200 leading-relaxed"><EditableText document="copy.ui.AboutJamiaSection" entry="en7c35q" fallback={"“"} />{sections.commitment.paragraphs[1]}<EditableText document="copy.ui.AboutJamiaSection" entry="e1w071rx" fallback={"”"} /></p>
               </div>
 
               <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-emerald-700/60 text-xs text-emerald-100">
                 <span>
-                  {header.title} — {header.established}
+                  {header.title}<EditableText document="copy.ui.AboutJamiaSection" entry="e1ad7szi" fallback={" — "} />{header.established}
                 </span>
                 <a
                   href={`tel:${siteSettings.phone}`}
                   className="inline-flex items-center gap-1.5 font-bold text-amber-300 hover:underline"
                 >
                   <Phone size={13} />
-                  <span>যোগাযোগ: {siteSettings.phone}</span>
+                  <span><EditableText document="copy.ui.AboutJamiaSection" entry="e9h354f" fallback={"যোগাযোগ: "} />{siteSettings.phone}</span>
                 </a>
               </div>
             </div>

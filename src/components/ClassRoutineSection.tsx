@@ -1,14 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { availableClasses, sampleRoutines } from "@/data/siteData";
+import { availableClasses as _fallback_availableClasses } from "@/data/siteData";
+import type { ClassRoutineDocument } from "@/sanity/lib/documents";
+import { stegaClean } from "@sanity/client/stega";
 import { Calendar, Search } from "lucide-react";
+import { useEditableData, EditableText } from "@/content/client";
 
-export default function ClassRoutineSection() {
+
+export default function ClassRoutineSection({ records = [] }: { records?: ClassRoutineDocument[] }) {
+  const availableClasses = useEditableData("copy.data.availableClasses", _fallback_availableClasses);
+
   const [selectedClass, setSelectedClass] = useState<string>("nursery");
   const [searched, setSearched] = useState<boolean>(false);
 
-  const routineData = searched ? sampleRoutines[selectedClass] || [] : [];
+  const routine = records.find((item) => stegaClean(item.classId || "") === selectedClass || stegaClean(item.className).toLowerCase() === availableClasses.find((entry) => entry.id === selectedClass)?.name.toLowerCase());
+  const routineData = searched ? routine?.timetableRows || [] : [];
 
   const handleSearch = () => {
     setSearched(true);
@@ -19,11 +26,12 @@ export default function ClassRoutineSection() {
       {/* Header Bar matching deep purple from screenshot */}
       <div className="bg-[#371b61] text-white px-4 py-2.5 flex items-center gap-2 font-bold text-sm sm:text-base shadow-xs">
         <Calendar size={18} />
-        <span>রুটিন</span>
+        <span><EditableText document="copy.ui.ClassRoutineSection" entry="e1qzuo57" fallback={"রুটিন"} /></span>
       </div>
 
       {/* Filter and Dropdown Controls */}
       <div className="p-5 space-y-4">
+        {routine?.pdfUrl && <a href={stegaClean(routine.pdfUrl)} target="_blank" rel="noreferrer" className="text-sm font-semibold text-[#371b61] underline"><EditableText document="copy.ui.ClassRoutineSection" entry="e48p6sy" fallback={"অফিসিয়াল রুটিন PDF দেখুন"} /></a>}
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
           {/* Left: Search button */}
           <div>
@@ -32,7 +40,7 @@ export default function ClassRoutineSection() {
               className="inline-flex items-center gap-1.5 bg-[#371b61] hover:bg-[#251044] text-white text-xs sm:text-sm font-bold px-5 py-2 rounded shadow-xs transition-colors cursor-pointer"
             >
               <Search size={14} />
-              <span>অনুসন্ধান</span>
+              <span><EditableText document="copy.ui.ClassRoutineSection" entry="ek89u7f" fallback={"অনুসন্ধান"} /></span>
             </button>
           </div>
 
@@ -41,9 +49,7 @@ export default function ClassRoutineSection() {
             <label
               htmlFor="class-select"
               className="block text-xs font-semibold text-gray-700 mb-1"
-            >
-              শ্রেণী
-            </label>
+            ><EditableText document="copy.ui.ClassRoutineSection" entry="e13jns57" fallback={"শ্রেণী"} /></label>
             <select
               id="class-select"
               value={selectedClass}
@@ -64,18 +70,20 @@ export default function ClassRoutineSection() {
 
         {/* Routine Display Area / Not Found message matching screenshot */}
         <div className="mt-6 border border-gray-200 rounded overflow-hidden">
-          {searched && routineData.length > 0 ? (
+          {searched && !routineData.length && !!routine?.scheduleRows?.length ? (
+            <div className="overflow-x-auto"><table className="w-full text-left border-collapse text-xs sm:text-sm"><thead><tr className="bg-[#371b61] text-white font-bold">{["ঘণ্টা", "সময়", "বিষয়", "শিক্ষক", "কক্ষ"].map((label) => <th key={label} className="py-2.5 px-3 border border-purple-900">{label}</th>)}</tr></thead><tbody>{routine.scheduleRows.map((row, index) => <tr key={row._key || index} className="hover:bg-purple-50/30">{[row.period, row.time, row.subject, row.teacher, row.room].map((text, column) => <td key={column} className="py-3 px-3 border border-gray-200">{text}</td>)}</tr>)}</tbody></table></div>
+          ) : searched && routineData.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs sm:text-sm">
                 <thead>
                   <tr className="bg-[#371b61] text-white font-bold">
-                    <th className="py-2.5 px-3 border border-purple-900 text-center w-28">বার / দিন</th>
-                    <th className="py-2.5 px-3 border border-purple-900 text-center">১ম পিরিয়ড</th>
-                    <th className="py-2.5 px-3 border border-purple-900 text-center">২য় পিরিয়ড</th>
-                    <th className="py-2.5 px-3 border border-purple-900 text-center">৩য় পিরিয়ড</th>
-                    <th className="py-2.5 px-3 border border-purple-900 text-center w-24 bg-purple-950">বিরতি</th>
-                    <th className="py-2.5 px-3 border border-purple-900 text-center">৪র্থ পিরিয়ড</th>
-                    <th className="py-2.5 px-3 border border-purple-900 text-center">৫ম পিরিয়ড</th>
+                    <th className="py-2.5 px-3 border border-purple-900 text-center w-28"><EditableText document="copy.ui.ClassRoutineSection" entry="em3ev90" fallback={"বার / দিন"} /></th>
+                    <th className="py-2.5 px-3 border border-purple-900 text-center"><EditableText document="copy.ui.ClassRoutineSection" entry="es1tgr3" fallback={"১ম পিরিয়ড"} /></th>
+                    <th className="py-2.5 px-3 border border-purple-900 text-center"><EditableText document="copy.ui.ClassRoutineSection" entry="eahe5u6" fallback={"২য় পিরিয়ড"} /></th>
+                    <th className="py-2.5 px-3 border border-purple-900 text-center"><EditableText document="copy.ui.ClassRoutineSection" entry="e1fnj6xl" fallback={"৩য় পিরিয়ড"} /></th>
+                    <th className="py-2.5 px-3 border border-purple-900 text-center w-24 bg-purple-950"><EditableText document="copy.ui.ClassRoutineSection" entry="e14uqcof" fallback={"বিরতি"} /></th>
+                    <th className="py-2.5 px-3 border border-purple-900 text-center"><EditableText document="copy.ui.ClassRoutineSection" entry="efxmhhg" fallback={"৪র্থ পিরিয়ড"} /></th>
+                    <th className="py-2.5 px-3 border border-purple-900 text-center"><EditableText document="copy.ui.ClassRoutineSection" entry="es3f9nm" fallback={"৫ম পিরিয়ড"} /></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 text-center">
@@ -100,9 +108,7 @@ export default function ClassRoutineSection() {
           ) : (
             /* Default "Not Found" state matching the screenshot */
             <div className="py-12 px-4 text-center bg-gray-50/50">
-              <p className="text-gray-500 text-sm font-semibold tracking-wide">
-                Not Found
-              </p>
+              <p className="text-gray-500 text-sm font-semibold tracking-wide"><EditableText document="copy.ui.ClassRoutineSection" entry="e1i7ivyu" fallback={"Not Found"} /></p>
             </div>
           )}
         </div>

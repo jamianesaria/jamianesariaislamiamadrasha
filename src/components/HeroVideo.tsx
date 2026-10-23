@@ -4,7 +4,7 @@ import { useContext, useEffect, useRef } from "react";
 import { stegaClean } from "@sanity/client/stega";
 import { IntroPlaybackContext } from "./IntroPlaybackContext";
 
-export default function HeroVideo({ src, poster }: { src: string; poster: string }) {
+export default function HeroVideo({ src, poster, sanity }: { src: string; poster: string; sanity?: string }) {
   const introPending = useContext(IntroPlaybackContext);
   const ref = useRef<HTMLVideoElement>(null);
 
@@ -32,7 +32,7 @@ export default function HeroVideo({ src, poster }: { src: string; poster: string
     };
   }, [introPending, src]);
 
-  return <video ref={ref} loop muted playsInline preload="none" poster={stegaClean(poster)}
+  return <video data-sanity={sanity} ref={ref} loop muted playsInline preload="none" poster={stegaClean(poster)}
     className="absolute inset-0 w-full h-full object-cover object-[center_68%]"
     style={{ objectFit: "cover", objectPosition: "center 68%", width: "100%", height: "100%" }}
     aria-hidden="true" />;

@@ -1,4 +1,5 @@
 import HeaderBanner from "@/components/HeaderBanner";
+import { editableRoute, editableMetadata } from "@/content/server";
 import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
 import HomePrimarySection from "@/components/HomePrimarySection";
@@ -12,7 +13,9 @@ import {
   getBlogPosts,
 } from "@/sanity/lib/queries";
 
-export default async function Home() {
+export const generateMetadata = editableMetadata("/", {});
+
+async function Home() {
   const [homeData, notices, siteData, departments, blogPosts] = await Promise.all([
     getHomepageContent(),
     getNotices(),
@@ -50,3 +53,4 @@ export default async function Home() {
     </WebsiteIntro>
   );
 }
+export default editableRoute("/", Home);

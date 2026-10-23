@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
@@ -6,13 +6,13 @@ import Footer from "@/components/Footer";
 import ContactSection from "@/components/ContactSection";
 import { getSiteSettings, getNewsTicker } from "@/sanity/lib/queries";
 
-export const metadata: Metadata = {
+export const generateMetadata = editableMetadata("/contact", {
   title: "যোগাযোগ | জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা",
   description:
     "জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানার সাথে যোগাযোগ করুন - ঠিকানা, হেল্পলাইন নম্বর, সরাসরি মেসেজ পাঠানোর ফরম ও অবস্থান।",
-};
+});
 
-export default async function ContactPage() {
+async function ContactPage() {
   const [siteData, newsTicker] = await Promise.all([
     getSiteSettings(),
     getNewsTicker(),
@@ -39,3 +39,4 @@ export default async function ContactPage() {
     </div>
   );
 }
+export default editableRoute("/contact", ContactPage);

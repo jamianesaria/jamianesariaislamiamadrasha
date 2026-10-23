@@ -4,15 +4,18 @@ export const noticeType = defineType({
   name: "notice",
   title: "নোটিশ ও প্রজ্ঞাপন (Notices)",
   type: "document",
+  groups: [{ name: "main", title: "প্রয়োজনীয় তথ্য", default: true }, { name: "details", title: "বিবরণ ও সংযুক্তি" }],
   fields: [
     defineField({
       name: "title",
+      group: "main",
       title: "নোটিশের শিরোনাম (Title)",
       type: "string",
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.required().error("নোটিশের শিরোনাম লিখুন।"),
     }),
     defineField({
       name: "slug",
+      hidden: true,
       title: "ওয়েব লিংক স্ল্যাগ (Slug)",
       type: "slug",
       options: {
@@ -22,12 +25,14 @@ export const noticeType = defineType({
     }),
     defineField({
       name: "memo",
+      group: "details",
       title: "স্মারক নম্বর (Memo No)",
       type: "string",
       description: "যেমন: জামিয়া/প্রশা-ভর্তি/২০২৬/১১৮",
     }),
     defineField({
       name: "category",
+      group: "main",
       title: "ক্যাটাগরি (Category)",
       type: "string",
       options: {
@@ -44,6 +49,8 @@ export const noticeType = defineType({
     }),
     defineField({
       name: "publishDate",
+      group: "main",
+      initialValue: () => new Date().toISOString().slice(0, 10),
       title: "প্রকাশের তারিখ (Publish Date)",
       type: "date",
       options: {
@@ -52,30 +59,35 @@ export const noticeType = defineType({
     }),
     defineField({
       name: "publishDateBn",
+      group: "details",
       title: "বাংলা তারিখ (Bangla Date String)",
       type: "string",
       description: "যেমন: ১৫ অক্টোবর ২০২৬",
     }),
     defineField({
       name: "isUrgent",
+      group: "main",
       title: "জরুরি নোটিশ ব্যাজ (Is Urgent)",
       type: "boolean",
       initialValue: false,
     }),
     defineField({
       name: "summary",
+      group: "main",
       title: "সংক্ষিপ্ত সারসংক্ষেপ (Summary)",
       type: "text",
       rows: 3,
     }),
     defineField({
       name: "details",
+      group: "details",
       title: "বিস্তারিত বিবরণ (Full Content)",
       type: "array",
       of: [{ type: "block" }],
     }),
     defineField({
       name: "pdfFile",
+      group: "details",
       title: "সংযুক্ত অফিসিয়াল PDF ফাইল (PDF Attachment)",
       type: "file",
       options: {

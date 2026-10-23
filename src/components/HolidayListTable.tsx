@@ -1,10 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { holidayListTableData, HolidayItem } from "@/data/siteData";
+import { holidayListTableData as _fallback_holidayListTableData, HolidayItem } from "@/data/siteData";
 import { CalendarDays, Eye, X, Calendar, Clock } from "lucide-react";
+import { useEditableData, EditableText } from "@/content/client";
 
-export default function HolidayListTable() {
+
+export default function HolidayListTable({ records }: { records?: HolidayItem[] }) {
+  const holidayListTableData = useEditableData("copy.data.holidayListTableData", _fallback_holidayListTableData);
+
+  const holidays = records ?? holidayListTableData;
   const [selectedHoliday, setSelectedHoliday] = useState<HolidayItem | null>(null);
 
   return (
@@ -12,7 +17,7 @@ export default function HolidayListTable() {
       {/* Table Header Bar - matching teal/deep cyan-green from screenshot */}
       <div className="bg-[#126b59] text-white px-4 py-2.5 flex items-center gap-2 font-bold text-sm sm:text-base shadow-xs">
         <CalendarDays size={18} />
-        <span>ছুটির তালিকা</span>
+        <span><EditableText document="copy.ui.HolidayListTable" entry="e1mnznxu" fallback={"ছুটির তালিকা"} /></span>
       </div>
 
       {/* Responsive Table Container */}
@@ -20,14 +25,14 @@ export default function HolidayListTable() {
         <table className="w-full text-left border-collapse text-xs sm:text-sm">
           <thead>
             <tr className="bg-gray-100/90 text-gray-700 border-b border-gray-300 font-bold">
-              <th className="py-2.5 px-3 w-14 text-center">#</th>
-              <th className="py-2.5 px-4">ছুটির নাম</th>
-              <th className="py-2.5 px-4 text-center sm:w-80">তারিখ ও সময়</th>
-              <th className="py-2.5 px-3 w-32 text-center">দেখুন</th>
+              <th className="py-2.5 px-3 w-14 text-center"><EditableText document="copy.ui.HolidayListTable" entry="enahrco" fallback={"#"} /></th>
+              <th className="py-2.5 px-4"><EditableText document="copy.ui.HolidayListTable" entry="e1qzcp1k" fallback={"ছুটির নাম"} /></th>
+              <th className="py-2.5 px-4 text-center sm:w-80"><EditableText document="copy.ui.HolidayListTable" entry="e1wd5i9a" fallback={"তারিখ ও সময়"} /></th>
+              <th className="py-2.5 px-3 w-32 text-center"><EditableText document="copy.ui.HolidayListTable" entry="e12t7hkn" fallback={"দেখুন"} /></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {holidayListTableData.map((holiday, index) => (
+            {holidays.map((holiday, index) => (
               <tr
                 key={holiday.id}
                 className="hover:bg-teal-50/30 transition-colors group"
@@ -56,7 +61,7 @@ export default function HolidayListTable() {
                     className="inline-flex items-center justify-center gap-1 bg-[#371b61] hover:bg-[#251044] text-white text-xs font-semibold px-3 py-1.5 rounded transition-colors shadow-2xs cursor-pointer"
                   >
                     <Eye size={13} />
-                    <span>আরও দেখুন</span>
+                    <span><EditableText document="copy.ui.HolidayListTable" entry="ey4m1wl" fallback={"আরও দেখুন"} /></span>
                   </button>
                 </td>
               </tr>
@@ -71,7 +76,7 @@ export default function HolidayListTable() {
           <div className="bg-white rounded-lg shadow-2xl max-w-lg w-full overflow-hidden border border-gray-200">
             {/* Modal Header */}
             <div className="bg-[#126b59] text-white px-4 py-3 flex items-center justify-between font-bold">
-              <span>ছুটির বিস্তারিত তথ্য</span>
+              <span><EditableText document="copy.ui.HolidayListTable" entry="e1krpiuu" fallback={"ছুটির বিস্তারিত তথ্য"} /></span>
               <button
                 onClick={() => setSelectedHoliday(null)}
                 className="text-white hover:text-gray-200 p-1"
@@ -89,7 +94,7 @@ export default function HolidayListTable() {
 
               <div className="flex items-center gap-2 text-xs text-gray-600 border-y border-gray-200 py-3">
                 <Calendar size={14} className="text-[#126b59]" />
-                <span className="font-semibold text-gray-800">ছুটির সময়কাল:</span>
+                <span className="font-semibold text-gray-800"><EditableText document="copy.ui.HolidayListTable" entry="els6g7x" fallback={"ছুটির সময়কাল:"} /></span>
                 <span className="font-mono">{selectedHoliday.dateTime}</span>
               </div>
 
@@ -103,9 +108,7 @@ export default function HolidayListTable() {
                 <button
                   onClick={() => setSelectedHoliday(null)}
                   className="bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-semibold px-4 py-1.5 rounded transition-colors"
-                >
-                  বন্ধ করুন
-                </button>
+                ><EditableText document="copy.ui.HolidayListTable" entry="e12mkiiy" fallback={"বন্ধ করুন"} /></button>
               </div>
             </div>
           </div>

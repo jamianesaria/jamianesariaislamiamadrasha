@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import Image from "next/image";
+import type { PublicSettings, PublicTeacher } from "@/content/public-types";
+
 import Link from "next/link";
-import { committeeAndFacultyData, siteSettings } from "@/data/siteData";
+import { committeeAndFacultyData as _fallback_committeeAndFacultyData, siteSettings as _fallback_siteSettings } from "@/data/siteData";
 import {
   GraduationCap,
   BookOpen,
@@ -20,10 +21,16 @@ import {
   Briefcase,
   Layers,
 } from "lucide-react";
+import { EditableImage as Image, useEditableData, EditableText } from "@/content/client";
+import { fieldSource } from "@/content/model";
+import { stegaClean } from "@sanity/client/stega";
+
 
 type TeacherCategory = "all" | "bukhari" | "kitab" | "hifz" | "maktab" | "other" | "staff";
 
 interface TeacherItem {
+  _id?: string;
+  _type?: string;
   id: string | number;
   serial: string;
   name: string;
@@ -39,18 +46,21 @@ interface TeacherItem {
 }
 
 interface FacultyAndTeachersSectionProps {
-  initialTeachers?: any[];
-  initialSettings?: any;
+  initialTeachers?: PublicTeacher[];
+  initialSettings?: PublicSettings;
 }
 
 export default function FacultyAndTeachersSection({
   initialTeachers,
   initialSettings,
 }: FacultyAndTeachersSectionProps = {}) {
+  const committeeAndFacultyData = useEditableData("copy.data.committeeAndFacultyData", _fallback_committeeAndFacultyData);
+  const siteSettings = useEditableData("siteSettings", _fallback_siteSettings);
+
   const [activeCategory, setActiveCategory] = useState<TeacherCategory>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [selectedTeacher, setSelectedTeacher] = useState<TeacherItem | null>(null);
+  const [selectedTeacherRecord, setSelectedTeacher] = useState<TeacherItem | null>(null);
 
   const { bukhariScholars, faculty, staff, pledge } = committeeAndFacultyData;
 
@@ -102,9 +112,9 @@ export default function FacultyAndTeachersSection({
 
   // Build unified teacher and staff list
   const allTeachersList = useMemo<TeacherItem[]>(() => {
-    if (initialTeachers && initialTeachers.length >= 20) {
+    if (initialTeachers !== undefined) {
       return initialTeachers.map((t, idx) => {
-        let cat = t.department || "kitab";
+        let cat = stegaClean(t.department || "kitab");
         if (cat === "officers") cat = "other";
         let title = "মুহাদ্দিস ও কিতাব বিভাগ";
         if (cat === "bukhari") title = "বুখারীর বিশেষ দরস";
@@ -114,6 +124,8 @@ export default function FacultyAndTeachersSection({
         else if (cat === "staff") title = "জামিয়ার স্টাফবৃন্দ";
 
         return {
+          _id: t._id,
+          _type: "teacher",
           id: t.id || `teacher-${idx}`,
           serial: t.serial ? String(t.serial) : String(idx + 1),
           name: t.name,
@@ -124,6 +136,7 @@ export default function FacultyAndTeachersSection({
           mobile: t.mobile || "",
           institution: t.institution || "",
           note: t.qualification || "",
+          honor: t.honor || "",
           photo: t.photo || "/avatar-scholar.svg",
         };
       });
@@ -225,6 +238,8 @@ export default function FacultyAndTeachersSection({
     return list;
   }, [initialTeachers, bukhariScholars, faculty, staff]);
 
+  const selectedTeacher = allTeachersList.find((teacher) => teacher.id === selectedTeacherRecord?.id) || null;
+
   // Filtered teachers based on category & search
   const filteredTeachers = useMemo(() => {
     return allTeachersList.filter((item) => {
@@ -256,28 +271,24 @@ export default function FacultyAndTeachersSection({
         <div className="relative z-10 max-w-4xl space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-300/40 text-amber-200 text-xs font-semibold backdrop-blur-sm">
             <GraduationCap size={14} className="text-amber-300" />
-            <span>ইলমে দ্বীনের আলো ছড়ানো বিজ্ঞ ও নিবেদিতপ্রাণ শিক্ষকমণ্ডলী</span>
+            <span><EditableText document="copy.ui.FacultyAndTeachersSection" entry="eq9ud6c" fallback={"ইলমে দ্বীনের আলো ছড়ানো বিজ্ঞ ও নিবেদিতপ্রাণ শিক্ষকমণ্ডলী"} /></span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white">
-            সম্মানিত শিক্ষক মণ্ডলী ও উলামায়ে কেরাম
-          </h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e1e4ykg7" fallback={"সম্মানিত শিক্ষক মণ্ডলী ও উলামায়ে কেরাম"} /></h1>
 
-          <p className="text-sm sm:text-base text-gray-200 leading-relaxed max-w-3xl">
-            দেশ-বিদেশের উচ্চতর শিক্ষাপ্রতিষ্ঠান থেকে সনদপ্রাপ্ত বিজ্ঞ মুহাদ্দিস, শায়খুল হাদিস ও দক্ষ হাফেজে কুরআন শিক্ষকদের নিবিড় তত্ত্বাবধানে জামিয়া পরিচালিত হচ্ছে।
-          </p>
+          <p className="text-sm sm:text-base text-gray-200 leading-relaxed max-w-3xl"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e186by0p" fallback={"দেশ-বিদেশের উচ্চতর শিক্ষাপ্রতিষ্ঠান থেকে সনদপ্রাপ্ত বিজ্ঞ মুহাদ্দিস, শায়খুল হাদিস ও দক্ষ হাফেজে কুরআন শিক্ষকদের নিবিড় তত্ত্বাবধানে জামিয়া পরিচালিত হচ্ছে।"} /></p>
 
           <div className="pt-2 flex flex-wrap items-center gap-3 text-xs">
             <span className="inline-flex items-center gap-1.5 bg-black/25 px-3 py-1 rounded-full border border-white/15">
               <MapPin size={13} className="text-amber-300" />
-              <span>মরকুন, তিস্তা গেট–আনোয়ার সিল্ক মিলস সংলগ্ন, টঙ্গী, গাজীপুর</span>
+              <span><EditableText document="copy.ui.FacultyAndTeachersSection" entry="ex9d51j" fallback={"মরকুন, তিস্তা গেট–আনোয়ার সিল্ক মিলস সংলগ্ন, টঙ্গী, গাজীপুর"} /></span>
             </span>
             <Link
               href="/committee"
               className="inline-flex items-center gap-1.5 bg-amber-400 text-gray-900 font-bold px-3 py-1 rounded-full hover:bg-amber-300 transition-colors shadow-xs"
             >
               <Users size={14} />
-              <span>পরিচালনা পরিষদ দেখুন</span>
+              <span><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e1jdbae6" fallback={"পরিচালনা পরিষদ দেখুন"} /></span>
               <ArrowRight size={13} />
             </Link>
           </div>
@@ -286,20 +297,20 @@ export default function FacultyAndTeachersSection({
         {/* Counter Summary */}
         <div className="mt-7 pt-5 border-t border-white/15 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-semibold">
           <div className="bg-black/20 backdrop-blur-xs p-3 rounded-xl border border-white/10 text-center">
-            <span className="text-2xl font-black text-amber-300 block">৩</span>
-            <span className="text-gray-200">বুখারীর দরস</span>
+            <span className="text-2xl font-black text-amber-300 block"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e1xpf3r" fallback={"৩"} /></span>
+            <span className="text-gray-200"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e13ngiv" fallback={"বুখারীর দরস"} /></span>
           </div>
           <div className="bg-black/20 backdrop-blur-xs p-3 rounded-xl border border-white/10 text-center">
-            <span className="text-2xl font-black text-amber-300 block">১৪</span>
-            <span className="text-gray-200">মুহাদ্দিস ও কিতাব</span>
+            <span className="text-2xl font-black text-amber-300 block"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="ev5kbz0" fallback={"১৪"} /></span>
+            <span className="text-gray-200"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e250e2p" fallback={"মুহাদ্দিস ও কিতাব"} /></span>
           </div>
           <div className="bg-black/20 backdrop-blur-xs p-3 rounded-xl border border-white/10 text-center">
-            <span className="text-2xl font-black text-amber-300 block">১১</span>
-            <span className="text-gray-200">হিফজ ও মক্তব</span>
+            <span className="text-2xl font-black text-amber-300 block"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="er7n80x" fallback={"১১"} /></span>
+            <span className="text-gray-200"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e10jkka1" fallback={"হিফজ ও মক্তব"} /></span>
           </div>
           <div className="bg-black/20 backdrop-blur-xs p-3 rounded-xl border border-white/10 text-center">
-            <span className="text-2xl font-black text-amber-300 block">৮</span>
-            <span className="text-gray-200">কর্মকর্তা ও স্টাফ</span>
+            <span className="text-2xl font-black text-amber-300 block"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e13tm96v" fallback={"৮"} /></span>
+            <span className="text-gray-200"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e4xmhx" fallback={"কর্মকর্তা ও স্টাফ"} /></span>
           </div>
         </div>
       </div>
@@ -382,9 +393,7 @@ export default function FacultyAndTeachersSection({
                 <span className="text-xs text-amber-200 block">{bukhariScholars.subtitle}</span>
               </div>
             </div>
-            <span className="text-xs bg-amber-400/20 text-amber-200 border border-amber-300/40 px-3 py-0.5 rounded-full font-bold">
-              ৩ জন বিশিষ্ট শায়খ
-            </span>
+            <span className="text-xs bg-amber-400/20 text-amber-200 border border-amber-300/40 px-3 py-0.5 rounded-full font-bold"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e1va400u" fallback={"৩ জন বিশিষ্ট শায়খ"} /></span>
           </div>
 
           <div className="p-5 sm:p-7 space-y-5">
@@ -393,7 +402,7 @@ export default function FacultyAndTeachersSection({
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {bukhariScholars.scholars.map((scholar) => (
+              {allTeachersList.filter((teacher) => teacher.category === "bukhari").map((scholar) => (
                 <div
                   key={scholar.id}
                   className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50/50 via-white to-white p-5 space-y-4 relative overflow-hidden shadow-2xs hover:shadow-md transition-all group"
@@ -403,8 +412,8 @@ export default function FacultyAndTeachersSection({
                   <div className="flex items-center gap-3.5">
                     {/* Scholar Photo Avatar on every card */}
                     <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-[#016332] p-0.5 bg-white shadow-xs shrink-0 group-hover:scale-105 transition-transform">
-                      <Image
-                        src="/avatar-scholar.svg"
+                      <Image document="copy.ui.FacultyAndTeachersSection" entry="e1o0fq5r" source={fieldSource(scholar, "photo")}
+                        src={scholar.photo || "/avatar-scholar.svg"}
                         alt={scholar.name}
                         fill
                         sizes="64px"
@@ -413,9 +422,7 @@ export default function FacultyAndTeachersSection({
                     </div>
 
                     <div>
-                      <span className="text-[10px] font-bold text-[#8B111A] bg-[#8B111A]/10 px-2 py-0.5 rounded-full inline-block mb-1">
-                        বুখারী শরিফ বিশেষ দরস
-                      </span>
+                      <span className="text-[10px] font-bold text-[#8B111A] bg-[#8B111A]/10 px-2 py-0.5 rounded-full inline-block mb-1"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e7gfu57" fallback={"বুখারী শরিফ বিশেষ দরস"} /></span>
                       <h3 className="text-base font-bold text-gray-900 group-hover:text-[#016332] transition-colors leading-tight">
                         {scholar.name}
                       </h3>
@@ -433,9 +440,7 @@ export default function FacultyAndTeachersSection({
               ))}
             </div>
 
-            <div className="bg-emerald-50 border-l-4 border-l-[#016332] rounded-r-xl p-4 text-xs sm:text-sm font-bold text-[#016332] leading-relaxed text-center shadow-2xs">
-              “{bukhariScholars.closingDua}”
-            </div>
+            <div className="bg-emerald-50 border-l-4 border-l-[#016332] rounded-r-xl p-4 text-xs sm:text-sm font-bold text-[#016332] leading-relaxed text-center shadow-2xs"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="ezc3j1o" fallback={"“"} />{bukhariScholars.closingDua}<EditableText document="copy.ui.FacultyAndTeachersSection" entry="etdv8jj" fallback={"”"} /></div>
           </div>
         </section>
       )}
@@ -478,19 +483,15 @@ export default function FacultyAndTeachersSection({
               </span>
             </div>
           </div>
-          <span className="text-xs bg-white/15 px-3 py-1 rounded-full border border-white/20 font-bold">
-            মোট: {filteredTeachers.length} জন
-          </span>
+          <span className="text-xs bg-white/15 px-3 py-1 rounded-full border border-white/20 font-bold"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e1jmahj2" fallback={"মোট: "} />{filteredTeachers.length}<EditableText document="copy.ui.FacultyAndTeachersSection" entry="ewjvpr7" fallback={" জন"} /></span>
         </div>
 
         <div className="p-5 sm:p-7 space-y-6">
           {filteredTeachers.length === 0 ? (
             <div className="py-12 text-center text-gray-500 space-y-2">
               <Search size={32} className="mx-auto text-gray-300" />
-              <p className="text-sm font-bold">কোনো শিক্ষকের তথ্য মেলেনি</p>
-              <p className="text-xs text-gray-400">
-                “{searchQuery}” দিয়ে কোনো রেকর্ড পাওয়া যায়নি।
-              </p>
+              <p className="text-sm font-bold"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e7ynfut" fallback={"কোনো শিক্ষকের তথ্য মেলেনি"} /></p>
+              <p className="text-xs text-gray-400"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e1kvtu5l" fallback={"“"} />{searchQuery}<EditableText document="copy.ui.FacultyAndTeachersSection" entry="epiq4ru" fallback={"” দিয়ে কোনো রেকর্ড পাওয়া যায়নি।"} /></p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -504,7 +505,7 @@ export default function FacultyAndTeachersSection({
                     <div className="flex items-center gap-3">
                       {/* Photo Avatar on every card */}
                       <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-[#016332]/40 bg-gray-100 p-0.5 shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
-                        <Image
+                        <Image document="copy.ui.FacultyAndTeachersSection" entry="ebc41x1" source={fieldSource(teacher, "photo")}
                           src={teacher.photo || "/avatar-scholar.svg"}
                           alt={teacher.name}
                           fill
@@ -514,8 +515,7 @@ export default function FacultyAndTeachersSection({
                       </div>
 
                       <div className="min-w-0 flex-1">
-                        <span className="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full inline-block mb-1">
-                          ক্রম: {teacher.serial}
+                        <span className="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full inline-block mb-1"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="eus1tka" fallback={"ক্রম: "} />{teacher.serial}
                         </span>
                         <h3 className="text-sm font-bold text-gray-900 group-hover:text-[#8B111A] transition-colors leading-snug line-clamp-2">
                           {teacher.name}
@@ -578,18 +578,14 @@ export default function FacultyAndTeachersSection({
                         </button>
                       </div>
                     ) : (
-                      <span className="text-[11px] text-gray-400 font-medium">
-                        জামিয়া নেছারিয়া
-                      </span>
+                      <span className="text-[11px] text-gray-400 font-medium"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e1ks39p" fallback={"জামিয়া নেছারিয়া"} /></span>
                     )}
 
                     <button
                       type="button"
                       onClick={() => setSelectedTeacher(teacher)}
                       className="shrink-0 text-xs text-[#016332] hover:bg-[#016332]/10 px-2 py-1 rounded-md font-semibold transition-colors cursor-pointer"
-                    >
-                      বিস্তারিত
-                    </button>
+                    ><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e1xyx77" fallback={"বিস্তারিত"} /></button>
                   </div>
                 </div>
               ))}
@@ -612,15 +608,13 @@ export default function FacultyAndTeachersSection({
         </p>
 
         <div className="bg-white/10 rounded-xl p-4 border border-white/20 backdrop-blur-sm">
-          <p className="text-sm sm:text-base font-bold text-amber-200 text-center leading-relaxed">
-            “{pledge.closingDua}”
-          </p>
+          <p className="text-sm sm:text-base font-bold text-amber-200 text-center leading-relaxed"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e1cxc5y1" fallback={"“"} />{pledge.closingDua}<EditableText document="copy.ui.FacultyAndTeachersSection" entry="e1bi62c8" fallback={"”"} /></p>
         </div>
 
         <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-white/20 text-xs sm:text-sm text-gray-300">
           <div>
-            <span className="font-bold text-white block">জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা</span>
-            <span>মরকুন, তিস্তা গেট–আনোয়ার সিল্ক মিলস সংলগ্ন, টঙ্গী, গাজীপুর, বাংলাদেশ।</span>
+            <span className="font-bold text-white block"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="epulcqr" fallback={"জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা"} /></span>
+            <span><EditableText document="copy.ui.FacultyAndTeachersSection" entry="eblwici" fallback={"মরকুন, তিস্তা গেট–আনোয়ার সিল্ক মিলস সংলগ্ন, টঙ্গী, গাজীপুর, বাংলাদেশ।"} /></span>
           </div>
 
           <a
@@ -628,7 +622,7 @@ export default function FacultyAndTeachersSection({
             className="inline-flex items-center gap-1.5 bg-[#8B111A] hover:bg-[#6e0b13] text-white font-bold px-4 py-2 rounded-lg text-xs transition-colors shadow-xs self-start sm:self-auto"
           >
             <Phone size={13} />
-            <span>যোগাযোগ করুন: {siteSettings.phone}</span>
+            <span><EditableText document="copy.ui.FacultyAndTeachersSection" entry="exqcmss" fallback={"যোগাযোগ করুন: "} />{siteSettings.phone}</span>
           </a>
         </div>
       </section>
@@ -640,7 +634,7 @@ export default function FacultyAndTeachersSection({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4 animate-in fade-in duration-150">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-200">
             <div className="bg-gradient-to-r from-[#016332] to-[#014222] text-white px-5 py-3.5 flex items-center justify-between border-b-2 border-[#D9822B]">
-              <span className="font-bold text-sm sm:text-base">শিক্ষক পরিচিতি</span>
+              <span className="font-bold text-sm sm:text-base"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e1tu53g3" fallback={"শিক্ষক পরিচিতি"} /></span>
               <button
                 type="button"
                 onClick={() => setSelectedTeacher(null)}
@@ -653,7 +647,7 @@ export default function FacultyAndTeachersSection({
             <div className="p-5 sm:p-6 space-y-4 text-sm text-gray-800">
               <div className="flex items-center gap-4">
                 <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-[#016332] p-0.5 bg-gray-50 shadow-sm shrink-0">
-                  <Image
+                  <Image document="copy.ui.FacultyAndTeachersSection" entry="e1vorgvo" source={fieldSource(selectedTeacher, "photo")}
                     src={selectedTeacher.photo || "/avatar-scholar.svg"}
                     alt={selectedTeacher.name}
                     fill
@@ -678,14 +672,14 @@ export default function FacultyAndTeachersSection({
                 {selectedTeacher.district && (
                   <div className="flex items-center gap-2 text-gray-700">
                     <MapPin size={14} className="text-[#8B111A] shrink-0" />
-                    <span className="font-semibold">জেলা:</span>
+                    <span className="font-semibold"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e1fytlxo" fallback={"জেলা:"} /></span>
                     <span className="font-bold text-gray-900">{selectedTeacher.district}</span>
                   </div>
                 )}
 
                 {selectedTeacher.institution && (
                   <div className="bg-gray-50 p-2.5 rounded-lg border border-gray-200">
-                    <span className="text-gray-500 block text-[11px] font-semibold">প্রতিষ্ঠান:</span>
+                    <span className="text-gray-500 block text-[11px] font-semibold"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e14s5nnf" fallback={"প্রতিষ্ঠান:"} /></span>
                     <span className="font-bold text-gray-800">{selectedTeacher.institution}</span>
                   </div>
                 )}
@@ -694,7 +688,7 @@ export default function FacultyAndTeachersSection({
                   <div className="flex items-center justify-between bg-emerald-50/60 p-3 rounded-xl border border-emerald-200">
                     <div className="flex items-center gap-2">
                       <Phone size={15} className="text-[#016332] shrink-0" />
-                      <span className="font-semibold text-emerald-950">মোবাইল:</span>
+                      <span className="font-semibold text-emerald-950"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="ei7od8f" fallback={"মোবাইল:"} /></span>
                       <a
                         href={`tel:${selectedTeacher.mobile}`}
                         className="font-bold text-[#016332] hover:underline"
@@ -714,7 +708,7 @@ export default function FacultyAndTeachersSection({
 
                 {selectedTeacher.note && (
                   <div className="bg-amber-50 p-2.5 rounded-lg border border-amber-200 text-xs text-amber-950">
-                    <span className="font-bold block">মন্তব্য:</span>
+                    <span className="font-bold block"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="ezovj4q" fallback={"মন্তব্য:"} /></span>
                     <span>{selectedTeacher.note}</span>
                   </div>
                 )}
@@ -727,16 +721,14 @@ export default function FacultyAndTeachersSection({
                     className="inline-flex items-center gap-1.5 bg-[#016332] hover:bg-[#014222] text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors cursor-pointer"
                   >
                     <Phone size={13} />
-                    <span>কল করুন</span>
+                    <span><EditableText document="copy.ui.FacultyAndTeachersSection" entry="ejzhyan" fallback={"কল করুন"} /></span>
                   </a>
                 )}
                 <button
                   type="button"
                   onClick={() => setSelectedTeacher(null)}
                   className="bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold px-4 py-2 rounded-lg transition-colors cursor-pointer"
-                >
-                  বন্ধ করুন
-                </button>
+                ><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e19ghl66" fallback={"বন্ধ করুন"} /></button>
               </div>
             </div>
           </div>

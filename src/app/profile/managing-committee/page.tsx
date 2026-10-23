@@ -1,16 +1,16 @@
-import type { Metadata } from "next";
+import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
 import Footer from "@/components/Footer";
 import ManagingCommitteeTable from "@/components/ManagingCommitteeTable";
 
-export const metadata: Metadata = {
+export const generateMetadata = editableMetadata("/profile/managing-committee", {
   title: "Managing Committe | জামিয়া নেছারিয়া ইসলামিয়া টঙ্গী",
   description: "জামিয়া নেছারিয়া ইসলামিয়া টঙ্গীর সম্মানিত ম্যানেজিং কমিটির সদস্যদের তালিকা ও পরিচালনা পর্ষদ।",
-};
+});
 
-export default function ManagingCommitteePage() {
+function ManagingCommitteePage() {
   return (
     <div className="min-h-screen bg-[#F0F2F5] flex flex-col">
       {/* 1. Top Identity Banner */}
@@ -32,4 +32,5 @@ export default function ManagingCommitteePage() {
     </div>
   );
 }
+export default editableRoute("/profile/managing-committee", ManagingCommitteePage);
 

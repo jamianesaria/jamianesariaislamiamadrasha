@@ -1,16 +1,18 @@
-import type { Metadata } from "next";
+import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
 import Footer from "@/components/Footer";
 import VacancyNoticeTable from "@/components/VacancyNoticeTable";
+import { getVacancies } from "@/sanity/lib/queries";
 
-export const metadata: Metadata = {
+export const generateMetadata = editableMetadata("/about/vacancy", {
   title: "Vacancy (Notice) | জামিয়া নেছারিয়া ইসলামিয়া টঙ্গী",
   description: "জামিয়া নেছারিয়া ইসলামিয়া টঙ্গীর সকল সাম্প্রতিক নিয়োগ বিজ্ঞপ্তি ও চাকরির সুযোগ।",
-};
+});
 
-export default function VacancyPage() {
+async function VacancyPage() {
+  const records = (await getVacancies()).map((record, index) => ({ ...record, _type: "vacancy", id: index + 1, postName: record.title, postingDate: record.postedAt || "", dateline: record.deadline, requirements: record.qualification, salary: record.salary, pdfUrl: record.pdfUrl }));
   return (
     <div className="min-h-screen bg-[#F0F2F5] flex flex-col">
       {/* 1. Top Identity Banner */}
@@ -24,7 +26,7 @@ export default function VacancyPage() {
 
       {/* 4. Main Vacancy Notice Content Area */}
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-6 w-full flex-1">
-        <VacancyNoticeTable />
+        <VacancyNoticeTable records={records} />
       </main>
 
       {/* 5. Footer */}
@@ -32,4 +34,5 @@ export default function VacancyPage() {
     </div>
   );
 }
+export default editableRoute("/about/vacancy", VacancyPage);
 

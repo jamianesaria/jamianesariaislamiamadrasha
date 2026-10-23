@@ -9,13 +9,6 @@ export const client = createClient({
   stega: {
     enabled: false,
     studioUrl: "/studio",
+    filter: (props) => props.resultPath.at(-1) === "text" || props.filterDefault(props),
   },
-});
-
-export const writeClient = createClient({
-  projectId,
-  dataset,
-  apiVersion,
-  useCdn: false,
-  token: process.env.SANITY_API_TOKEN,
 });

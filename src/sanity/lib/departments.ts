@@ -15,6 +15,7 @@ export interface AcademicDepartmentRecord {
 }
 
 export interface AcademicDepartment {
+  _type: "academicDepartment";
   _id: string;
   id: string;
   name: string;
@@ -38,6 +39,7 @@ export function mapAcademicDepartments(records: AcademicDepartmentRecord[]): Aca
     seen.add(id);
     return [{
       _id: record._id,
+      _type: "academicDepartment",
       id,
       name: record.title || "",
       arabicName: record.arabicTitle || "",

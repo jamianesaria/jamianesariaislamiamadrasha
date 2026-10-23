@@ -41,14 +41,6 @@ const nextConfig: NextConfig = {
       ],
     }));
   },
-  turbopack: {
-    rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
-      },
-    },
-  },
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 2678400,

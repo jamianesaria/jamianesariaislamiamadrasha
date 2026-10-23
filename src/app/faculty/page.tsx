@@ -1,5 +1,5 @@
-import TeachersPage, { metadata } from "@/app/teachers/page";
+import TeachersPage, { generateMetadata } from "@/app/teachers/page";
 
-export { metadata };
+export { generateMetadata };
 export default TeachersPage;
 

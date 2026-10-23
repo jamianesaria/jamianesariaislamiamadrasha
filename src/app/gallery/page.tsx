@@ -1,17 +1,17 @@
-import type { Metadata } from "next";
+import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
 import Footer from "@/components/Footer";
 import MainGallerySection from "@/components/MainGallerySection";
 
-export const metadata: Metadata = {
+export const generateMetadata = editableMetadata("/gallery", {
   title: "ফটো ও ভিডিও গ্যালারি | জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা",
   description:
     "জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানার মনোরম ক্যাম্পাস, পাঠদান, হিফজুল কুরআন ও বিভিন্ন দ্বীনি আয়োজনের স্থিরচিত্র, ড্রোন ফুটেজ ও ভিডিও মহাফেজখানা।",
-};
+});
 
-export default function GalleryPage() {
+function GalleryPage() {
   return (
     <div className="min-h-screen bg-[#FAFAFA] flex flex-col">
       {/* 1. Top Identity Banner */}
@@ -33,3 +33,4 @@ export default function GalleryPage() {
     </div>
   );
 }
+export default editableRoute("/gallery", GalleryPage);

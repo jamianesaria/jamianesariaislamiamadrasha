@@ -1,10 +1,13 @@
 import { defineField, defineType } from "sanity";
+import { availableClasses } from "@/data/siteData";
 
 export const examRoutineType = defineType({
   name: "examRoutine",
   title: "পরীক্ষার রুটিন (Exam Routines)",
   type: "document",
   fields: [
+    defineField({ name: "migrationKey", title: "স্থানান্তর পরিচিতি", type: "string", hidden: true, readOnly: true }),
+    defineField({ name: "classId", title: "ওয়েবসাইটের শ্রেণি নির্বাচন", type: "string", options: { list: [{ title: "সকল শ্রেণি", value: "all" }, ...availableClasses.map((item) => ({ title: item.name, value: item.id }))] }, validation: (rule) => rule.required() }),
     defineField({
       name: "title",
       title: "পরীক্ষার রুটিনের শিরোনাম",
@@ -38,7 +41,7 @@ export const examRoutineType = defineType({
       type: "array",
       of: [
         {
-          type: "object",
+          type: "object", name: "examRow",
           fields: [
             { name: "date", title: "তারিখ", type: "string" },
             { name: "day", title: "বার", type: "string" },

@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import type { LucideIcon } from "lucide-react";
+import type { AdmissionContent } from "@/content/public-types";
+import { stegaClean } from "@sanity/client/stega";
 import {
   GraduationCap,
   Calendar,
@@ -31,10 +34,12 @@ import {
   Copy,
   CheckCheck,
 } from "lucide-react";
-import { officialAdmissionData, type OfficialAdmissionInfo } from "@/data/admissionData";
+import { officialAdmissionData as _fallback_officialAdmissionData, type OfficialAdmissionInfo } from "@/data/admissionData";
+import { useEditableData, EditableText, EditableValue } from "@/content/client";
+
 
 interface AdmissionInfoSectionProps {
-  initialAdmissionData?: any;
+  initialAdmissionData?: AdmissionContent | null;
 }
 
 type TabKey =
@@ -49,12 +54,14 @@ type TabKey =
 export default function AdmissionInfoSection({
   initialAdmissionData,
 }: AdmissionInfoSectionProps) {
+  const officialAdmissionData = useEditableData("copy.data.officialAdmissionData", _fallback_officialAdmissionData);
+
   // Merge CMS data if available with official static data
   const data: OfficialAdmissionInfo = {
     ...officialAdmissionData,
     sessionName: initialAdmissionData?.sessionName || officialAdmissionData.sessionName,
     hijriYear: initialAdmissionData?.hijriYear || officialAdmissionData.hijriYear,
-    status: initialAdmissionData?.status || officialAdmissionData.status,
+    status: stegaClean(initialAdmissionData?.status || officialAdmissionData.status),
     overview: initialAdmissionData?.overview || officialAdmissionData.overview,
     timelines: {
       arabic:
@@ -74,14 +81,12 @@ export default function AdmissionInfoSection({
         initialAdmissionData?.orphanPolicy ||
         officialAdmissionData.orphanFacility.description,
       verificationConditions:
-        Array.isArray(initialAdmissionData?.orphanConditions) &&
-        initialAdmissionData.orphanConditions.length > 0
+        Array.isArray(initialAdmissionData?.orphanConditions)
           ? initialAdmissionData.orphanConditions
           : officialAdmissionData.orphanFacility.verificationConditions,
     },
     guardianGuidelines:
-      Array.isArray(initialAdmissionData?.guardianGuidelines) &&
-      initialAdmissionData.guardianGuidelines.length > 0
+      Array.isArray(initialAdmissionData?.guardianGuidelines)
         ? initialAdmissionData.guardianGuidelines
         : officialAdmissionData.guardianGuidelines,
     admissionProcess: {
@@ -89,6 +94,13 @@ export default function AdmissionInfoSection({
       pdfDownloadUrl:
         initialAdmissionData?.admissionFormPdfUrl ||
         officialAdmissionData.admissionProcess.pdfDownloadUrl,
+    },
+    contacts: {
+      ...officialAdmissionData.contacts,
+      personnel: officialAdmissionData.contacts.personnel.map((person, index) => {
+        const phone = [initialAdmissionData?.phoneMuhtamim, initialAdmissionData?.phoneNazemeTalimat, initialAdmissionData?.phoneOffice][index];
+        return phone ? { ...person, phone, rawPhone: stegaClean(phone).replace(/[০-৯]/g, (digit) => String("০১২৩৪৫৬৭৮৯".indexOf(digit))) } : person;
+      }),
     },
   };
 
@@ -200,7 +212,7 @@ export default function AdmissionInfoSection({
   const totalAdmissionFee = activeFeeCategory.total + oneTimeMealCost;
   const grandFirstMonthTotal = totalAdmissionFee + totalMonthlyFee;
 
-  const tabs: { key: TabKey; label: string; icon: any; sectionNo: string }[] = [
+  const tabs: { key: TabKey; label: string; icon: LucideIcon; sectionNo: string }[] = useEditableData("copy.ui.AdmissionInfoSection", [
     {
       key: "overview",
       label: "ভর্তি কার্যক্রম ও সময়সূচি",
@@ -243,7 +255,7 @@ export default function AdmissionInfoSection({
       icon: Layers,
       sectionNo: "১-১১",
     },
-  ];
+  ], ["local","tabs"]);
 
   return (
     <div className="space-y-6 sm:space-y-8 max-w-6xl mx-auto">
@@ -260,20 +272,15 @@ export default function AdmissionInfoSection({
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="bg-[#8B111A] text-white text-xs sm:text-sm font-black px-3.5 py-1.5 rounded-full border-2 border-amber-300 inline-flex items-center gap-2 shadow-sm">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>{data.statusText} ({data.sessionName})</span>
+              <span>{data.statusText}<EditableText document="copy.ui.AdmissionInfoSection" entry="efmnez7" fallback={" ("} />{data.sessionName}<EditableText document="copy.ui.AdmissionInfoSection" entry="el695up" fallback={")"} /></span>
             </span>
 
-            <span className="text-amber-200 font-bold text-xs bg-black/40 px-3 py-1.5 rounded-full border border-amber-300/40">
-              হিজরি সেশন: {data.hijriYear}
+            <span className="text-amber-200 font-bold text-xs bg-black/40 px-3 py-1.5 rounded-full border border-amber-300/40"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1h6fv5j" fallback={"হিজরি সেশন: "} />{data.hijriYear}
             </span>
 
-            <span className="text-emerald-100 font-bold text-xs bg-emerald-900/80 px-3 py-1.5 rounded-full border border-emerald-500/50">
-              সমাজসেবা ও বেফাক নিবন্ধিত
-            </span>
+            <span className="text-emerald-100 font-bold text-xs bg-emerald-900/80 px-3 py-1.5 rounded-full border border-emerald-500/50"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1gy3hvg" fallback={"সমাজসেবা ও বেফাক নিবন্ধিত"} /></span>
 
-            <span className="text-amber-300 font-arabic text-sm sm:text-base font-bold ml-auto hidden md:inline">
-              بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
-            </span>
+            <span className="text-amber-300 font-arabic text-sm sm:text-base font-bold ml-auto hidden md:inline"><EditableText document="copy.ui.AdmissionInfoSection" entry="eostloz" fallback={"بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"} /></span>
           </div>
 
           {/* Institution Header & Identity */}
@@ -282,12 +289,10 @@ export default function AdmissionInfoSection({
               <Sparkles size={16} />
               <span>{data.slogan}</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
-              ভর্তি তথ্য ও ভর্তি নির্দেশিকা
-            </h1>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight"><EditableText document="copy.ui.AdmissionInfoSection" entry="ef4ngba" fallback={"ভর্তি তথ্য ও ভর্তি নির্দেশিকা"} /></h1>
             <div className="flex flex-wrap items-center gap-2 text-sm sm:text-base md:text-lg text-emerald-100 font-bold">
               <span>{data.institutionName}</span>
-              <span className="hidden sm:inline">•</span>
+              <span className="hidden sm:inline"><EditableText document="copy.ui.AdmissionInfoSection" entry="e8ubpbq" fallback={"•"} /></span>
               <span className="inline-flex items-center gap-1.5 text-amber-200">
                 <MapPin size={16} className="text-amber-300 shrink-0" />
                 <span>{data.address}</span>
@@ -298,27 +303,27 @@ export default function AdmissionInfoSection({
           {/* Key Quick Highlight Chips */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
             <div className="bg-black/30 backdrop-blur-xs border border-white/15 p-3 rounded-2xl">
-              <div className="text-[11px] font-bold text-amber-300 uppercase">ভর্তির সময়সীমা</div>
-              <div className="text-sm sm:text-base font-black text-white mt-0.5">৮–১৫ শাওয়াল</div>
-              <div className="text-[11px] text-emerald-200 font-medium">ইংরেজি: ১–১৫ জানুয়ারি</div>
+              <div className="text-[11px] font-bold text-amber-300 uppercase"><EditableText document="copy.ui.AdmissionInfoSection" entry="exi43gg" fallback={"ভর্তির সময়সীমা"} /></div>
+              <div className="text-sm sm:text-base font-black text-white mt-0.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1j56hqu" fallback={"৮–১৫ শাওয়াল"} /></div>
+              <div className="text-[11px] text-emerald-200 font-medium"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1no122z" fallback={"ইংরেজি: ১–১৫ জানুয়ারি"} /></div>
             </div>
 
             <div className="bg-black/30 backdrop-blur-xs border border-white/15 p-3 rounded-2xl">
-              <div className="text-[11px] font-bold text-amber-300 uppercase">ভর্তি পরীক্ষা</div>
-              <div className="text-sm sm:text-base font-black text-white mt-0.5">মৌখিক পরীক্ষা</div>
-              <div className="text-[11px] text-emerald-200 font-medium">ফলাফল প্রতিদিন প্রকাশ</div>
+              <div className="text-[11px] font-bold text-amber-300 uppercase"><EditableText document="copy.ui.AdmissionInfoSection" entry="e16iatvt" fallback={"ভর্তি পরীক্ষা"} /></div>
+              <div className="text-sm sm:text-base font-black text-white mt-0.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="e385tbs" fallback={"মৌখিক পরীক্ষা"} /></div>
+              <div className="text-[11px] text-emerald-200 font-medium"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1taai64" fallback={"ফলাফল প্রতিদিন প্রকাশ"} /></div>
             </div>
 
             <div className="bg-black/30 backdrop-blur-xs border border-white/15 p-3 rounded-2xl">
-              <div className="text-[11px] font-bold text-amber-300 uppercase">নতুন ছাত্র ভর্তি ফি</div>
-              <div className="text-sm sm:text-base font-black text-white mt-0.5">৳ ৩,৫০০ টাকা</div>
-              <div className="text-[11px] text-emerald-200 font-medium">পুরাতন ছাত্র: ৩,২০০ টাকা</div>
+              <div className="text-[11px] font-bold text-amber-300 uppercase"><EditableText document="copy.ui.AdmissionInfoSection" entry="ego6t9k" fallback={"নতুন ছাত্র ভর্তি ফি"} /></div>
+              <div className="text-sm sm:text-base font-black text-white mt-0.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="eb04fgc" fallback={"৳ ৩,৫০০ টাকা"} /></div>
+              <div className="text-[11px] text-emerald-200 font-medium"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1qp3p6v" fallback={"পুরাতন ছাত্র: ৩,২০০ টাকা"} /></div>
             </div>
 
             <div className="bg-black/30 backdrop-blur-xs border border-white/15 p-3 rounded-2xl">
-              <div className="text-[11px] font-bold text-amber-300 uppercase">এতিম ও অসহায় কোটা</div>
-              <div className="text-sm sm:text-base font-black text-white mt-0.5">১০০% ফ্রি সুবিধা</div>
-              <div className="text-[11px] text-emerald-200 font-medium">থাকা, খাওয়া ও পড়াশোনা</div>
+              <div className="text-[11px] font-bold text-amber-300 uppercase"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1s0484j" fallback={"এতিম ও অসহায় কোটা"} /></div>
+              <div className="text-sm sm:text-base font-black text-white mt-0.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="eskuwsn" fallback={"১০০% ফ্রি সুবিধা"} /></div>
+              <div className="text-[11px] text-emerald-200 font-medium"><EditableText document="copy.ui.AdmissionInfoSection" entry="e7e17kn" fallback={"থাকা, খাওয়া ও পড়াশোনা"} /></div>
             </div>
           </div>
 
@@ -329,7 +334,7 @@ export default function AdmissionInfoSection({
               className="inline-flex items-center gap-2 bg-[#8B111A] hover:bg-[#6e0b13] text-white text-sm sm:text-base font-black px-5 py-3 rounded-xl border-2 border-amber-300 shadow-lg transition-all hover:scale-105"
             >
               <GraduationCap size={18} className="text-amber-300" />
-              <span>অনলাইনে ভর্তি আবেদন শুরু করুন</span>
+              <span><EditableText document="copy.ui.AdmissionInfoSection" entry="exf519t" fallback={"অনলাইনে ভর্তি আবেদন শুরু করুন"} /></span>
               <ArrowRight size={16} />
             </Link>
 
@@ -339,7 +344,7 @@ export default function AdmissionInfoSection({
               className="inline-flex items-center gap-2 bg-white text-[#014d26] hover:bg-amber-50 text-sm sm:text-base font-black px-4 py-3 rounded-xl border-2 border-amber-400 shadow-md transition-colors"
             >
               <Download size={18} className="text-[#8B111A]" />
-              <span>ভর্তি ফরম ডাউনলোড (PDF)</span>
+              <span><EditableText document="copy.ui.AdmissionInfoSection" entry="exxeyu9" fallback={"ভর্তি ফরম ডাউনলোড (PDF)"} /></span>
             </button>
 
             <button
@@ -348,7 +353,7 @@ export default function AdmissionInfoSection({
               className="inline-flex items-center gap-2 bg-[#D9822B] hover:bg-[#c27122] text-black text-sm sm:text-base font-black px-4 py-3 rounded-xl border-2 border-amber-200 shadow-sm transition-colors"
             >
               <Calculator size={17} />
-              <span>ভর্তি ফি হিসাব করুন</span>
+              <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e19nzgos" fallback={"ভর্তি ফি হিসাব করুন"} /></span>
             </button>
 
             <button
@@ -357,7 +362,7 @@ export default function AdmissionInfoSection({
               className="inline-flex items-center gap-2 bg-black/40 hover:bg-black/60 text-white text-sm sm:text-base font-black px-4 py-3 rounded-xl border border-white/30 transition-colors"
             >
               <PhoneCall size={17} className="text-emerald-300" />
-              <span>জরুরি যোগাযোগ</span>
+              <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e11ghi8a" fallback={"জরুরি যোগাযোগ"} /></span>
             </button>
           </div>
         </div>
@@ -373,16 +378,13 @@ export default function AdmissionInfoSection({
         {/* Mobile Header: Displays Current Section & Instruction */}
         <div className="flex sm:hidden items-center justify-between pb-2 mb-2.5 border-b border-gray-200">
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-black bg-[#014d26] text-amber-300 px-2.5 py-0.5 rounded-md">
-              ধারা {tabs.find((t) => t.key === activeTab)?.sectionNo}
+            <span className="text-[11px] font-black bg-[#014d26] text-amber-300 px-2.5 py-0.5 rounded-md"><EditableText document="copy.ui.AdmissionInfoSection" entry="ezjdca2" fallback={"ধারা "} />{tabs.find((t) => t.key === activeTab)?.sectionNo}
             </span>
             <span className="text-xs font-black text-gray-950 truncate max-w-[200px]">
               {tabs.find((t) => t.key === activeTab)?.label}
             </span>
           </div>
-          <span className="text-[10px] font-bold text-gray-500">
-            ৭টি বিষয়ভিত্তিক ধাপ
-          </span>
+          <span className="text-[10px] font-bold text-gray-500"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1brumr3" fallback={"৭টি বিষয়ভিত্তিক ধাপ"} /></span>
         </div>
 
         {/* Responsive Grid:
@@ -478,14 +480,9 @@ export default function AdmissionInfoSection({
             {/* Header */}
             <div className="border-b-2 border-gray-200 pb-4 flex flex-wrap items-center justify-between gap-4">
               <div>
-                <span className="text-xs font-black text-[#014d26] bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">
-                  ধারা ১ ও ২ • প্রাতিষ্ঠানিক প্রজ্ঞাপন
-                </span>
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-950 mt-1.5">
-                  ভর্তি কার্যক্রম ও নির্ধারিত সময়সীমা
-                </h2>
-                <p className="text-sm font-bold text-gray-700 mt-0.5">
-                  শিক্ষাবর্ষ: {data.sessionName} | হিজরি: {data.hijriYear}
+                <span className="text-xs font-black text-[#014d26] bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1qblb3s" fallback={"ধারা ১ ও ২ • প্রাতিষ্ঠানিক প্রজ্ঞাপন"} /></span>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-950 mt-1.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="ey8pdmk" fallback={"ভর্তি কার্যক্রম ও নির্ধারিত সময়সীমা"} /></h2>
+                <p className="text-sm font-bold text-gray-700 mt-0.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1of7t25" fallback={"শিক্ষাবর্ষ: "} />{data.sessionName}<EditableText document="copy.ui.AdmissionInfoSection" entry="e1nmieof" fallback={" | হিজরি: "} />{data.hijriYear}
                 </p>
               </div>
 
@@ -496,7 +493,7 @@ export default function AdmissionInfoSection({
                   className="inline-flex items-center gap-2 text-xs sm:text-sm font-black text-white bg-[#8B111A] hover:bg-[#6e0b13] px-4 py-2.5 rounded-xl border border-amber-300 shadow-xs transition-colors"
                 >
                   <Download size={15} />
-                  <span>ভর্তি ফরম (PDF)</span>
+                  <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e1lzlxxj" fallback={"ভর্তি ফরম (PDF)"} /></span>
                 </button>
                 <button
                   type="button"
@@ -504,7 +501,7 @@ export default function AdmissionInfoSection({
                   className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-gray-900 bg-gray-100 hover:bg-gray-200 px-3.5 py-2.5 rounded-xl border border-gray-300 transition-colors"
                 >
                   <Printer size={15} />
-                  <span className="hidden sm:inline">প্রিন্ট</span>
+                  <span className="hidden sm:inline"><EditableText document="copy.ui.AdmissionInfoSection" entry="e54r2an" fallback={"প্রিন্ট"} /></span>
                 </button>
               </div>
             </div>
@@ -512,12 +509,8 @@ export default function AdmissionInfoSection({
             {/* ১. ভর্তি কার্যক্রম */}
             <div className="space-y-3 bg-[#f8faf8] p-5 sm:p-7 rounded-2xl border-2 border-emerald-200">
               <div className="flex items-center gap-2.5">
-                <span className="w-8 h-8 rounded-xl bg-[#014d26] text-amber-300 font-black text-sm flex items-center justify-center">
-                  ১
-                </span>
-                <h3 className="text-lg sm:text-xl font-black text-[#014d26]">
-                  ভর্তি কার্যক্রম
-                </h3>
+                <span className="w-8 h-8 rounded-xl bg-[#014d26] text-amber-300 font-black text-sm flex items-center justify-center"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1t4itun" fallback={"১"} /></span>
+                <h3 className="text-lg sm:text-xl font-black text-[#014d26]"><EditableText document="copy.ui.AdmissionInfoSection" entry="edsdnb6" fallback={"ভর্তি কার্যক্রম"} /></h3>
               </div>
               <p className="text-sm sm:text-base text-gray-900 leading-relaxed font-medium pl-1 sm:pl-10">
                 {data.overview}
@@ -527,66 +520,48 @@ export default function AdmissionInfoSection({
             {/* ২. ভর্তির সময়সীমা */}
             <div className="space-y-4">
               <div className="flex items-center gap-2.5">
-                <span className="w-8 h-8 rounded-xl bg-[#8B111A] text-white font-black text-sm flex items-center justify-center">
-                  ২
-                </span>
-                <h3 className="text-lg sm:text-xl font-black text-gray-950">
-                  ভর্তির সময়সীমা
-                </h3>
+                <span className="w-8 h-8 rounded-xl bg-[#8B111A] text-white font-black text-sm flex items-center justify-center"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1wxxr4p" fallback={"২"} /></span>
+                <h3 className="text-lg sm:text-xl font-black text-gray-950"><EditableText document="copy.ui.AdmissionInfoSection" entry="ep5mm6w" fallback={"ভর্তির সময়সীমা"} /></h3>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pl-0 sm:pl-10">
                 {/* Arabic Timeline Card */}
                 <div className="bg-emerald-50/70 border-2 border-emerald-400 rounded-2xl p-5 space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-black text-[#014d26] bg-emerald-200 px-3 py-1 rounded-full uppercase">
-                      আরবি শিক্ষাবর্ষ
-                    </span>
+                    <span className="text-xs font-black text-[#014d26] bg-emerald-200 px-3 py-1 rounded-full uppercase"><EditableText document="copy.ui.AdmissionInfoSection" entry="eucy8dk" fallback={"আরবি শিক্ষাবর্ষ"} /></span>
                     <Calendar size={20} className="text-[#014d26]" />
                   </div>
-                  <h4 className="text-base sm:text-lg font-black text-gray-950">
-                    আরবি বর্ষের ভর্তি সময়সীমা
-                  </h4>
+                  <h4 className="text-base sm:text-lg font-black text-gray-950"><EditableText document="copy.ui.AdmissionInfoSection" entry="etlyusy" fallback={"আরবি বর্ষের ভর্তি সময়সীমা"} /></h4>
                   <div className="bg-white p-3.5 rounded-xl border border-emerald-300 text-sm sm:text-base font-black text-[#014d26]">
                     {data.timelines.arabic}
                   </div>
-                  <p className="text-xs text-gray-700 font-semibold">
-                    * কওমী মাদরাসা শিক্ষাবোর্ড বেফাকের বার্ষিক ক্যালেন্ডার অনুযায়ী নির্ধারিত।
-                  </p>
+                  <p className="text-xs text-gray-700 font-semibold"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1yngyp3" fallback={"* কওমী মাদরাসা শিক্ষাবোর্ড বেফাকের বার্ষিক ক্যালেন্ডার অনুযায়ী নির্ধারিত।"} /></p>
                 </div>
 
                 {/* English Timeline Card */}
                 <div className="bg-amber-50/70 border-2 border-amber-400 rounded-2xl p-5 space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-black text-amber-950 bg-amber-200 px-3 py-1 rounded-full uppercase">
-                      ইংরেজি বর্ষ
-                    </span>
+                    <span className="text-xs font-black text-amber-950 bg-amber-200 px-3 py-1 rounded-full uppercase"><EditableText document="copy.ui.AdmissionInfoSection" entry="eiytd29" fallback={"ইংরেজি বর্ষ"} /></span>
                     <Calendar size={20} className="text-[#8B111A]" />
                   </div>
-                  <h4 className="text-base sm:text-lg font-black text-gray-950">
-                    ইংরেজি বর্ষের ভর্তি সময়সীমা
-                  </h4>
+                  <h4 className="text-base sm:text-lg font-black text-gray-950"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1w2as4p" fallback={"ইংরেজি বর্ষের ভর্তি সময়সীমা"} /></h4>
                   <div className="bg-white p-3.5 rounded-xl border border-amber-300 text-sm sm:text-base font-black text-[#8B111A]">
                     {data.timelines.english}
                   </div>
-                  <p className="text-xs text-gray-700 font-semibold">
-                    * নূরানী মক্তব ও হিফজ প্রস্তুতি জামাতে জানুয়ারি সেশনে নতুন শিক্ষার্থী গ্রহণ করা হয়।
-                  </p>
+                  <p className="text-xs text-gray-700 font-semibold"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1xx60tk" fallback={"* নূরানী মক্তব ও হিফজ প্রস্তুতি জামাতে জানুয়ারি সেশনে নতুন শিক্ষার্থী গ্রহণ করা হয়।"} /></p>
                 </div>
               </div>
             </div>
 
             {/* Navigation to Next Tab */}
             <div className="pt-6 border-t-2 border-gray-200 flex flex-wrap items-center justify-between gap-3">
-              <span className="text-xs font-bold text-gray-600">
-                পরবর্তী ধাপ: বিভাগসমূহ ও ভর্তির যোগ্যতা
-              </span>
+              <span className="text-xs font-bold text-gray-600"><EditableText document="copy.ui.AdmissionInfoSection" entry="ebqkdsk" fallback={"পরবর্তী ধাপ: বিভাগসমূহ ও ভর্তির যোগ্যতা"} /></span>
               <button
                 type="button"
                 onClick={() => goToTab("departments")}
                 className="inline-flex items-center gap-2 bg-[#014d26] hover:bg-[#023e1f] text-white text-xs sm:text-sm font-black px-5 py-2.5 rounded-xl border border-amber-300 shadow-sm transition-colors"
               >
-                <span>ধারা ৩ • বিভাগ ও যোগ্যতা দেখুন</span>
+                <span><EditableText document="copy.ui.AdmissionInfoSection" entry="epk6mhc" fallback={"ধারা ৩ • বিভাগ ও যোগ্যতা দেখুন"} /></span>
                 <ArrowRight size={15} />
               </button>
             </div>
@@ -602,15 +577,9 @@ export default function AdmissionInfoSection({
             <div id="age-checker" className="scroll-mt-24" />
             {/* Header */}
             <div className="border-b-2 border-gray-200 pb-4">
-              <span className="text-xs font-black text-[#014d26] bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">
-                ধারা ৩ • শিক্ষাগত যোগ্যতা ও বিভাগ
-              </span>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-950 mt-1.5">
-                বিভাগসমূহ ও ভর্তির যোগ্যতা
-              </h2>
-              <p className="text-sm font-bold text-gray-700 mt-0.5">
-                নিচের বিভাগগুলোর বিস্তারিত নিয়মাবলি, বয়সসীমা ও আবাসন সুবিধা দেখে নিন।
-              </p>
+              <span className="text-xs font-black text-[#014d26] bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300"><EditableText document="copy.ui.AdmissionInfoSection" entry="ez3s9ks" fallback={"ধারা ৩ • শিক্ষাগত যোগ্যতা ও বিভাগ"} /></span>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-950 mt-1.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1321clc" fallback={"বিভাগসমূহ ও ভর্তির যোগ্যতা"} /></h2>
+              <p className="text-sm font-bold text-gray-700 mt-0.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="ey7rgv3" fallback={"নিচের বিভাগগুলোর বিস্তারিত নিয়মাবলি, বয়সসীমা ও আবাসন সুবিধা দেখে নিন।"} /></p>
             </div>
 
             {/* Department Navigation Buttons */}
@@ -640,8 +609,7 @@ export default function AdmissionInfoSection({
                       </span>
                       <h3 className="font-black text-base sm:text-lg mt-1">{dept.name}</h3>
                     </div>
-                    <div className="mt-3 pt-2 border-t border-white/20 text-xs font-semibold">
-                      বয়সসীমা: {dept.ageLimit}
+                    <div className="mt-3 pt-2 border-t border-white/20 text-xs font-semibold"><EditableText document="copy.ui.AdmissionInfoSection" entry="eiqxjnr" fallback={"বয়সসীমা: "} />{dept.ageLimit}
                     </div>
                   </button>
                 );
@@ -673,8 +641,7 @@ export default function AdmissionInfoSection({
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <span className="text-xs sm:text-sm font-black text-amber-950 bg-amber-200 px-3 py-1 rounded-full border border-amber-300">
-                          বয়স: {dept.ageLimit}
+                        <span className="text-xs sm:text-sm font-black text-amber-950 bg-amber-200 px-3 py-1 rounded-full border border-amber-300"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1n6lvb3" fallback={"বয়স: "} />{dept.ageLimit}
                         </span>
                       </div>
                     </div>
@@ -684,7 +651,7 @@ export default function AdmissionInfoSection({
                       <div className="bg-white p-5 rounded-xl border border-gray-300 space-y-3">
                         <h4 className="font-black text-base text-gray-950 flex items-center gap-2 text-[#014d26]">
                           <CheckCircle2 size={18} className="text-[#014d26]" />
-                          <span>ভর্তির যোগ্যতা ও শর্তাবলি:</span>
+                          <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e4ftir3" fallback={"ভর্তির যোগ্যতা ও শর্তাবলি:"} /></span>
                         </h4>
                         <ul className="space-y-2">
                           {dept.eligibility.map((el, i) => (
@@ -692,9 +659,7 @@ export default function AdmissionInfoSection({
                               key={i}
                               className="text-sm font-semibold text-gray-800 flex items-start gap-2"
                             >
-                              <span className="text-[#8B111A] font-black text-base leading-none">
-                                •
-                              </span>
+                              <span className="text-[#8B111A] font-black text-base leading-none"><EditableText document="copy.ui.AdmissionInfoSection" entry="e3gzyrh" fallback={"•"} /></span>
                               <span>{el}</span>
                             </li>
                           ))}
@@ -705,7 +670,7 @@ export default function AdmissionInfoSection({
                       <div className="bg-white p-5 rounded-xl border border-gray-300 space-y-3">
                         <h4 className="font-black text-base text-gray-950 flex items-center gap-2 text-[#014d26]">
                           <Info size={18} className="text-amber-600" />
-                          <span>আবাসন ও অধ্যয়নের সুযোগ:</span>
+                          <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e849m43" fallback={"আবাসন ও অধ্যয়নের সুযোগ:"} /></span>
                         </h4>
                         <div className="space-y-2 text-sm text-gray-800">
                           <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-200 font-bold text-[#014d26]">
@@ -724,14 +689,12 @@ export default function AdmissionInfoSection({
                     </div>
 
                     <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-gray-200">
-                      <span className="text-xs font-bold text-gray-600">
-                        * নির্ধারিত সময়ে মৌখিক পরীক্ষার মাধ্যমে যোগ্যতা যাচাই করা হবে।
-                      </span>
+                      <span className="text-xs font-bold text-gray-600"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1t5j4fh" fallback={"* নির্ধারিত সময়ে মৌখিক পরীক্ষার মাধ্যমে যোগ্যতা যাচাই করা হবে।"} /></span>
                       <Link
                         href={`/apply?dept=${dept.id}`}
                         className="inline-flex items-center gap-2 bg-[#014d26] hover:bg-[#023e1f] text-white text-xs sm:text-sm font-black px-4 py-2 rounded-xl transition-colors"
                       >
-                        <span>এই বিভাগে আবেদন ফরম পূরণ করুন</span>
+                        <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e1dssm4x" fallback={"এই বিভাগে আবেদন ফরম পূরণ করুন"} /></span>
                         <ArrowRight size={14} />
                       </Link>
                     </div>
@@ -746,15 +709,13 @@ export default function AdmissionInfoSection({
                 type="button"
                 onClick={() => goToTab("overview")}
                 className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-900 text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl border border-gray-300 transition-colors"
-              >
-                &larr; পূর্ববর্তী: ধারা ১ ও ২ (কার্যক্রম ও সময়সূচি)
-              </button>
+              ><EditableText document="copy.ui.AdmissionInfoSection" entry="e14a356a" fallback={"&larr; পূর্ববর্তী: ধারা ১ ও ২ (কার্যক্রম ও সময়সূচি)"} /></button>
               <button
                 type="button"
                 onClick={() => goToTab("process")}
                 className="inline-flex items-center gap-2 bg-[#014d26] hover:bg-[#023e1f] text-white text-xs sm:text-sm font-black px-5 py-2.5 rounded-xl border border-amber-300 shadow-sm transition-colors"
               >
-                <span>পরবর্তী: ধারা ৪ ও ৫ • পরীক্ষা ও প্রক্রিয়া</span>
+                <span><EditableText document="copy.ui.AdmissionInfoSection" entry="evptsst" fallback={"পরবর্তী: ধারা ৪ ও ৫ • পরীক্ষা ও প্রক্রিয়া"} /></span>
                 <ArrowRight size={15} />
               </button>
             </div>
@@ -769,15 +730,9 @@ export default function AdmissionInfoSection({
             {/* Header */}
             <div className="border-b-2 border-gray-200 pb-4 flex flex-wrap items-center justify-between gap-4">
               <div>
-                <span className="text-xs font-black text-[#014d26] bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">
-                  ধারা ৪ ও ৫ • পরীক্ষা ও আবেদন ধাপ
-                </span>
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-950 mt-1.5">
-                  ভর্তি পরীক্ষা ও পূর্ণাঙ্গ ভর্তি প্রক্রিয়া
-                </h2>
-                <p className="text-sm font-bold text-gray-700 mt-0.5">
-                  অনলাইন বা সরাসরি অফিসে এসে আবেদনের ৫টি সহজ ধাপ।
-                </p>
+                <span className="text-xs font-black text-[#014d26] bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300"><EditableText document="copy.ui.AdmissionInfoSection" entry="eoe7my6" fallback={"ধারা ৪ ও ৫ • পরীক্ষা ও আবেদন ধাপ"} /></span>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-950 mt-1.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1836ul9" fallback={"ভর্তি পরীক্ষা ও পূর্ণাঙ্গ ভর্তি প্রক্রিয়া"} /></h2>
+                <p className="text-sm font-bold text-gray-700 mt-0.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1rdkwpj" fallback={"অনলাইন বা সরাসরি অফিসে এসে আবেদনের ৫টি সহজ ধাপ।"} /></p>
               </div>
 
               <button
@@ -786,44 +741,32 @@ export default function AdmissionInfoSection({
                 className="inline-flex items-center gap-2 text-xs sm:text-sm font-black text-[#014d26] bg-amber-300 hover:bg-amber-400 px-4 py-2.5 rounded-xl border-2 border-amber-500 shadow-xs transition-colors"
               >
                 <Download size={16} />
-                <span>ভর্তি ফরম ডাউনলোড (PDF)</span>
+                <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e2d0kic" fallback={"ভর্তি ফরম ডাউনলোড (PDF)"} /></span>
               </button>
             </div>
 
             {/* ৪. ভর্তি পরীক্ষা ও ফলাফল */}
             <div className="bg-emerald-50/70 border-2 border-emerald-300 rounded-2xl p-5 sm:p-7 space-y-4">
               <div className="flex items-center gap-2.5">
-                <span className="w-8 h-8 rounded-xl bg-[#014d26] text-amber-300 font-black text-sm flex items-center justify-center">
-                  ৪
-                </span>
-                <h3 className="text-lg sm:text-xl font-black text-[#014d26]">
-                  ভর্তি পরীক্ষা ও ফলাফল
-                </h3>
+                <span className="w-8 h-8 rounded-xl bg-[#014d26] text-amber-300 font-black text-sm flex items-center justify-center"><EditableText document="copy.ui.AdmissionInfoSection" entry="eq4adj9" fallback={"৪"} /></span>
+                <h3 className="text-lg sm:text-xl font-black text-[#014d26]"><EditableText document="copy.ui.AdmissionInfoSection" entry="e5t7iu9" fallback={"ভর্তি পরীক্ষা ও ফলাফল"} /></h3>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pl-0 sm:pl-10">
                 <div className="bg-white p-4 rounded-xl border border-emerald-200 space-y-1">
-                  <div className="text-xs font-black text-gray-600 uppercase">
-                    ভর্তি পরীক্ষার পদ্ধতি
-                  </div>
+                  <div className="text-xs font-black text-gray-600 uppercase"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1i93ch4" fallback={"ভর্তি পরীক্ষার পদ্ধতি"} /></div>
                   <div className="text-base sm:text-lg font-black text-[#8B111A]">
                     {data.examInfo.method}
                   </div>
-                  <p className="text-xs text-gray-700 font-medium">
-                    সংশ্লিষ্ট জামাত ও বিভাগের শিক্ষাগত মান অনুযায়ী মৌখিক যাচাই গ্রহণ করা হয়।
-                  </p>
+                  <p className="text-xs text-gray-700 font-medium"><EditableText document="copy.ui.AdmissionInfoSection" entry="e4wwctr" fallback={"সংশ্লিষ্ট জামাত ও বিভাগের শিক্ষাগত মান অনুযায়ী মৌখিক যাচাই গ্রহণ করা হয়।"} /></p>
                 </div>
 
                 <div className="bg-white p-4 rounded-xl border border-emerald-200 space-y-1">
-                  <div className="text-xs font-black text-gray-600 uppercase">
-                    ফলাফল প্রকাশ
-                  </div>
+                  <div className="text-xs font-black text-gray-600 uppercase"><EditableText document="copy.ui.AdmissionInfoSection" entry="e18bule9" fallback={"ফলাফল প্রকাশ"} /></div>
                   <div className="text-base sm:text-lg font-black text-[#014d26]">
                     {data.examInfo.resultPublish}
                   </div>
-                  <p className="text-xs text-gray-700 font-medium">
-                    মাদরাসার নোটিশ বোর্ড এবং ওয়েবসাইটের ফলাফল পেজে তাৎক্ষণিক হালনাগাদ করা হয়।
-                  </p>
+                  <p className="text-xs text-gray-700 font-medium"><EditableText document="copy.ui.AdmissionInfoSection" entry="ehdx0w7" fallback={"মাদরাসার নোটিশ বোর্ড এবং ওয়েবসাইটের ফলাফল পেজে তাৎক্ষণিক হালনাগাদ করা হয়।"} /></p>
                 </div>
               </div>
             </div>
@@ -831,13 +774,9 @@ export default function AdmissionInfoSection({
             {/* ৫. ভর্তি প্রক্রিয়া (5 Easy Steps) */}
             <div className="space-y-5">
               <div className="flex items-center gap-2.5">
-                <span className="w-8 h-8 rounded-xl bg-[#8B111A] text-white font-black text-sm flex items-center justify-center">
-                  ৫
-                </span>
+                <span className="w-8 h-8 rounded-xl bg-[#8B111A] text-white font-black text-sm flex items-center justify-center"><EditableText document="copy.ui.AdmissionInfoSection" entry="ezhn93h" fallback={"৫"} /></span>
                 <div>
-                  <h3 className="text-lg sm:text-xl font-black text-gray-950">
-                    ভর্তি প্রক্রিয়া
-                  </h3>
+                  <h3 className="text-lg sm:text-xl font-black text-gray-950"><EditableText document="copy.ui.AdmissionInfoSection" entry="ebs3uil" fallback={"ভর্তি প্রক্রিয়া"} /></h3>
                   <p className="text-xs sm:text-sm font-semibold text-gray-700">
                     {data.admissionProcess.intro}
                   </p>
@@ -855,7 +794,7 @@ export default function AdmissionInfoSection({
                       {idx + 1}
                     </div>
                     <div className="space-y-1">
-                      <div className="text-xs font-bold text-[#8B111A] uppercase">ধাপ ০{idx + 1}</div>
+                      <div className="text-xs font-bold text-[#8B111A] uppercase"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1haebn3" fallback={"ধাপ ০"} />{idx + 1}</div>
                       <p className="text-sm sm:text-base font-bold text-gray-950 leading-relaxed">
                         {step}
                       </p>
@@ -868,12 +807,8 @@ export default function AdmissionInfoSection({
               <div className="pl-0 sm:pl-10">
                 <div className="rounded-2xl p-6 bg-linear-to-r from-amber-50 to-orange-50 border-2 border-amber-400 flex flex-col md:flex-row items-center justify-between gap-5 shadow-sm">
                   <div className="space-y-2 text-center md:text-left">
-                    <span className="text-xs font-black text-amber-900 bg-amber-200 px-3 py-1 rounded-full border border-amber-300">
-                      অফিসিয়াল ফরম
-                    </span>
-                    <h4 className="text-lg sm:text-xl font-black text-gray-950">
-                      ভর্তি ফরম ডাউনলোড (PDF)
-                    </h4>
+                    <span className="text-xs font-black text-amber-900 bg-amber-200 px-3 py-1 rounded-full border border-amber-300"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1j82nyc" fallback={"অফিসিয়াল ফরম"} /></span>
+                    <h4 className="text-lg sm:text-xl font-black text-gray-950"><EditableText document="copy.ui.AdmissionInfoSection" entry="ef5hppg" fallback={"ভর্তি ফরম ডাউনলোড (PDF)"} /></h4>
                     <p className="text-xs sm:text-sm font-semibold text-gray-800 max-w-xl">
                       {data.admissionProcess.formDownloadNote}
                     </p>
@@ -886,7 +821,7 @@ export default function AdmissionInfoSection({
                       className="inline-flex items-center gap-2 bg-[#014d26] hover:bg-[#023e1f] text-white text-sm font-black px-5 py-3 rounded-xl border border-amber-300 shadow-md transition-colors"
                     >
                       <Printer size={17} />
-                      <span>ফরম প্রিভিউ ও প্রিন্ট</span>
+                      <span><EditableText document="copy.ui.AdmissionInfoSection" entry="ea8kbew" fallback={"ফরম প্রিভিউ ও প্রিন্ট"} /></span>
                     </button>
 
                     <a
@@ -895,7 +830,7 @@ export default function AdmissionInfoSection({
                       className="inline-flex items-center gap-2 bg-[#8B111A] hover:bg-[#6e0b13] text-white text-sm font-black px-5 py-3 rounded-xl border border-amber-300 shadow-md transition-colors"
                     >
                       <Download size={17} />
-                      <span>সরাসরি PDF ফাইল সেভ করুন</span>
+                      <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e93m226" fallback={"সরাসরি PDF ফাইল সেভ করুন"} /></span>
                     </a>
                   </div>
                 </div>
@@ -908,15 +843,13 @@ export default function AdmissionInfoSection({
                 type="button"
                 onClick={() => goToTab("departments")}
                 className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-900 text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl border border-gray-300 transition-colors"
-              >
-                &larr; পূর্ববর্তী: ধারা ৩ (বিভাগসমূহ ও যোগ্যতা)
-              </button>
+              ><EditableText document="copy.ui.AdmissionInfoSection" entry="e1y98zon" fallback={"&larr; পূর্ববর্তী: ধারা ৩ (বিভাগসমূহ ও যোগ্যতা)"} /></button>
               <button
                 type="button"
                 onClick={() => goToTab("documents")}
                 className="inline-flex items-center gap-2 bg-[#014d26] hover:bg-[#023e1f] text-white text-xs sm:text-sm font-black px-5 py-2.5 rounded-xl border border-amber-300 shadow-sm transition-colors"
               >
-                <span>পরবর্তী: ধারা ৬ ও ৭ • কাগজপত্র ও এতিমদের সুবিধা</span>
+                <span><EditableText document="copy.ui.AdmissionInfoSection" entry="ecggqdg" fallback={"পরবর্তী: ধারা ৬ ও ৭ • কাগজপত্র ও এতিমদের সুবিধা"} /></span>
                 <ArrowRight size={15} />
               </button>
             </div>
@@ -931,32 +864,20 @@ export default function AdmissionInfoSection({
             <div id="document-checklist" className="scroll-mt-24" />
             {/* Header */}
             <div className="border-b-2 border-gray-200 pb-4">
-              <span className="text-xs font-black text-[#014d26] bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">
-                ধারা ৬ ও ৭ • নথিপত্র ও মানবিক সুবিধা
-              </span>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-950 mt-1.5">
-                ভর্তির প্রয়োজনীয় কাগজপত্র ও এতিমদের বিশেষ ব্যবস্থা
-              </h2>
-              <p className="text-sm font-bold text-gray-700 mt-0.5">
-                আবেদনের পূর্বে প্রয়োজনীয় কাগজপত্র প্রস্তুত করে রাখুন।
-              </p>
+              <span className="text-xs font-black text-[#014d26] bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300"><EditableText document="copy.ui.AdmissionInfoSection" entry="eex2x12" fallback={"ধারা ৬ ও ৭ • নথিপত্র ও মানবিক সুবিধা"} /></span>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-950 mt-1.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="eei83q3" fallback={"ভর্তির প্রয়োজনীয় কাগজপত্র ও এতিমদের বিশেষ ব্যবস্থা"} /></h2>
+              <p className="text-sm font-bold text-gray-700 mt-0.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="eyl8e6r" fallback={"আবেদনের পূর্বে প্রয়োজনীয় কাগজপত্র প্রস্তুত করে রাখুন।"} /></p>
             </div>
 
             {/* ৬. ভর্তির জন্য প্রয়োজনীয় কাগজপত্র */}
             <div className="space-y-4">
               <div className="flex items-center justify-between border-b border-gray-200 pb-2">
                 <div className="flex items-center gap-2.5">
-                  <span className="w-8 h-8 rounded-xl bg-[#014d26] text-amber-300 font-black text-sm flex items-center justify-center">
-                    ৬
-                  </span>
-                  <h3 className="text-lg sm:text-xl font-black text-gray-950">
-                    ভর্তির জন্য প্রয়োজনীয় কাগজপত্র
-                  </h3>
+                  <span className="w-8 h-8 rounded-xl bg-[#014d26] text-amber-300 font-black text-sm flex items-center justify-center"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1iho1wz" fallback={"৬"} /></span>
+                  <h3 className="text-lg sm:text-xl font-black text-gray-950"><EditableText document="copy.ui.AdmissionInfoSection" entry="e5u44wo" fallback={"ভর্তির জন্য প্রয়োজনীয় কাগজপত্র"} /></h3>
                 </div>
 
-                <span className="text-xs font-bold text-gray-600 hidden sm:inline">
-                  চেকবক্সে ক্লিক করে আপনার সংগ্রহ যাচাই করুন
-                </span>
+                <span className="text-xs font-bold text-gray-600 hidden sm:inline"><EditableText document="copy.ui.AdmissionInfoSection" entry="emcdyrs" fallback={"চেকবক্সে ক্লিক করে আপনার সংগ্রহ যাচাই করুন"} /></span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -983,7 +904,7 @@ export default function AdmissionInfoSection({
                       </div>
 
                       <div className="space-y-0.5">
-                        <div className="text-xs font-bold text-gray-500">নথি ক্রমিক ০{idx + 1}</div>
+                        <div className="text-xs font-bold text-gray-500"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1el7st4" fallback={"নথি ক্রমিক ০"} />{idx + 1}</div>
                         <p className="text-sm sm:text-base font-black text-gray-950">
                           {doc}
                         </p>
@@ -1001,9 +922,7 @@ export default function AdmissionInfoSection({
                   <Heart size={22} className="text-amber-300" />
                 </div>
                 <div>
-                  <span className="text-xs font-black text-rose-900 bg-rose-200 px-3 py-1 rounded-full border border-rose-300">
-                    ধারা ৭ • মানবিক ও লিল্লাহ কোটা
-                  </span>
+                  <span className="text-xs font-black text-rose-900 bg-rose-200 px-3 py-1 rounded-full border border-rose-300"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1ecsa12" fallback={"ধারা ৭ • মানবিক ও লিল্লাহ কোটা"} /></span>
                   <h3 className="text-xl sm:text-2xl font-black text-[#8B111A] mt-1.5">
                     {data.orphanFacility.title}
                   </h3>
@@ -1017,15 +936,13 @@ export default function AdmissionInfoSection({
               <div className="bg-white p-5 sm:p-6 rounded-2xl border-2 border-rose-200 space-y-3">
                 <h4 className="font-black text-base sm:text-lg text-[#014d26] flex items-center gap-2">
                   <CheckCircle2 size={18} className="text-[#014d26]" />
-                  <span>এতিম শিক্ষার্থী যাচাইয়ের শর্তাবলি:</span>
+                  <span><EditableText document="copy.ui.AdmissionInfoSection" entry="ewna47u" fallback={"এতিম শিক্ষার্থী যাচাইয়ের শর্তাবলি:"} /></span>
                 </h4>
 
                 <div className="space-y-2.5">
                   {data.orphanFacility.verificationConditions.map((cond, i) => (
                     <div key={i} className="flex items-start gap-3">
-                      <div className="w-5 h-5 rounded-full bg-emerald-100 text-[#014d26] flex items-center justify-center font-black text-xs shrink-0 mt-0.5">
-                        ✓
-                      </div>
+                      <div className="w-5 h-5 rounded-full bg-emerald-100 text-[#014d26] flex items-center justify-center font-black text-xs shrink-0 mt-0.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1dfi4l8" fallback={"✓"} /></div>
                       <span className="text-sm sm:text-base font-bold text-gray-900">
                         {cond}
                       </span>
@@ -1035,14 +952,12 @@ export default function AdmissionInfoSection({
               </div>
 
               <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-                <span className="text-xs font-bold text-gray-700">
-                  * সমাজসেবা অধিদপ্তর নিবন্ধিত এতিমখানা লিল্লাহ বোর্ডিং (নিবন্ধন: ঢ-০৫০৪)।
-                </span>
+                <span className="text-xs font-bold text-gray-700"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1g5sdi7" fallback={"* সমাজসেবা অধিদপ্তর নিবন্ধিত এতিমখানা লিল্লাহ বোর্ডিং (নিবন্ধন: ঢ-০৫০৪)।"} /></span>
                 <Link
                   href="/orphanage"
                   className="inline-flex items-center gap-2 text-xs sm:text-sm font-black bg-[#8B111A] hover:bg-[#6e0b13] text-white px-5 py-2.5 rounded-xl border border-amber-300 transition-colors"
                 >
-                  <span>এতিমখানা লিল্লাহ ফান্ড বিবরণ দেখুন</span>
+                  <span><EditableText document="copy.ui.AdmissionInfoSection" entry="et0kxs0" fallback={"এতিমখানা লিল্লাহ ফান্ড বিবরণ দেখুন"} /></span>
                   <ArrowRight size={14} />
                 </Link>
               </div>
@@ -1054,15 +969,13 @@ export default function AdmissionInfoSection({
                 type="button"
                 onClick={() => goToTab("process")}
                 className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-900 text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl border border-gray-300 transition-colors"
-              >
-                &larr; পূর্ববর্তী: ধারা ৪ ও ৫ (পরীক্ষা ও প্রক্রিয়া)
-              </button>
+              ><EditableText document="copy.ui.AdmissionInfoSection" entry="euay5e1" fallback={"&larr; পূর্ববর্তী: ধারা ৪ ও ৫ (পরীক্ষা ও প্রক্রিয়া)"} /></button>
               <button
                 type="button"
                 onClick={() => goToTab("fees")}
                 className="inline-flex items-center gap-2 bg-[#014d26] hover:bg-[#023e1f] text-white text-xs sm:text-sm font-black px-5 py-2.5 rounded-xl border border-amber-300 shadow-sm transition-colors"
               >
-                <span>পরবর্তী: ধারা ৮ ও ৯ • ভর্তি ফি ও মাসিক খরচ</span>
+                <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e1kyktrh" fallback={"পরবর্তী: ধারা ৮ ও ৯ • ভর্তি ফি ও মাসিক খরচ"} /></span>
                 <ArrowRight size={15} />
               </button>
             </div>
@@ -1077,26 +990,16 @@ export default function AdmissionInfoSection({
             <div id="fee-calculator" className="scroll-mt-24" />
             {/* Header */}
             <div className="border-b-2 border-gray-200 pb-4">
-              <span className="text-xs font-black text-[#014d26] bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">
-                ধারা ৮ ও ৯ • স্বচ্ছ আর্থিক পরিকাঠামো
-              </span>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-950 mt-1.5">
-                বিভাগভিত্তিক ভর্তি ফি ও মাসিক খরচ
-              </h2>
-              <p className="text-sm font-bold text-gray-700 mt-0.5">
-                জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানার অনুমোদিত ফি চার্ট ও খরচ হিসাব টুল।
-              </p>
+              <span className="text-xs font-black text-[#014d26] bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1czsum0" fallback={"ধারা ৮ ও ৯ • স্বচ্ছ আর্থিক পরিকাঠামো"} /></span>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-950 mt-1.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="e38fah7" fallback={"বিভাগভিত্তিক ভর্তি ফি ও মাসিক খরচ"} /></h2>
+              <p className="text-sm font-bold text-gray-700 mt-0.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="ejtr5hb" fallback={"জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানার অনুমোদিত ফি চার্ট ও খরচ হিসাব টুল।"} /></p>
             </div>
 
             {/* ৮. বিভাগভিত্তিক ভর্তি ফি */}
             <div className="space-y-4">
               <div className="flex items-center gap-2.5">
-                <span className="w-8 h-8 rounded-xl bg-[#014d26] text-amber-300 font-black text-sm flex items-center justify-center">
-                  ৮
-                </span>
-                <h3 className="text-lg sm:text-xl font-black text-gray-950">
-                  বিভাগভিত্তিক ভর্তি ফি
-                </h3>
+                <span className="w-8 h-8 rounded-xl bg-[#014d26] text-amber-300 font-black text-sm flex items-center justify-center"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1dhfg4z" fallback={"৮"} /></span>
+                <h3 className="text-lg sm:text-xl font-black text-gray-950"><EditableText document="copy.ui.AdmissionInfoSection" entry="etiao0f" fallback={"বিভাগভিত্তিক ভর্তি ফি"} /></h3>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pl-0 sm:pl-10">
@@ -1106,17 +1009,15 @@ export default function AdmissionInfoSection({
                     <h4 className="font-black text-base sm:text-lg">
                       {data.admissionFees.newStudents.title}
                     </h4>
-                    <span className="text-xs font-black bg-amber-400 text-black px-2.5 py-1 rounded-md">
-                      নতুন ছাত্র
-                    </span>
+                    <span className="text-xs font-black bg-amber-400 text-black px-2.5 py-1 rounded-md"><EditableText document="copy.ui.AdmissionInfoSection" entry="enfe81r" fallback={"নতুন ছাত্র"} /></span>
                   </div>
 
                   <div className="p-4 space-y-2">
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b-2 border-gray-200 text-gray-700 font-bold text-xs">
-                          <th className="text-left py-2">বিবরণ</th>
-                          <th className="text-right py-2">পরিমাণ</th>
+                          <th className="text-left py-2"><EditableText document="copy.ui.AdmissionInfoSection" entry="epb5w6l" fallback={"বিবরণ"} /></th>
+                          <th className="text-right py-2"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1rr4kxy" fallback={"পরিমাণ"} /></th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-100 font-bold text-gray-900">
@@ -1124,17 +1025,15 @@ export default function AdmissionInfoSection({
                           <tr key={idx} className="hover:bg-emerald-50/50">
                             <td className="py-2.5">{item.name}</td>
                             <td className="py-2.5 text-right font-black text-gray-950">
-                              {item.amount.toLocaleString("bn-BD")} টাকা
-                            </td>
+                              <EditableValue object={item} field="amount">{item.amount.toLocaleString("bn-BD")}</EditableValue><EditableText document="copy.ui.AdmissionInfoSection" entry="e1m9ow03" fallback={" টাকা"} /></td>
                           </tr>
                         ))}
                       </tbody>
                       <tfoot>
                         <tr className="border-t-2 border-[#014d26] bg-emerald-50 font-black text-base text-[#014d26]">
-                          <td className="py-3 px-2">সর্বমোট</td>
+                          <td className="py-3 px-2"><EditableText document="copy.ui.AdmissionInfoSection" entry="evs2fg8" fallback={"সর্বমোট"} /></td>
                           <td className="py-3 px-2 text-right">
-                            {data.admissionFees.newStudents.total.toLocaleString("bn-BD")} টাকা
-                          </td>
+                            <EditableValue object={data.admissionFees.newStudents} field="total">{data.admissionFees.newStudents.total.toLocaleString("bn-BD")}</EditableValue><EditableText document="copy.ui.AdmissionInfoSection" entry="emo1as4" fallback={" টাকা"} /></td>
                         </tr>
                       </tfoot>
                     </table>
@@ -1147,17 +1046,15 @@ export default function AdmissionInfoSection({
                     <h4 className="font-black text-base sm:text-lg">
                       {data.admissionFees.oldStudents.title}
                     </h4>
-                    <span className="text-xs font-black bg-amber-300 text-black px-2.5 py-1 rounded-md">
-                      পুরাতন ছাত্র
-                    </span>
+                    <span className="text-xs font-black bg-amber-300 text-black px-2.5 py-1 rounded-md"><EditableText document="copy.ui.AdmissionInfoSection" entry="ek36ifo" fallback={"পুরাতন ছাত্র"} /></span>
                   </div>
 
                   <div className="p-4 space-y-2">
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b-2 border-gray-200 text-gray-700 font-bold text-xs">
-                          <th className="text-left py-2">বিবরণ</th>
-                          <th className="text-right py-2">পরিমাণ</th>
+                          <th className="text-left py-2"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1uha8ah" fallback={"বিবরণ"} /></th>
+                          <th className="text-right py-2"><EditableText document="copy.ui.AdmissionInfoSection" entry="e4oyu56" fallback={"পরিমাণ"} /></th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-100 font-bold text-gray-900">
@@ -1165,17 +1062,15 @@ export default function AdmissionInfoSection({
                           <tr key={idx} className="hover:bg-amber-50/50">
                             <td className="py-2.5">{item.name}</td>
                             <td className="py-2.5 text-right font-black text-gray-950">
-                              {item.amount.toLocaleString("bn-BD")} টাকা
-                            </td>
+                              <EditableValue object={item} field="amount">{item.amount.toLocaleString("bn-BD")}</EditableValue><EditableText document="copy.ui.AdmissionInfoSection" entry="e1wllsf5" fallback={" টাকা"} /></td>
                           </tr>
                         ))}
                       </tbody>
                       <tfoot>
                         <tr className="border-t-2 border-[#8B111A] bg-amber-50 font-black text-base text-[#8B111A]">
-                          <td className="py-3 px-2">সর্বমোট</td>
+                          <td className="py-3 px-2"><EditableText document="copy.ui.AdmissionInfoSection" entry="eh9q2dl" fallback={"সর্বমোট"} /></td>
                           <td className="py-3 px-2 text-right">
-                            {data.admissionFees.oldStudents.total.toLocaleString("bn-BD")} টাকা
-                          </td>
+                            <EditableValue object={data.admissionFees.oldStudents} field="total">{data.admissionFees.oldStudents.total.toLocaleString("bn-BD")}</EditableValue><EditableText document="copy.ui.AdmissionInfoSection" entry="etn3lyz" fallback={" টাকা"} /></td>
                         </tr>
                       </tfoot>
                     </table>
@@ -1187,12 +1082,8 @@ export default function AdmissionInfoSection({
             {/* ৯. বিভাগভিত্তিক মাসিক খরচ */}
             <div className="space-y-4 pt-4">
               <div className="flex items-center gap-2.5">
-                <span className="w-8 h-8 rounded-xl bg-[#8B111A] text-white font-black text-sm flex items-center justify-center">
-                  ৯
-                </span>
-                <h3 className="text-lg sm:text-xl font-black text-gray-950">
-                  বিভাগভিত্তিক মাসিক খরচ
-                </h3>
+                <span className="w-8 h-8 rounded-xl bg-[#8B111A] text-white font-black text-sm flex items-center justify-center"><EditableText document="copy.ui.AdmissionInfoSection" entry="e12eu7ky" fallback={"৯"} /></span>
+                <h3 className="text-lg sm:text-xl font-black text-gray-950"><EditableText document="copy.ui.AdmissionInfoSection" entry="e185lpsi" fallback={"বিভাগভিত্তিক মাসিক খরচ"} /></h3>
               </div>
 
               {/* Monthly Cost Table Cards Grid */}
@@ -1213,7 +1104,7 @@ export default function AdmissionInfoSection({
                         >
                           {dept.type}
                         </span>
-                        <span className="text-xs font-bold text-gray-500">প্রতি মাস</span>
+                        <span className="text-xs font-bold text-gray-500"><EditableText document="copy.ui.AdmissionInfoSection" entry="e7fgwt2" fallback={"প্রতি মাস"} /></span>
                       </div>
                       <h4 className="font-black text-base text-gray-950 mt-2">
                         {dept.title}
@@ -1224,18 +1115,16 @@ export default function AdmissionInfoSection({
                           <div key={idx} className="flex justify-between">
                             <span>{it.name}</span>
                             <span className="text-gray-950 font-black">
-                              {it.amount.toLocaleString("bn-BD")} টাকা
-                            </span>
+                              <EditableValue object={it} field="amount">{it.amount.toLocaleString("bn-BD")}</EditableValue><EditableText document="copy.ui.AdmissionInfoSection" entry="ehqbji5" fallback={" টাকা"} /></span>
                           </div>
                         ))}
                       </div>
                     </div>
 
                     <div className="border-t-2 border-emerald-300 bg-emerald-50/70 p-2.5 rounded-xl flex items-center justify-between font-black text-sm text-[#014d26]">
-                      <span>মাসিক সর্বমোট</span>
+                      <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e156olxc" fallback={"মাসিক সর্বমোট"} /></span>
                       <span className="text-base">
-                        {dept.total.toLocaleString("bn-BD")} টাকা
-                      </span>
+                        <EditableValue object={dept} field="total">{dept.total.toLocaleString("bn-BD")}</EditableValue><EditableText document="copy.ui.AdmissionInfoSection" entry="e11cur1d" fallback={" টাকা"} /></span>
                     </div>
                   </div>
                 ))}
@@ -1244,10 +1133,8 @@ export default function AdmissionInfoSection({
                 <div className="bg-amber-50/60 rounded-2xl border-2 border-amber-400 p-4 space-y-3 shadow-xs flex flex-col justify-between">
                   <div>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-black bg-amber-200 text-amber-950 px-2.5 py-0.5 rounded-full border border-amber-400">
-                        অতিরিক্ত খাদ্য সেবা
-                      </span>
-                      <span className="text-xs font-bold text-amber-800">ঐচ্ছিক</span>
+                      <span className="text-xs font-black bg-amber-200 text-amber-950 px-2.5 py-0.5 rounded-full border border-amber-400"><EditableText document="copy.ui.AdmissionInfoSection" entry="e13knhks" fallback={"অতিরিক্ত খাদ্য সেবা"} /></span>
+                      <span className="text-xs font-bold text-amber-800"><EditableText document="copy.ui.AdmissionInfoSection" entry="exn3h68" fallback={"ঐচ্ছিক"} /></span>
                     </div>
                     <h4 className="font-black text-base text-gray-950 mt-2">
                       {data.emdadiKhana.title}
@@ -1258,15 +1145,14 @@ export default function AdmissionInfoSection({
                         <div key={idx} className="flex justify-between">
                           <span>{it.name}</span>
                           <span className="text-gray-950 font-black">
-                            {it.amount.toLocaleString("bn-BD")} টাকা
-                          </span>
+                            <EditableValue object={it} field="amount">{it.amount.toLocaleString("bn-BD")}</EditableValue><EditableText document="copy.ui.AdmissionInfoSection" entry="eyn8jo" fallback={" টাকা"} /></span>
                         </div>
                       ))}
                     </div>
                   </div>
 
                   <div className="bg-white p-2 rounded-lg border border-amber-300 text-[11px] font-semibold text-gray-700 leading-tight">
-                    <strong>বিশেষ দ্রষ্টব্য:</strong> {data.emdadiKhana.note}
+                    <strong><EditableText document="copy.ui.AdmissionInfoSection" entry="edk0qbh" fallback={"বিশেষ দ্রষ্টব্য:"} /></strong> {data.emdadiKhana.note}
                   </div>
                 </div>
               </div>
@@ -1279,12 +1165,8 @@ export default function AdmissionInfoSection({
                   <Calculator size={20} />
                 </div>
                 <div>
-                  <h3 className="text-lg sm:text-xl font-black text-gray-950">
-                    ইন্টারেক্টিভ ভর্তি ফি ও মাসিক খরচ ক্যালকুলেটর
-                  </h3>
-                  <p className="text-xs sm:text-sm font-semibold text-gray-700">
-                    শিক্ষার্থীর ধরন ও কাঙ্ক্ষিত বিভাগ নির্বাচন করে তাৎক্ষণিক সর্বমোট খরচের হিসাব দেখুন।
-                  </p>
+                  <h3 className="text-lg sm:text-xl font-black text-gray-950"><EditableText document="copy.ui.AdmissionInfoSection" entry="enhb6g2" fallback={"ইন্টারেক্টিভ ভর্তি ফি ও মাসিক খরচ ক্যালকুলেটর"} /></h3>
+                  <p className="text-xs sm:text-sm font-semibold text-gray-700"><EditableText document="copy.ui.AdmissionInfoSection" entry="ejupm52" fallback={"শিক্ষার্থীর ধরন ও কাঙ্ক্ষিত বিভাগ নির্বাচন করে তাৎক্ষণিক সর্বমোট খরচের হিসাব দেখুন।"} /></p>
                 </div>
               </div>
 
@@ -1292,9 +1174,7 @@ export default function AdmissionInfoSection({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* 1. Student Type */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-black text-gray-900">
-                    ১. শিক্ষার্থীর ধরন নির্বাচন করুন:
-                  </label>
+                  <label className="text-xs font-black text-gray-900"><EditableText document="copy.ui.AdmissionInfoSection" entry="e19v3bsx" fallback={"১. শিক্ষার্থীর ধরন নির্বাচন করুন:"} /></label>
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       type="button"
@@ -1304,9 +1184,7 @@ export default function AdmissionInfoSection({
                           ? "bg-[#014d26] text-white border-amber-400 shadow-sm"
                           : "bg-white text-gray-900 border-gray-300 hover:bg-gray-100"
                       }`}
-                    >
-                      নতুন শিক্ষার্থী (৳৩,৫০০)
-                    </button>
+                    ><EditableText document="copy.ui.AdmissionInfoSection" entry="e61brp6" fallback={"নতুন শিক্ষার্থী (৳৩,৫০০)"} /></button>
                     <button
                       type="button"
                       onClick={() => setCalcStudentType("old")}
@@ -1315,17 +1193,13 @@ export default function AdmissionInfoSection({
                           ? "bg-[#8B111A] text-white border-amber-400 shadow-sm"
                           : "bg-white text-gray-900 border-gray-300 hover:bg-gray-100"
                       }`}
-                    >
-                      পুরাতন শিক্ষার্থী (৳৩,২০০)
-                    </button>
+                    ><EditableText document="copy.ui.AdmissionInfoSection" entry="ean0fvc" fallback={"পুরাতন শিক্ষার্থী (৳৩,২০০)"} /></button>
                   </div>
                 </div>
 
                 {/* 2. Department Selector */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-black text-gray-900">
-                    ২. শিক্ষাবিভাগ নির্বাচন করুন:
-                  </label>
+                  <label className="text-xs font-black text-gray-900"><EditableText document="copy.ui.AdmissionInfoSection" entry="emqkck9" fallback={"২. শিক্ষাবিভাগ নির্বাচন করুন:"} /></label>
                   <select
                     value={calcDeptId}
                     onChange={(e) => setCalcDeptId(e.target.value)}
@@ -1333,7 +1207,7 @@ export default function AdmissionInfoSection({
                   >
                     {data.monthlyExpenses.map((dept) => (
                       <option key={dept.id} value={dept.id}>
-                        {dept.title} — মাসিক ৳{dept.total.toLocaleString("bn-BD")}
+                        {dept.title}<EditableText document="copy.ui.AdmissionInfoSection" entry="ez953j5" fallback={" — মাসিক ৳"} />{dept.total.toLocaleString("bn-BD")}
                       </option>
                     ))}
                   </select>
@@ -1342,9 +1216,7 @@ export default function AdmissionInfoSection({
 
               {/* Emdadi Khana Optional Checkboxes */}
               <div className="bg-white p-4 rounded-xl border border-gray-300 space-y-2">
-                <div className="text-xs font-black text-gray-900">
-                  ৩. এমদাদীখানার অতিরিক্ত সেবা (প্রযোজ্য ক্ষেত্রে টিক দিন):
-                </div>
+                <div className="text-xs font-black text-gray-900"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1t3sbq" fallback={"৩. এমদাদীখানার অতিরিক্ত সেবা (প্রযোজ্য ক্ষেত্রে টিক দিন):"} /></div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm font-bold text-gray-800">
                   <label className="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50 border border-gray-200">
                     <input
@@ -1353,7 +1225,7 @@ export default function AdmissionInfoSection({
                       onChange={(e) => setIncludeBreakfast(e.target.checked)}
                       className="w-4 h-4 text-[#014d26] rounded border-gray-300"
                     />
-                    <span>নাশতা বাবদ মাসিক খরচ (+ ১,০০০ টাকা/মাস)</span>
+                    <span><EditableText document="copy.ui.AdmissionInfoSection" entry="eb10t6z" fallback={"নাশতা বাবদ মাসিক খরচ (+ ১,০০০ টাকা/মাস)"} /></span>
                   </label>
 
                   <label className="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50 border border-gray-200">
@@ -1363,7 +1235,7 @@ export default function AdmissionInfoSection({
                       onChange={(e) => setIncludeOneTimeTwoMeals(e.target.checked)}
                       className="w-4 h-4 text-[#014d26] rounded border-gray-300"
                     />
-                    <span>দুই বেলা গ্রহণের জন্য এককালীন খরচ (+ ২,০০০ টাকা)</span>
+                    <span><EditableText document="copy.ui.AdmissionInfoSection" entry="exhfadr" fallback={"দুই বেলা গ্রহণের জন্য এককালীন খরচ (+ ২,০০০ টাকা)"} /></span>
                   </label>
                 </div>
               </div>
@@ -1372,38 +1244,31 @@ export default function AdmissionInfoSection({
               <div className="bg-white rounded-2xl p-5 border-2 border-emerald-400 space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
                   <div className="p-3 bg-gray-50 rounded-xl border border-gray-200">
-                    <div className="text-xs font-bold text-gray-600">ভর্তিকালীন এককালীন ফি</div>
-                    <div className="text-lg sm:text-xl font-black text-[#8B111A] mt-1">
-                      ৳ {totalAdmissionFee.toLocaleString("bn-BD")}
+                    <div className="text-xs font-bold text-gray-600"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1ub2hgf" fallback={"ভর্তিকালীন এককালীন ফি"} /></div>
+                    <div className="text-lg sm:text-xl font-black text-[#8B111A] mt-1"><EditableText document="copy.ui.AdmissionInfoSection" entry="e225j2d" fallback={"৳ "} />{totalAdmissionFee.toLocaleString("bn-BD")}
                     </div>
                   </div>
 
                   <div className="p-3 bg-gray-50 rounded-xl border border-gray-200">
-                    <div className="text-xs font-bold text-gray-600">প্রতি মাসের নিয়মিত খরচ</div>
-                    <div className="text-lg sm:text-xl font-black text-[#014d26] mt-1">
-                      ৳ {totalMonthlyFee.toLocaleString("bn-BD")}
+                    <div className="text-xs font-bold text-gray-600"><EditableText document="copy.ui.AdmissionInfoSection" entry="ei16paa" fallback={"প্রতি মাসের নিয়মিত খরচ"} /></div>
+                    <div className="text-lg sm:text-xl font-black text-[#014d26] mt-1"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1cg19nc" fallback={"৳ "} />{totalMonthlyFee.toLocaleString("bn-BD")}
                     </div>
                   </div>
 
                   <div className="p-3 bg-emerald-100/70 rounded-xl border-2 border-emerald-400">
-                    <div className="text-xs font-black text-emerald-950 uppercase">
-                      ভর্তিকালীন ১ম মাসে প্রদেয়
-                    </div>
-                    <div className="text-xl sm:text-2xl font-black text-[#014d26] mt-1">
-                      ৳ {grandFirstMonthTotal.toLocaleString("bn-BD")}
+                    <div className="text-xs font-black text-emerald-950 uppercase"><EditableText document="copy.ui.AdmissionInfoSection" entry="es34t73" fallback={"ভর্তিকালীন ১ম মাসে প্রদেয়"} /></div>
+                    <div className="text-xl sm:text-2xl font-black text-[#014d26] mt-1"><EditableText document="copy.ui.AdmissionInfoSection" entry="eghx8kz" fallback={"৳ "} />{grandFirstMonthTotal.toLocaleString("bn-BD")}
                     </div>
                   </div>
                 </div>
 
                 <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-gray-200">
-                  <p className="text-xs text-gray-700 font-semibold">
-                    * এতিম শিক্ষার্থীদের ক্ষেত্রে লিল্লাহ বোর্ডিং যাচাই সাপেক্ষে ১০০% ফ্রি সুবিধা প্রযোজ্য।
-                  </p>
+                  <p className="text-xs text-gray-700 font-semibold"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1g2woa4" fallback={"* এতিম শিক্ষার্থীদের ক্ষেত্রে লিল্লাহ বোর্ডিং যাচাই সাপেক্ষে ১০০% ফ্রি সুবিধা প্রযোজ্য।"} /></p>
                   <Link
                     href="/apply"
                     className="inline-flex items-center gap-2 bg-[#8B111A] hover:bg-[#6e0b13] text-white text-xs sm:text-sm font-black px-5 py-2.5 rounded-xl border border-amber-300 transition-colors shadow-xs"
                   >
-                    <span>ভর্তি আবেদন শুরু করুন</span>
+                    <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e12ml7yg" fallback={"ভর্তি আবেদন শুরু করুন"} /></span>
                     <ArrowRight size={14} />
                   </Link>
                 </div>
@@ -1416,15 +1281,13 @@ export default function AdmissionInfoSection({
                 type="button"
                 onClick={() => goToTab("documents")}
                 className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-900 text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl border border-gray-300 transition-colors"
-              >
-                &larr; পূর্ববর্তী: ধারা ৬ ও ৭ (কাগজপত্র ও এতিমদের সুবিধা)
-              </button>
+              ><EditableText document="copy.ui.AdmissionInfoSection" entry="e11k0a6m" fallback={"&larr; পূর্ববর্তী: ধারা ৬ ও ৭ (কাগজপত্র ও এতিমদের সুবিধা)"} /></button>
               <button
                 type="button"
                 onClick={() => goToTab("contact")}
                 className="inline-flex items-center gap-2 bg-[#014d26] hover:bg-[#023e1f] text-white text-xs sm:text-sm font-black px-5 py-2.5 rounded-xl border border-amber-300 shadow-sm transition-colors"
               >
-                <span>পরবর্তী: ধারা ১০ ও ১১ • যোগাযোগ ও নির্দেশনা</span>
+                <span><EditableText document="copy.ui.AdmissionInfoSection" entry="ei0lz9w" fallback={"পরবর্তী: ধারা ১০ ও ১১ • যোগাযোগ ও নির্দেশনা"} /></span>
                 <ArrowRight size={15} />
               </button>
             </div>
@@ -1438,26 +1301,16 @@ export default function AdmissionInfoSection({
           <div className="space-y-8 animate-in fade-in duration-200">
             {/* Header */}
             <div className="border-b-2 border-gray-200 pb-4">
-              <span className="text-xs font-black text-[#014d26] bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">
-                ধারা ১০ ও ১১ • সরাসরি যোগাযোগ ও নির্দেশনা
-              </span>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-950 mt-1.5">
-                যোগাযোগ ও অভিভাবকদের জন্য বিশেষ নির্দেশনা
-              </h2>
-              <p className="text-sm font-bold text-gray-700 mt-0.5">
-                ভর্তি সংক্রান্ত যেকোনো তথ্য, নির্দেশনা ও সহযোগিতার জন্য মাদরাসা কর্তৃপক্ষের সাথে যোগাযোগ করুন।
-              </p>
+              <span className="text-xs font-black text-[#014d26] bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300"><EditableText document="copy.ui.AdmissionInfoSection" entry="ee5sja7" fallback={"ধারা ১০ ও ১১ • সরাসরি যোগাযোগ ও নির্দেশনা"} /></span>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-950 mt-1.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="e4ia6bs" fallback={"যোগাযোগ ও অভিভাবকদের জন্য বিশেষ নির্দেশনা"} /></h2>
+              <p className="text-sm font-bold text-gray-700 mt-0.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1vkgxpy" fallback={"ভর্তি সংক্রান্ত যেকোনো তথ্য, নির্দেশনা ও সহযোগিতার জন্য মাদরাসা কর্তৃপক্ষের সাথে যোগাযোগ করুন।"} /></p>
             </div>
 
             {/* ১০. যোগাযোগ */}
             <div className="space-y-4">
               <div className="flex items-center gap-2.5">
-                <span className="w-8 h-8 rounded-xl bg-[#014d26] text-amber-300 font-black text-sm flex items-center justify-center">
-                  ১০
-                </span>
-                <h3 className="text-lg sm:text-xl font-black text-gray-950">
-                  যোগাযোগ
-                </h3>
+                <span className="w-8 h-8 rounded-xl bg-[#014d26] text-amber-300 font-black text-sm flex items-center justify-center"><EditableText document="copy.ui.AdmissionInfoSection" entry="e14rzs5x" fallback={"১০"} /></span>
+                <h3 className="text-lg sm:text-xl font-black text-gray-950"><EditableText document="copy.ui.AdmissionInfoSection" entry="eru0rkg" fallback={"যোগাযোগ"} /></h3>
               </div>
 
               {/* Institution Address Banner */}
@@ -1468,16 +1321,14 @@ export default function AdmissionInfoSection({
                   </div>
                   <div className="text-sm font-bold text-gray-800 flex items-center gap-2">
                     <MapPin size={16} className="text-[#8B111A] shrink-0" />
-                    <span>ঠিকানা: {data.contacts.address}</span>
+                    <span><EditableText document="copy.ui.AdmissionInfoSection" entry="eh10m8f" fallback={"ঠিকানা: "} />{data.contacts.address}</span>
                   </div>
                 </div>
 
                 <Link
                   href="/contact"
                   className="text-xs sm:text-sm font-black text-[#014d26] bg-emerald-100 hover:bg-emerald-200 px-4 py-2 rounded-xl border border-emerald-300 transition-colors"
-                >
-                  ক্যাম্পাস অবস্থান ম্যাপে দেখুন &rarr;
-                </Link>
+                ><EditableText document="copy.ui.AdmissionInfoSection" entry="erd3akn" fallback={"ক্যাম্পাস অবস্থান ম্যাপে দেখুন &rarr;"} /></Link>
               </div>
 
               {/* 3 Contact Cards for Key Personnel */}
@@ -1495,7 +1346,7 @@ export default function AdmissionInfoSection({
                     </div>
 
                     <div className="space-y-1">
-                      <div className="text-xs font-bold text-gray-500">মোবাইল নম্বর:</div>
+                      <div className="text-xs font-bold text-gray-500"><EditableText document="copy.ui.AdmissionInfoSection" entry="ed878up" fallback={"মোবাইল নম্বর:"} /></div>
                       <a
                         href={`tel:${person.rawPhone}`}
                         className="text-lg font-black text-[#014d26] hover:underline block"
@@ -1508,9 +1359,7 @@ export default function AdmissionInfoSection({
                       <a
                         href={`tel:${person.rawPhone}`}
                         className="flex-1 text-center bg-[#014d26] hover:bg-[#023e1f] text-white text-xs font-black py-2 rounded-lg transition-colors"
-                      >
-                        কল করুন
-                      </a>
+                      ><EditableText document="copy.ui.AdmissionInfoSection" entry="e1fp5e51" fallback={"কল করুন"} /></a>
                       <button
                         type="button"
                         onClick={() => handleCopyPhone(person.rawPhone)}
@@ -1536,12 +1385,8 @@ export default function AdmissionInfoSection({
             {/* ১১. অভিভাবকদের জন্য বিশেষ নির্দেশনা */}
             <div className="space-y-4 pt-4">
               <div className="flex items-center gap-2.5">
-                <span className="w-8 h-8 rounded-xl bg-[#8B111A] text-white font-black text-sm flex items-center justify-center">
-                  ১১
-                </span>
-                <h3 className="text-lg sm:text-xl font-black text-gray-950">
-                  অভিভাবকদের জন্য বিশেষ নির্দেশনা
-                </h3>
+                <span className="w-8 h-8 rounded-xl bg-[#8B111A] text-white font-black text-sm flex items-center justify-center"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1nvdxpe" fallback={"১১"} /></span>
+                <h3 className="text-lg sm:text-xl font-black text-gray-950"><EditableText document="copy.ui.AdmissionInfoSection" entry="epwi93e" fallback={"অভিভাবকদের জন্য বিশেষ নির্দেশনা"} /></h3>
               </div>
 
               <div className="bg-amber-50/70 border-2 border-amber-300 rounded-3xl p-6 sm:p-7 space-y-3.5 pl-0 sm:pl-10">
@@ -1577,15 +1422,13 @@ export default function AdmissionInfoSection({
                 type="button"
                 onClick={() => goToTab("fees")}
                 className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-900 text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl border border-gray-300 transition-colors"
-              >
-                &larr; পূর্ববর্তী: ধারা ৮ ও ৯ (ভর্তি ফি ও মাসিক খরচ)
-              </button>
+              ><EditableText document="copy.ui.AdmissionInfoSection" entry="e1lga8ds" fallback={"&larr; পূর্ববর্তী: ধারা ৮ ও ৯ (ভর্তি ফি ও মাসিক খরচ)"} /></button>
               <button
                 type="button"
                 onClick={() => goToTab("full")}
                 className="inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-black text-xs sm:text-sm font-black px-5 py-2.5 rounded-xl border border-amber-500 shadow-sm transition-colors"
               >
-                <span>একনজরে পূর্ণ বিবরণী (সব ধারা ১–১১)</span>
+                <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e1qn98x7" fallback={"একনজরে পূর্ণ বিবরণী (সব ধারা ১–১১)"} /></span>
                 <ArrowRight size={15} />
               </button>
             </div>
@@ -1600,14 +1443,10 @@ export default function AdmissionInfoSection({
             {/* Header */}
             <div className="border-b-2 border-gray-200 pb-4 flex flex-wrap items-center justify-between gap-4">
               <div>
-                <span className="text-xs font-black text-[#014d26] bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">
-                  পূর্ণ প্রজ্ঞাপন • সকল ধারা (১–১১)
-                </span>
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-950 mt-1.5">
-                  ভর্তি তথ্যের পূর্ণ প্রাতিষ্ঠানিক বিবরণী
-                </h2>
+                <span className="text-xs font-black text-[#014d26] bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1mby2ja" fallback={"পূর্ণ প্রজ্ঞাপন • সকল ধারা (১–১১)"} /></span>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-950 mt-1.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="evaml4p" fallback={"ভর্তি তথ্যের পূর্ণ প্রাতিষ্ঠানিক বিবরণী"} /></h2>
                 <p className="text-sm font-bold text-gray-700 mt-0.5">
-                  {data.institutionName} • ঠিকানা: {data.address}
+                  {data.institutionName}<EditableText document="copy.ui.AdmissionInfoSection" entry="e10rh5gy" fallback={" • ঠিকানা: "} />{data.address}
                 </p>
               </div>
 
@@ -1618,7 +1457,7 @@ export default function AdmissionInfoSection({
                   className="inline-flex items-center gap-2 bg-[#014d26] text-white text-xs sm:text-sm font-black px-4 py-2.5 rounded-xl border border-amber-300"
                 >
                   <Printer size={16} />
-                  <span>প্রিন্ট করুন</span>
+                  <span><EditableText document="copy.ui.AdmissionInfoSection" entry="edreday" fallback={"প্রিন্ট করুন"} /></span>
                 </button>
               </div>
             </div>
@@ -1627,7 +1466,7 @@ export default function AdmissionInfoSection({
             <div className="space-y-8 text-gray-900">
               {/* ১. ভর্তি কার্যক্রম */}
               <div className="space-y-2">
-                <h3 className="text-lg font-black text-[#014d26]">১. ভর্তি কার্যক্রম</h3>
+                <h3 className="text-lg font-black text-[#014d26]"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1hk3bdr" fallback={"১. ভর্তি কার্যক্রম"} /></h3>
                 <p className="text-sm sm:text-base font-medium leading-relaxed bg-gray-50 p-4 rounded-xl border border-gray-300">
                   {data.overview}
                 </p>
@@ -1635,16 +1474,16 @@ export default function AdmissionInfoSection({
 
               {/* ২. ভর্তির সময়সীমা */}
               <div className="space-y-2">
-                <h3 className="text-lg font-black text-[#014d26]">২. ভর্তির সময়সীমা</h3>
+                <h3 className="text-lg font-black text-[#014d26]"><EditableText document="copy.ui.AdmissionInfoSection" entry="exdayad" fallback={"২. ভর্তির সময়সীমা"} /></h3>
                 <div className="bg-gray-50 p-4 rounded-xl border border-gray-300 space-y-1.5 text-sm sm:text-base font-semibold">
-                  <div>• <strong>আরবি বর্ষ:</strong> {data.timelines.arabic}</div>
-                  <div>• <strong>ইংরেজি বর্ষ:</strong> {data.timelines.english}</div>
+                  <div><EditableText document="copy.ui.AdmissionInfoSection" entry="e1e15ywb" fallback={"• "} /><strong><EditableText document="copy.ui.AdmissionInfoSection" entry="e1gsyuc2" fallback={"আরবি বর্ষ:"} /></strong> {data.timelines.arabic}</div>
+                  <div><EditableText document="copy.ui.AdmissionInfoSection" entry="ejmek18" fallback={"• "} /><strong><EditableText document="copy.ui.AdmissionInfoSection" entry="e1nkhntj" fallback={"ইংরেজি বর্ষ:"} /></strong> {data.timelines.english}</div>
                 </div>
               </div>
 
               {/* ৩. বিভাগসমূহ ও ভর্তির যোগ্যতা */}
               <div className="space-y-3">
-                <h3 className="text-lg font-black text-[#014d26]">৩. বিভাগসমূহ ও ভর্তির যোগ্যতা</h3>
+                <h3 className="text-lg font-black text-[#014d26]"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1uzy04n" fallback={"৩. বিভাগসমূহ ও ভর্তির যোগ্যতা"} /></h3>
                 <div className="space-y-3">
                   {data.departments.map((dept) => (
                     <div key={dept.id} className="bg-gray-50 p-4 rounded-xl border border-gray-300 space-y-2 text-sm">
@@ -1653,8 +1492,8 @@ export default function AdmissionInfoSection({
                         {dept.eligibility.map((el, i) => (
                           <li key={i}>{el}</li>
                         ))}
-                        <li><strong>বয়সসীমা:</strong> {dept.ageLimit}</li>
-                        <li><strong>ব্যবস্থা:</strong> {dept.livingType}</li>
+                        <li><strong><EditableText document="copy.ui.AdmissionInfoSection" entry="e103z63m" fallback={"বয়সসীমা:"} /></strong> {dept.ageLimit}</li>
+                        <li><strong><EditableText document="copy.ui.AdmissionInfoSection" entry="e1ac90nl" fallback={"ব্যবস্থা:"} /></strong> {dept.livingType}</li>
                       </ul>
                     </div>
                   ))}
@@ -1663,33 +1502,33 @@ export default function AdmissionInfoSection({
 
               {/* ৪. ভর্তি পরীক্ষা ও ফলাফল */}
               <div className="space-y-2">
-                <h3 className="text-lg font-black text-[#014d26]">৪. ভর্তি পরীক্ষা ও ফলাফল</h3>
+                <h3 className="text-lg font-black text-[#014d26]"><EditableText document="copy.ui.AdmissionInfoSection" entry="e18sni5d" fallback={"৪. ভর্তি পরীক্ষা ও ফলাফল"} /></h3>
                 <div className="bg-gray-50 p-4 rounded-xl border border-gray-300 space-y-1 text-sm sm:text-base font-semibold">
-                  <div>• <strong>ভর্তি পরীক্ষার পদ্ধতি:</strong> {data.examInfo.method}</div>
-                  <div>• <strong>ফলাফল প্রকাশ:</strong> {data.examInfo.resultPublish}</div>
+                  <div><EditableText document="copy.ui.AdmissionInfoSection" entry="e1tn3sak" fallback={"• "} /><strong><EditableText document="copy.ui.AdmissionInfoSection" entry="ez4n63b" fallback={"ভর্তি পরীক্ষার পদ্ধতি:"} /></strong> {data.examInfo.method}</div>
+                  <div><EditableText document="copy.ui.AdmissionInfoSection" entry="ez24ud8" fallback={"• "} /><strong><EditableText document="copy.ui.AdmissionInfoSection" entry="e10q5m11" fallback={"ফলাফল প্রকাশ:"} /></strong> {data.examInfo.resultPublish}</div>
                 </div>
               </div>
 
               {/* ৫. ভর্তি প্রক্রিয়া */}
               <div className="space-y-2">
-                <h3 className="text-lg font-black text-[#014d26]">৫. ভর্তি প্রক্রিয়া</h3>
+                <h3 className="text-lg font-black text-[#014d26]"><EditableText document="copy.ui.AdmissionInfoSection" entry="ejsemwe" fallback={"৫. ভর্তি প্রক্রিয়া"} /></h3>
                 <div className="bg-gray-50 p-4 rounded-xl border border-gray-300 space-y-2 text-sm sm:text-base">
                   <p className="font-semibold">{data.admissionProcess.intro}</p>
-                  <div className="font-black text-[#8B111A]">ভর্তির ধাপসমূহ:</div>
+                  <div className="font-black text-[#8B111A]"><EditableText document="copy.ui.AdmissionInfoSection" entry="e2m04ln" fallback={"ভর্তির ধাপসমূহ:"} /></div>
                   <ol className="list-decimal list-inside space-y-1.5 font-medium pl-1">
                     {data.admissionProcess.steps.map((st, i) => (
                       <li key={i}>{st}</li>
                     ))}
                   </ol>
                   <p className="pt-2 text-xs font-bold text-gray-700">
-                    <strong>ভর্তি ফরম ডাউনলোড:</strong> {data.admissionProcess.formDownloadNote}
+                    <strong><EditableText document="copy.ui.AdmissionInfoSection" entry="e15ekc3x" fallback={"ভর্তি ফরম ডাউনলোড:"} /></strong> {data.admissionProcess.formDownloadNote}
                   </p>
                 </div>
               </div>
 
               {/* ৬. ভর্তির জন্য প্রয়োজনীয় কাগজপত্র */}
               <div className="space-y-2">
-                <h3 className="text-lg font-black text-[#014d26]">৬. ভর্তির জন্য প্রয়োজনীয় কাগজপত্র</h3>
+                <h3 className="text-lg font-black text-[#014d26]"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1ke7sdt" fallback={"৬. ভর্তির জন্য প্রয়োজনীয় কাগজপত্র"} /></h3>
                 <ol className="list-decimal list-inside space-y-1.5 bg-gray-50 p-4 rounded-xl border border-gray-300 text-sm sm:text-base font-medium">
                   {data.requiredDocuments.map((doc, i) => (
                     <li key={i}>{doc}</li>
@@ -1699,12 +1538,10 @@ export default function AdmissionInfoSection({
 
               {/* ৭. এতিম, অসহায় ও সুবিধাবঞ্চিত শিক্ষার্থীদের জন্য বিশেষ ব্যবস্থা */}
               <div className="space-y-2">
-                <h3 className="text-lg font-black text-[#014d26]">
-                  ৭. এতিম, অসহায় ও সুবিধাবঞ্চিত শিক্ষার্থীদের জন্য বিশেষ ব্যবস্থা
-                </h3>
+                <h3 className="text-lg font-black text-[#014d26]"><EditableText document="copy.ui.AdmissionInfoSection" entry="e18fekfh" fallback={"৭. এতিম, অসহায় ও সুবিধাবঞ্চিত শিক্ষার্থীদের জন্য বিশেষ ব্যবস্থা"} /></h3>
                 <div className="bg-gray-50 p-4 rounded-xl border border-gray-300 space-y-3 text-sm sm:text-base">
                   <p className="font-medium">{data.orphanFacility.description}</p>
-                  <div className="font-black text-[#8B111A]">এতিম শিক্ষার্থী যাচাইয়ের শর্তাবলি:</div>
+                  <div className="font-black text-[#8B111A]"><EditableText document="copy.ui.AdmissionInfoSection" entry="e15pm1m6" fallback={"এতিম শিক্ষার্থী যাচাইয়ের শর্তাবলি:"} /></div>
                   <ul className="list-disc list-inside space-y-1 font-medium pl-1">
                     {data.orphanFacility.verificationConditions.map((cond, i) => (
                       <li key={i}>{cond}</li>
@@ -1715,39 +1552,39 @@ export default function AdmissionInfoSection({
 
               {/* ৮. বিভাগভিত্তিক ভর্তি ফি */}
               <div className="space-y-2">
-                <h3 className="text-lg font-black text-[#014d26]">৮. বিভাগভিত্তিক ভর্তি ফি</h3>
+                <h3 className="text-lg font-black text-[#014d26]"><EditableText document="copy.ui.AdmissionInfoSection" entry="e35qif3" fallback={"৮. বিভাগভিত্তিক ভর্তি ফি"} /></h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-gray-50 p-4 rounded-xl border border-gray-300 space-y-2">
-                    <h4 className="font-black text-sm text-[#014d26]">নতুন শিক্ষার্থীদের ভর্তি ফি</h4>
+                    <h4 className="font-black text-sm text-[#014d26]"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1xz1094" fallback={"নতুন শিক্ষার্থীদের ভর্তি ফি"} /></h4>
                     <table className="w-full text-xs sm:text-sm">
                       <tbody>
                         {data.admissionFees.newStudents.items.map((it, i) => (
                           <tr key={i} className="border-b border-gray-200">
                             <td className="py-1">{it.name}</td>
-                            <td className="py-1 text-right font-bold">{it.amount.toLocaleString("bn-BD")} টাকা</td>
+                            <td className="py-1 text-right font-bold"><EditableValue object={it} field="amount">{it.amount.toLocaleString("bn-BD")}</EditableValue><EditableText document="copy.ui.AdmissionInfoSection" entry="ea6rg67" fallback={" টাকা"} /></td>
                           </tr>
                         ))}
                         <tr className="font-black text-gray-950">
-                          <td className="py-1.5">সর্বমোট</td>
-                          <td className="py-1.5 text-right">{data.admissionFees.newStudents.total.toLocaleString("bn-BD")} টাকা</td>
+                          <td className="py-1.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1hafdxd" fallback={"সর্বমোট"} /></td>
+                          <td className="py-1.5 text-right"><EditableValue object={data.admissionFees.newStudents} field="total">{data.admissionFees.newStudents.total.toLocaleString("bn-BD")}</EditableValue><EditableText document="copy.ui.AdmissionInfoSection" entry="eplv6yu" fallback={" টাকা"} /></td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
 
                   <div className="bg-gray-50 p-4 rounded-xl border border-gray-300 space-y-2">
-                    <h4 className="font-black text-sm text-[#8B111A]">পুরাতন শিক্ষার্থীদের ভর্তি ফি</h4>
+                    <h4 className="font-black text-sm text-[#8B111A]"><EditableText document="copy.ui.AdmissionInfoSection" entry="e170kqg9" fallback={"পুরাতন শিক্ষার্থীদের ভর্তি ফি"} /></h4>
                     <table className="w-full text-xs sm:text-sm">
                       <tbody>
                         {data.admissionFees.oldStudents.items.map((it, i) => (
                           <tr key={i} className="border-b border-gray-200">
                             <td className="py-1">{it.name}</td>
-                            <td className="py-1 text-right font-bold">{it.amount.toLocaleString("bn-BD")} টাকা</td>
+                            <td className="py-1 text-right font-bold"><EditableValue object={it} field="amount">{it.amount.toLocaleString("bn-BD")}</EditableValue><EditableText document="copy.ui.AdmissionInfoSection" entry="e12tqvt" fallback={" টাকা"} /></td>
                           </tr>
                         ))}
                         <tr className="font-black text-gray-950">
-                          <td className="py-1.5">সর্বমোট</td>
-                          <td className="py-1.5 text-right">{data.admissionFees.oldStudents.total.toLocaleString("bn-BD")} টাকা</td>
+                          <td className="py-1.5"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1ysmu2t" fallback={"সর্বমোট"} /></td>
+                          <td className="py-1.5 text-right"><EditableValue object={data.admissionFees.oldStudents} field="total">{data.admissionFees.oldStudents.total.toLocaleString("bn-BD")}</EditableValue><EditableText document="copy.ui.AdmissionInfoSection" entry="e13bup8m" fallback={" টাকা"} /></td>
                         </tr>
                       </tbody>
                     </table>
@@ -1757,7 +1594,7 @@ export default function AdmissionInfoSection({
 
               {/* ৯. বিভাগভিত্তিক মাসিক খরচ */}
               <div className="space-y-2">
-                <h3 className="text-lg font-black text-[#014d26]">৯. বিভাগভিত্তিক মাসিক খরচ</h3>
+                <h3 className="text-lg font-black text-[#014d26]"><EditableText document="copy.ui.AdmissionInfoSection" entry="elnznhg" fallback={"৯. বিভাগভিত্তিক মাসিক খরচ"} /></h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {data.monthlyExpenses.map((dept) => (
                     <div key={dept.id} className="bg-gray-50 p-3.5 rounded-xl border border-gray-300 space-y-1 text-xs sm:text-sm">
@@ -1765,12 +1602,12 @@ export default function AdmissionInfoSection({
                       {dept.items.map((it, i) => (
                         <div key={i} className="flex justify-between text-gray-700">
                           <span>{it.name}</span>
-                          <span>{it.amount.toLocaleString("bn-BD")} টাকা</span>
+                          <span><EditableValue object={it} field="amount">{it.amount.toLocaleString("bn-BD")}</EditableValue><EditableText document="copy.ui.AdmissionInfoSection" entry="e13450ag" fallback={" টাকা"} /></span>
                         </div>
                       ))}
                       <div className="flex justify-between font-black text-[#014d26] pt-1 border-t border-gray-200">
-                        <span>মাসিক সর্বমোট</span>
-                        <span>{dept.total.toLocaleString("bn-BD")} টাকা</span>
+                        <span><EditableText document="copy.ui.AdmissionInfoSection" entry="ebvb1e4" fallback={"মাসিক সর্বমোট"} /></span>
+                        <span><EditableValue object={dept} field="total">{dept.total.toLocaleString("bn-BD")}</EditableValue><EditableText document="copy.ui.AdmissionInfoSection" entry="e1r0heqn" fallback={" টাকা"} /></span>
                       </div>
                     </div>
                   ))}
@@ -1780,11 +1617,11 @@ export default function AdmissionInfoSection({
                     {data.emdadiKhana.items.map((it, i) => (
                       <div key={i} className="flex justify-between text-gray-700">
                         <span>{it.name}</span>
-                        <span>{it.amount.toLocaleString("bn-BD")} টাকা</span>
+                        <span><EditableValue object={it} field="amount">{it.amount.toLocaleString("bn-BD")}</EditableValue><EditableText document="copy.ui.AdmissionInfoSection" entry="e6g0s5s" fallback={" টাকা"} /></span>
                       </div>
                     ))}
                     <p className="text-[11px] font-semibold text-gray-600 pt-1">
-                      <strong>বিশেষ দ্রষ্টব্য:</strong> {data.emdadiKhana.note}
+                      <strong><EditableText document="copy.ui.AdmissionInfoSection" entry="e1ez8r2w" fallback={"বিশেষ দ্রষ্টব্য:"} /></strong> {data.emdadiKhana.note}
                     </p>
                   </div>
                 </div>
@@ -1792,12 +1629,12 @@ export default function AdmissionInfoSection({
 
               {/* ১০. যোগাযোগ */}
               <div className="space-y-2">
-                <h3 className="text-lg font-black text-[#014d26]">১০. যোগাযোগ</h3>
+                <h3 className="text-lg font-black text-[#014d26]"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1ldb1xr" fallback={"১০. যোগাযোগ"} /></h3>
                 <div className="bg-gray-50 p-4 rounded-xl border border-gray-300 space-y-1.5 text-sm sm:text-base font-semibold">
                   <div><strong>{data.institutionName}</strong></div>
-                  <div>• <strong>ঠিকানা:</strong> {data.contacts.address}</div>
+                  <div><EditableText document="copy.ui.AdmissionInfoSection" entry="e1fn7tts" fallback={"• "} /><strong><EditableText document="copy.ui.AdmissionInfoSection" entry="e1fmydbv" fallback={"ঠিকানা:"} /></strong> {data.contacts.address}</div>
                   {data.contacts.personnel.map((p, i) => (
-                    <div key={i}>• <strong>{p.role}:</strong> {p.phone}</div>
+                    <div key={i}><EditableText document="copy.ui.AdmissionInfoSection" entry="e13fydl9" fallback={"• "} /><strong>{p.role}<EditableText document="copy.ui.AdmissionInfoSection" entry="e4gepl9" fallback={":"} /></strong> {p.phone}</div>
                   ))}
                   <p className="pt-1 text-xs font-medium text-gray-600">{data.contacts.note}</p>
                 </div>
@@ -1805,7 +1642,7 @@ export default function AdmissionInfoSection({
 
               {/* ১১. অভিভাবকদের জন্য বিশেষ নির্দেশনা */}
               <div className="space-y-2">
-                <h3 className="text-lg font-black text-[#014d26]">১১. অভিভাবকদের জন্য বিশেষ নির্দেশনা</h3>
+                <h3 className="text-lg font-black text-[#014d26]"><EditableText document="copy.ui.AdmissionInfoSection" entry="e10de8cb" fallback={"১১. অভিভাবকদের জন্য বিশেষ নির্দেশনা"} /></h3>
                 <ul className="list-disc list-inside space-y-1.5 bg-gray-50 p-4 rounded-xl border border-gray-300 text-sm sm:text-base font-medium">
                   {data.guardianGuidelines.map((g, i) => (
                     <li key={i}>{g}</li>
@@ -1826,9 +1663,7 @@ export default function AdmissionInfoSection({
                 type="button"
                 onClick={() => goToTab("overview")}
                 className="inline-flex items-center gap-2 bg-[#014d26] hover:bg-[#023e1f] text-white text-xs sm:text-sm font-black px-4 py-2.5 rounded-xl border border-amber-300 transition-colors"
-              >
-                &larr; ধারাভিত্তিক ট্যাব ভিউতে ফিরুন
-              </button>
+              ><EditableText document="copy.ui.AdmissionInfoSection" entry="e2nqvob" fallback={"&larr; ধারাভিত্তিক ট্যাব ভিউতে ফিরুন"} /></button>
               <button
                 type="button"
                 onClick={() => {
@@ -1837,9 +1672,7 @@ export default function AdmissionInfoSection({
                   }
                 }}
                 className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-gray-700 hover:text-black bg-gray-100 px-4 py-2.5 rounded-xl border border-gray-300 transition-colors"
-              >
-                উপরে উঠুন ↑
-              </button>
+              ><EditableText document="copy.ui.AdmissionInfoSection" entry="esg1cvq" fallback={"উপরে উঠুন ↑"} /></button>
             </div>
           </div>
         )}
@@ -1855,9 +1688,7 @@ export default function AdmissionInfoSection({
             <div className="sticky top-0 bg-[#014d26] text-white p-3 sm:p-4 flex flex-wrap items-center justify-between gap-2 z-20 border-b-2 border-amber-400">
               <div className="flex items-center gap-2">
                 <FileText size={18} className="text-amber-300 shrink-0" />
-                <h3 className="font-black text-xs sm:text-base">
-                  ভর্তি ফরম (PDF Preview)
-                </h3>
+                <h3 className="font-black text-xs sm:text-base"><EditableText document="copy.ui.AdmissionInfoSection" entry="e38vci2" fallback={"ভর্তি ফরম (PDF Preview)"} /></h3>
               </div>
 
               <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
@@ -1867,7 +1698,7 @@ export default function AdmissionInfoSection({
                   className="bg-amber-400 hover:bg-amber-300 text-black text-[11px] sm:text-xs font-black px-2.5 sm:px-3 py-1.5 rounded-lg flex items-center gap-1.5"
                 >
                   <Printer size={13} />
-                  <span>প্রিন্ট / PDF সেভ</span>
+                  <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e1ak9oil" fallback={"প্রিন্ট / PDF সেভ"} /></span>
                 </button>
 
                 <a
@@ -1876,7 +1707,7 @@ export default function AdmissionInfoSection({
                   className="bg-[#8B111A] hover:bg-[#6e0b13] text-white text-[11px] sm:text-xs font-black px-2.5 sm:px-3 py-1.5 rounded-lg flex items-center gap-1.5"
                 >
                   <Download size={13} />
-                  <span>PDF ডাউনলোড</span>
+                  <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e1y0par0" fallback={"PDF ডাউনলোড"} /></span>
                 </a>
 
                 <button
@@ -1894,157 +1725,119 @@ export default function AdmissionInfoSection({
             <div id="printable-admission-form" className="p-6 sm:p-8 space-y-5 text-gray-950 bg-white">
               {/* Form Official Header */}
               <div className="text-center border-b-2 border-gray-400 pb-4 relative">
-                <div className="text-xs font-bold text-gray-700">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+                <div className="text-xs font-bold text-gray-700"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1sz3qqm" fallback={"بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"} /></div>
                 <h2 className="text-xl sm:text-2xl font-black text-[#014d26] mt-0.5">
                   {data.institutionName}
                 </h2>
-                <p className="text-xs font-bold text-gray-700">
-                  ঠিকানা: {data.address} | ফোন: ০১৭১৬২৯৬৩৭৯, ০১৭৩৪৩১৯৪২৬, ০১৯০১৪৪৭১৬০
-                </p>
-                <div className="mt-2 inline-block bg-[#014d26] text-white px-4 py-1 rounded-full text-xs sm:text-sm font-black border border-amber-300">
-                  ছাত্র ভর্তি আবেদন ফরম — শিক্ষাবর্ষ: {data.sessionName} ({data.hijriYear})
-                </div>
+                <p className="text-xs font-bold text-gray-700"><EditableText document="copy.ui.AdmissionInfoSection" entry="ejjarh8" fallback={"ঠিকানা: "} />{data.address}<EditableText document="copy.ui.AdmissionInfoSection" entry="elg4vms" fallback={" | ফোন: ০১৭১৬২৯৬৩৭৯, ০১৭৩৪৩১৯৪২৬, ০১৯০১৪৪৭১৬০"} /></p>
+                <div className="mt-2 inline-block bg-[#014d26] text-white px-4 py-1 rounded-full text-xs sm:text-sm font-black border border-amber-300"><EditableText document="copy.ui.AdmissionInfoSection" entry="e6thyag" fallback={"ছাত্র ভর্তি আবেদন ফরম — শিক্ষাবর্ষ: "} />{data.sessionName}<EditableText document="copy.ui.AdmissionInfoSection" entry="e1oh19o" fallback={" ("} />{data.hijriYear}<EditableText document="copy.ui.AdmissionInfoSection" entry="e10o0p9o" fallback={")"} /></div>
 
                 {/* Passport Photo Box on Top Right */}
                 <div className="sm:absolute right-0 top-0 mt-3 sm:mt-0 w-24 h-28 border-2 border-dashed border-gray-400 rounded-lg flex flex-col items-center justify-center text-center p-1 text-[11px] font-bold text-gray-500 mx-auto sm:mx-0">
-                  <span>পাসপোর্ট সাইজ</span>
-                  <span>ছবি লাগান</span>
+                  <span><EditableText document="copy.ui.AdmissionInfoSection" entry="eq0x4rp" fallback={"পাসপোর্ট সাইজ"} /></span>
+                  <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e1mgpu85" fallback={"ছবি লাগান"} /></span>
                 </div>
               </div>
 
               {/* Form Form Fields Table / Lines */}
               <div className="space-y-3.5 text-xs sm:text-sm font-bold text-gray-900">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="p-2 border border-gray-300 rounded-lg">
-                    ফরম নং: ............................................
-                  </div>
-                  <div className="p-2 border border-gray-300 rounded-lg">
-                    ভর্তির তারিখ: ....../....../২০২....
-                  </div>
+                  <div className="p-2 border border-gray-300 rounded-lg"><EditableText document="copy.ui.AdmissionInfoSection" entry="egs4z5k" fallback={"ফরম নং: ............................................"} /></div>
+                  <div className="p-2 border border-gray-300 rounded-lg"><EditableText document="copy.ui.AdmissionInfoSection" entry="e11mt9hv" fallback={"ভর্তির তারিখ: ....../....../২০২...."} /></div>
                 </div>
 
-                <div className="p-2 border border-gray-300 rounded-lg">
-                  ১. শিক্ষার্থীর পুরো নাম (বাংলায়): ..........................................................................................
-                </div>
+                <div className="p-2 border border-gray-300 rounded-lg"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1n9aj6n" fallback={"১. শিক্ষার্থীর পুরো নাম (বাংলায়): .........................................................................................."} /></div>
 
-                <div className="p-2 border border-gray-300 rounded-lg">
-                  ২. শিক্ষার্থীর নাম (ইংরেজি বড় অক্ষরে): .................................................................................
+                <div className="p-2 border border-gray-300 rounded-lg"><EditableText document="copy.ui.AdmissionInfoSection" entry="eid1ya8" fallback={"২. শিক্ষার্থীর নাম (ইংরেজি বড় অক্ষরে): ................................................................................."} /></div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="p-2 border border-gray-300 rounded-lg"><EditableText document="copy.ui.AdmissionInfoSection" entry="ec66dcw" fallback={"৩. পিতার নাম: ........................................................"} /></div>
+                  <div className="p-2 border border-gray-300 rounded-lg"><EditableText document="copy.ui.AdmissionInfoSection" entry="equ1079" fallback={"পেশা: ......................................................."} /></div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="p-2 border border-gray-300 rounded-lg">
-                    ৩. পিতার নাম: ........................................................
-                  </div>
-                  <div className="p-2 border border-gray-300 rounded-lg">
-                    পেশা: .......................................................
-                  </div>
+                  <div className="p-2 border border-gray-300 rounded-lg"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1w4gd8g" fallback={"৪. মাতার নাম: ........................................................"} /></div>
+                  <div className="p-2 border border-gray-300 rounded-lg"><EditableText document="copy.ui.AdmissionInfoSection" entry="e7uzwe7" fallback={"অভিভাবকের মোবাইল: ...................................."} /></div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="p-2 border border-gray-300 rounded-lg">
-                    ৪. মাতার নাম: ........................................................
-                  </div>
-                  <div className="p-2 border border-gray-300 rounded-lg">
-                    অভিভাবকের মোবাইল: ....................................
-                  </div>
+                  <div className="p-2 border border-gray-300 rounded-lg"><EditableText document="copy.ui.AdmissionInfoSection" entry="ecws9m7" fallback={"৫. জন্মতারিখ: ....../....../............"} /></div>
+                  <div className="p-2 border border-gray-300 rounded-lg"><EditableText document="copy.ui.AdmissionInfoSection" entry="ed48tjs" fallback={"ডিজিটাল জন্মনিবন্ধন নং: ......................................"} /></div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="p-2 border border-gray-300 rounded-lg">
-                    ৫. জন্মতারিখ: ....../....../............
-                  </div>
-                  <div className="p-2 border border-gray-300 rounded-lg">
-                    ডিজিটাল জন্মনিবন্ধন নং: ......................................
-                  </div>
-                </div>
+                <div className="p-2 border border-gray-300 rounded-lg"><EditableText document="copy.ui.AdmissionInfoSection" entry="elbp68m" fallback={"৬. বর্তমান ঠিকানা: গ্রাম/মহল্লা: ................................. ডাকঘর: ................................ থানা: ............................. জেলা: ....................................."} /></div>
 
-                <div className="p-2 border border-gray-300 rounded-lg">
-                  ৬. বর্তমান ঠিকানা: গ্রাম/মহল্লা: ................................. ডাকঘর: ................................ থানা: ............................. জেলা: .....................................
-                </div>
-
-                <div className="p-2 border border-gray-300 rounded-lg">
-                  ৭. স্থায়ী ঠিকানা: গ্রাম/মহল্লা: ................................. ডাকঘর: ................................ থানা: ............................. জেলা: .....................................
-                </div>
+                <div className="p-2 border border-gray-300 rounded-lg"><EditableText document="copy.ui.AdmissionInfoSection" entry="ez83bq5" fallback={"৭. স্থায়ী ঠিকানা: গ্রাম/মহল্লা: ................................. ডাকঘর: ................................ থানা: ............................. জেলা: ....................................."} /></div>
 
                 <div className="p-3 border border-gray-300 rounded-lg space-y-1.5">
-                  <div>৮. ভর্তিচ্ছু বিভাগ ও ধরন (টিক চিহ্ন দিন):</div>
+                  <div><EditableText document="copy.ui.AdmissionInfoSection" entry="e1k54z2y" fallback={"৮. ভর্তিচ্ছু বিভাগ ও ধরন (টিক চিহ্ন দিন):"} /></div>
                   <div className="flex flex-wrap gap-4 font-normal text-xs sm:text-sm">
                     <label className="flex items-center gap-1.5">
                       <span className="w-4 h-4 border border-gray-400 inline-block rounded-xs" />
-                      <span>মক্তব বিভাগ (অনাবাসিক)</span>
+                      <span><EditableText document="copy.ui.AdmissionInfoSection" entry="elbufpx" fallback={"মক্তব বিভাগ (অনাবাসিক)"} /></span>
                     </label>
                     <label className="flex items-center gap-1.5">
                       <span className="w-4 h-4 border border-gray-400 inline-block rounded-xs" />
-                      <span>নাজেরা বিভাগ (আবাসিক)</span>
+                      <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e18kes9q" fallback={"নাজেরা বিভাগ (আবাসিক)"} /></span>
                     </label>
                     <label className="flex items-center gap-1.5">
                       <span className="w-4 h-4 border border-gray-400 inline-block rounded-xs" />
-                      <span>হিফজ বিভাগ (আবাসিক)</span>
+                      <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e1xuqepn" fallback={"হিফজ বিভাগ (আবাসিক)"} /></span>
                     </label>
                     <label className="flex items-center gap-1.5">
                       <span className="w-4 h-4 border border-gray-400 inline-block rounded-xs" />
-                      <span>মাদানী নেসাব বিভাগ</span>
+                      <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e1pcq2vk" fallback={"মাদানী নেসাব বিভাগ"} /></span>
                     </label>
                     <label className="flex items-center gap-1.5">
                       <span className="w-4 h-4 border border-gray-400 inline-block rounded-xs" />
-                      <span>কিতাব বিভাগ (আবাসিক)</span>
+                      <span><EditableText document="copy.ui.AdmissionInfoSection" entry="e1hd8hky" fallback={"কিতাব বিভাগ (আবাসিক)"} /></span>
                     </label>
                     <label className="flex items-center gap-1.5">
                       <span className="w-4 h-4 border border-gray-400 inline-block rounded-xs" />
-                      <span>এতিমখানা লিল্লাহ কোটা</span>
+                      <span><EditableText document="copy.ui.AdmissionInfoSection" entry="ekszrln" fallback={"এতিমখানা লিল্লাহ কোটা"} /></span>
                     </label>
                   </div>
                 </div>
 
                 {/* Declaration Box */}
                 <div className="p-3 bg-gray-50 border border-gray-300 rounded-lg text-xs leading-relaxed space-y-2">
-                  <div className="font-black text-[#014d26]">অভিভাবকের অঙ্গীকারনামা:</div>
-                  <p>
-                    আমি এই মর্মে অঙ্গীকার করছি যে, ফরমে প্রদত্ত সকল তথ্য সত্য ও সঠিক। আমার সন্তান মাদরাসার সকল নিয়মাবলি, সময়সূচি ও শৃঙ্খলা মেনে চলতে বাধ্য থাকবে।
-                  </p>
+                  <div className="font-black text-[#014d26]"><EditableText document="copy.ui.AdmissionInfoSection" entry="e1jon7e1" fallback={"অভিভাবকের অঙ্গীকারনামা:"} /></div>
+                  <p><EditableText document="copy.ui.AdmissionInfoSection" entry="e1soua0u" fallback={"আমি এই মর্মে অঙ্গীকার করছি যে, ফরমে প্রদত্ত সকল তথ্য সত্য ও সঠিক। আমার সন্তান মাদরাসার সকল নিয়মাবলি, সময়সূচি ও শৃঙ্খলা মেনে চলতে বাধ্য থাকবে।"} /></p>
                   <div className="pt-6 flex justify-between font-bold text-gray-700">
-                    <div>শিক্ষার্থীর স্বাক্ষর: ...................................</div>
-                    <div>অভিভাবকের স্বাক্ষর: ...................................</div>
+                    <div><EditableText document="copy.ui.AdmissionInfoSection" entry="e1rncnrw" fallback={"শিক্ষার্থীর স্বাক্ষর: ..................................."} /></div>
+                    <div><EditableText document="copy.ui.AdmissionInfoSection" entry="e1vu1aa0" fallback={"অভিভাবকের স্বাক্ষর: ..................................."} /></div>
                   </div>
                 </div>
 
                 {/* Office Use Section */}
                 <div className="p-3 border-2 border-dashed border-gray-400 rounded-lg text-xs space-y-2 bg-gray-50">
-                  <div className="font-black text-gray-950 uppercase text-center border-b border-gray-300 pb-1">
-                    কেবলমাত্র মাদরাসা অফিস ব্যবহারের জন্য
-                  </div>
+                  <div className="font-black text-gray-950 uppercase text-center border-b border-gray-300 pb-1"><EditableText document="copy.ui.AdmissionInfoSection" entry="e17k406d" fallback={"কেবলমাত্র মাদরাসা অফিস ব্যবহারের জন্য"} /></div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 font-semibold text-gray-800">
-                    <div>মৌখিক পরীক্ষার প্রাপ্ত নম্বর: ...........</div>
-                    <div>নির্ধারিত জামাত: ...................</div>
-                    <div>গৃহীত ভর্তি ফি: ৳....................</div>
-                    <div>ভর্তি রোল নং: .......................</div>
+                    <div><EditableText document="copy.ui.AdmissionInfoSection" entry="e1cghe11" fallback={"মৌখিক পরীক্ষার প্রাপ্ত নম্বর: ..........."} /></div>
+                    <div><EditableText document="copy.ui.AdmissionInfoSection" entry="e15f8xr4" fallback={"নির্ধারিত জামাত: ..................."} /></div>
+                    <div><EditableText document="copy.ui.AdmissionInfoSection" entry="e1rg2hqz" fallback={"গৃহীত ভর্তি ফি: ৳...................."} /></div>
+                    <div><EditableText document="copy.ui.AdmissionInfoSection" entry="ez97wfo" fallback={"ভর্তি রোল নং: ......................."} /></div>
                   </div>
                   <div className="pt-4 flex justify-between font-bold text-gray-700">
-                    <div>যাচাইকারীর স্বাক্ষর: .................................</div>
-                    <div>মুহতামিমের অনুমোদন: .................................</div>
+                    <div><EditableText document="copy.ui.AdmissionInfoSection" entry="e5cwbct" fallback={"যাচাইকারীর স্বাক্ষর: ................................."} /></div>
+                    <div><EditableText document="copy.ui.AdmissionInfoSection" entry="e8hw0q2" fallback={"মুহতামিমের অনুমোদন: ................................."} /></div>
                   </div>
                 </div>
               </div>
 
               {/* Bottom Buttons for Modal */}
               <div className="pt-4 border-t-2 border-gray-200 flex flex-wrap items-center justify-between gap-3">
-                <span className="text-xs text-gray-500 font-bold">
-                  * ডাউনলোড বা প্রিন্ট করে প্রয়োজনীয় কাগজপত্রসহ অফিসে জমা দিন।
-                </span>
+                <span className="text-xs text-gray-500 font-bold"><EditableText document="copy.ui.AdmissionInfoSection" entry="ev6ei29" fallback={"* ডাউনলোড বা প্রিন্ট করে প্রয়োজনীয় কাগজপত্রসহ অফিসে জমা দিন।"} /></span>
                 <div className="flex items-center gap-2">
                   <Link
                     href="/apply"
                     className="bg-[#014d26] hover:bg-[#023e1f] text-white text-xs font-black px-4 py-2 rounded-xl transition-colors"
-                  >
-                    অনলাইনে ফরম পূরণ করুন &rarr;
-                  </Link>
+                  ><EditableText document="copy.ui.AdmissionInfoSection" entry="e1fzyn6o" fallback={"অনলাইনে ফরম পূরণ করুন &rarr;"} /></Link>
                   <button
                     type="button"
                     onClick={() => setShowFormModal(false)}
                     className="bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-black px-4 py-2 rounded-xl transition-colors"
-                  >
-                    বন্ধ করুন
-                  </button>
+                  ><EditableText document="copy.ui.AdmissionInfoSection" entry="e11h3sh2" fallback={"বন্ধ করুন"} /></button>
                 </div>
               </div>
             </div>

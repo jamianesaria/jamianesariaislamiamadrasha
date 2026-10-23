@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
@@ -6,13 +6,13 @@ import Footer from "@/components/Footer";
 import FacultyAndTeachersSection from "@/components/FacultyAndTeachersSection";
 import { getTeachers, getSiteSettings, getNewsTicker } from "@/sanity/lib/queries";
 
-export const metadata: Metadata = {
+export const generateMetadata = editableMetadata("/teachers", {
   title: "সম্মানিত শিক্ষক মণ্ডলী ও উলামায়ে কেরাম | জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা",
   description:
     "জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানার বুখারী শরিফের বিশেষ দরস প্রদানকারী উলামা, মুহাদ্দিস ও কিতাব বিভাগ, হিফজুল কুরআন বিভাগ, মক্তব বিভাগ এবং কর্মকর্তা ও স্টাফবৃন্দের পরিচিতি।",
-};
+});
 
-export default async function TeachersPage() {
+async function TeachersPage() {
   const [teachers, siteData, newsTicker] = await Promise.all([
     getTeachers(),
     getSiteSettings(),
@@ -33,3 +33,4 @@ export default async function TeachersPage() {
     </div>
   );
 }
+export default editableRoute("/teachers", TeachersPage);

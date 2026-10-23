@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
@@ -6,13 +6,13 @@ import Footer from "@/components/Footer";
 import BlogSection from "@/components/BlogSection";
 import { getSiteSettings, getNewsTicker, getBlogPosts } from "@/sanity/lib/queries";
 
-export const metadata: Metadata = {
+export const generateMetadata = editableMetadata("/blog", {
   title: "মাদরাসা ব্লগ, সাময়িকী ও সমকালীন প্রবন্ধ | জামিয়া নেছারিয়া ইসলামিয়া টঙ্গী",
   description:
     "জামিয়া নেছারিয়া ইসলামিয়া টঙ্গীর অফিসিয়াল ব্লগ ও জ্ঞান মঞ্জিল - কুরআন-সুন্নাহর আলো, সমকালীন ইসলামি দর্শন, তারবিয়াত, অভিভাবকত্ব ও সুন্নাহসম্মত আদর্শ জীবনধারার নিয়মিত কলাম ও গবেষণামূলক প্রবন্ধ।",
-};
+});
 
-export default async function BlogPage() {
+async function BlogPage() {
   const [siteData, newsTicker, blogPosts] = await Promise.all([
     getSiteSettings(),
     getNewsTicker(),
@@ -40,3 +40,4 @@ export default async function BlogPage() {
     </div>
   );
 }
+export default editableRoute("/blog", BlogPage);

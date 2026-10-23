@@ -1,16 +1,16 @@
-import type { Metadata } from "next";
+import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
 import Footer from "@/components/Footer";
 import VideoGallerySection from "@/components/VideoGallerySection";
 
-export const metadata: Metadata = {
+export const generateMetadata = editableMetadata("/gallery/video", {
   title: "Video Gallery | জামিয়া নেছারিয়া ইসলামিয়া টঙ্গী",
   description: "জামিয়া নেছারিয়া ইসলামিয়া টঙ্গীর ভিডিও গ্যালারি - পবিত্র কুরআন তেলাওয়াত, তাফসির, দ্বীনি নসিহত ও মাদ্রাসার অনুষ্ঠানমালার ভিডিও সংগ্রহ।",
-};
+});
 
-export default function VideoGalleryPage() {
+function VideoGalleryPage() {
   return (
     <div className="min-h-screen bg-[#F0F2F5] flex flex-col">
       {/* 1. Top Identity Banner */}
@@ -32,4 +32,5 @@ export default function VideoGalleryPage() {
     </div>
   );
 }
+export default editableRoute("/gallery/video", VideoGalleryPage);
 

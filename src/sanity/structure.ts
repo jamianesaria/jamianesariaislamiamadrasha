@@ -70,7 +70,6 @@ export const structure: StructureResolver = (S) =>
             .title("ভর্তি ব্যবস্থাপনা")
             .items([
               S.documentTypeListItem("admissionInfo").title("ভর্তি তথ্য ও ফি কাঠামো (Admission Info)"),
-              S.documentTypeListItem("admissionApplication").title("অনলাইন আবেদনপত্রসমূহ (Incoming Applications)"),
             ])
         ),
 
@@ -96,8 +95,8 @@ export const structure: StructureResolver = (S) =>
         .title("৩১৩ বদরি কাফেলা প্রকল্প (Badri Kafela)")
         .child(
           S.document()
-            .schemaType("badriKafila")
-            .documentId("badriKafila")
+            .schemaType("pageContent")
+            .documentId("copy.ui.BadriKafilaSection")
             .title("৩১৩ বদরি কাফেলা প্রকল্প বিবরণ")
         ),
 
@@ -105,5 +104,7 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem("blogPost").title("মাদরাসা ব্লগ ও প্রবন্ধ (Blog Posts)"),
 
       // 13. Contact Messages
-      S.documentTypeListItem("contactMessage").title("যোগাযোগ ইনবক্স (Inquiries Inbox)"),
+      S.documentTypeListItem("pageContent").title("পাতার লেখা ও ছবি (Page content)"),
+      S.documentTypeListItem("calendarEvent").title("অনুষ্ঠান ও ছুটি (Calendar)"),
+      S.documentTypeListItem("vacancy").title("নিয়োগ বিজ্ঞপ্তি (Vacancies)"),
     ]);

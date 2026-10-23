@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Hind_Siliguri } from "next/font/google";
 import "./globals.css";
-import CustomScrollbar from "@/components/CustomScrollbar";
-import HashScrollHandler from "@/components/HashScrollHandler";
+import WebsiteRuntime from "@/components/WebsiteRuntime";
 import SanityVisualEditing from "@/components/SanityVisualEditing";
 
 const hindSiliguri = Hind_Siliguri({
@@ -40,10 +39,8 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
     >
       <body className="min-h-screen bg-[#FAF7F0] font-sans antialiased text-gray-800">
-        <CustomScrollbar />
-        <Suspense fallback={null}><HashScrollHandler /></Suspense>
         {children}
-        <Suspense fallback={null}><SanityVisualEditing /></Suspense>
+        <Suspense fallback={null}><WebsiteRuntime><SanityVisualEditing /></WebsiteRuntime></Suspense>
       </body>
     </html>
   );

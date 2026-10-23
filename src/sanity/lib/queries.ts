@@ -1,45 +1,23 @@
 import { groq } from "next-sanity";
-import { draftMode } from "next/headers";
-import { client } from "./client";
+import { fetchSiteQuery } from "./fetch";
+import { getEditableData } from "@/content/server";
+import type { AdmissionContent } from "@/content/public-types";
+import { stegaClean } from "@sanity/client/stega";
+import { paragraphs, type SettingsDocument, type HomepageDocument, type NoticeDocument, type TeacherDocument, type CommitteeDocument, type BlogDocument, type ClassRoutineDocument, type ExamRoutineDocument, type ResultDocument, type PhotoDocument, type VideoDocument, type CalendarDocument, type VacancyDocument } from "./documents";
 import { mapAcademicDepartments, type AcademicDepartmentRecord } from "./departments";
 import {
   siteSettings as fallbackSettings,
-  homePageContent as fallbackHome,
+  homePageContent as fallbackHomeSource,
   noticesData as fallbackNotices,
   committeeAndFacultyData,
   sampleBlogPosts as fallbackBlogPosts,
 } from "@/data/siteData";
-
-/**
- * Dynamically resolves fetch options based on Next.js Draft Mode status.
- * In draft mode: fetches unpublished drafts + Content Source Maps (stega) using the viewer/read token.
- * In published mode: serves published content via CDN with zero stega overhead.
- */
-export async function getSanityFetchOptions() {
-  try {
-    const draft = await draftMode();
-    if (draft.isEnabled) {
-      return {
-        perspective: "drafts" as const,
-        stega: true,
-        useCdn: false,
-        token: process.env.SANITY_API_READ_TOKEN || process.env.SANITY_API_TOKEN,
-        next: { revalidate: 0 },
-      };
-    }
-  } catch {
-    // draftMode() may throw during static build prerendering outside request context
-  }
-
-  return {
-    perspective: "published" as const,
-    stega: false,
-    useCdn: true,
-  };
-}
+const fallbackHome = fallbackHomeSource;
 
 // 1. Site Settings Query (Projected)
 export const siteSettingsQuery = groq`*[_type == "siteSettings"][0] {
+  _id,
+  _type,
   title,
   arabicTitle,
   englishTitle,
@@ -47,6 +25,11 @@ export const siteSettingsQuery = groq`*[_type == "siteSettings"][0] {
   slogan,
   phone,
   emergencyPhone,
+  footerSlogan,
+  establishedFull,
+  applyUrl,
+  onlineClassUrl,
+  appDownloadUrl,
   email,
   address,
   addressFull,
@@ -56,15 +39,13 @@ export const siteSettingsQuery = groq`*[_type == "siteSettings"][0] {
   mapEmbedUrl,
   facebookUrl,
   youtubeUrl,
-  headerBannerUrl,
+  "headerBannerUrl":coalesce(headerBanner.asset->url,headerBannerUrl),
   "logoUrl": logo.asset->url
 }`;
 
 export async function getSiteSettings() {
-  "use cache";
   try {
-    const options = await getSanityFetchOptions();
-    const data = await client.fetch(siteSettingsQuery, {}, options);
+    const data = await fetchSiteQuery<SettingsDocument | null>(siteSettingsQuery, {});
     if (data && (data.title || data.phone)) {
       return {
         ...fallbackSettings,
@@ -73,7 +54,11 @@ export async function getSiteSettings() {
         nameAr: data.arabicTitle || fallbackSettings.nameAr,
         nameEn: data.englishTitle || fallbackSettings.nameEn,
         sloganBn: data.slogan || fallbackSettings.sloganBn,
-        footerSloganBn: data.slogan || fallbackSettings.footerSloganBn,
+        footerSloganBn: data.footerSlogan || data.slogan || fallbackSettings.footerSloganBn,
+        establishedFull: data.establishedFull || fallbackSettings.establishedFull,
+        applyUrl: data.applyUrl || fallbackSettings.applyUrl,
+        onlineClassUrl: data.onlineClassUrl || fallbackSettings.onlineClassUrl,
+        appDownloadUrl: data.appDownloadUrl || fallbackSettings.appDownloadUrl,
         address: data.addressFull || fallbackSettings.address,
         addressShort: data.address || fallbackSettings.addressShort,
         established: data.establishedYear
@@ -106,9 +91,11 @@ export async function getSiteSettings() {
 
 // 2. Homepage Content Query (Projected)
 export const homepageQuery = groq`*[_type == "homepage"][0]{
+  _id,
+  _type,
   introVideo{enabled, videoUrl, mobileVideoUrl, posterUrl, mobilePosterUrl, title, skipLabel, playLabel, loadingLabel},
   heroVideoUrl,
-  heroPosterUrl,
+  "heroPosterUrl":coalesce(heroPoster.asset->url,heroPosterUrl),
   newsTicker,
   heroBadge,
   heroHeadline,
@@ -125,10 +112,9 @@ export const homepageQuery = groq`*[_type == "homepage"][0]{
 }`;
 
 export async function getHomepageContent() {
-  "use cache";
+  const fallbackHome = await getEditableData("copy.data.homePageContent", fallbackHomeSource);
   try {
-    const options = await getSanityFetchOptions();
-    const data = await client.fetch(homepageQuery, {}, options);
+    const data = await fetchSiteQuery<HomepageDocument | null>(homepageQuery, {});
     if (data && (data.heroHeadline || data.heroBadge || data.introVideo || data.heroVideoUrl || data.heroPosterUrl)) {
       return {
         ...fallbackHome,
@@ -186,7 +172,7 @@ export async function getHomepageContent() {
   } catch (err) {
     console.warn("Using fallback homepage content:", err);
   }
-  return fallbackHome;
+  return { ...fallbackHome, newsTicker: [fallbackHome.hero.slogan] };
 }
 
 // 2b. Lightweight News Ticker Query (for sub-pages)
@@ -196,10 +182,8 @@ export const newsTickerQuery = groq`*[_type == "homepage"][0]{
 }`;
 
 export async function getNewsTicker(): Promise<string[]> {
-  "use cache";
   try {
-    const options = await getSanityFetchOptions();
-    const data = await client.fetch(newsTickerQuery, {}, options);
+    const data = await fetchSiteQuery<HomepageDocument | null>(newsTickerQuery, {});
     if (data && Array.isArray(data.newsTicker) && data.newsTicker.length > 0) {
       return data.newsTicker;
     }
@@ -215,7 +199,7 @@ export async function getNewsTicker(): Promise<string[]> {
 }
 
 // 3. Notices Query (Projected)
-export const noticesQuery = groq`*[_type == "notice"] | order(publishDate desc) {
+export const noticesQuery = groq`*[_type == "notice" && !defined(archivedAt)] | order(publishDate desc) {
   _id,
   title,
   memo,
@@ -252,13 +236,11 @@ const categoryMap: Record<
 };
 
 export async function getNotices() {
-  "use cache";
   try {
-    const options = await getSanityFetchOptions();
-    const data = await client.fetch(noticesQuery, {}, options);
-    if (Array.isArray(data) && data.length > 0) {
-      return data.map((n: any, idx: number) => {
-        const catInfo = categoryMap[n.category] || {
+    const data = await fetchSiteQuery<NoticeDocument[]>(noticesQuery, {});
+    if (Array.isArray(data)) {
+      return data.map((n, idx) => {
+        const catInfo = categoryMap[stegaClean(n.category)] || {
           label: "প্রশাসনিক ও সাধারণ",
           key: "general",
         };
@@ -269,12 +251,12 @@ export async function getNotices() {
           category: catInfo.label,
           categoryKey: catInfo.key,
           publishDateEn: n.publishDate || "2026-01-01",
-          publishDateBn: n.publishDateBn || "১ জানুয়ারি ২০২৬",
+          publishDateBn: n.publishDateBn || (n.publishDate ? new Intl.DateTimeFormat("bn-BD", { dateStyle: "long", timeZone: "Asia/Dhaka" }).format(new Date(stegaClean(n.publishDate))) : "তারিখ উল্লেখ নেই"),
           publishDateHijri: n.publishDateHijri || "",
           isUrgent: !!n.isUrgent,
           isNew: idx < 3,
           summary: n.summary || n.title,
-          details: Array.isArray(n.details) ? n.details : [n.summary || n.title],
+          details: paragraphs(n.details, n.summary || n.title),
           instructions: Array.isArray(n.instructions) ? n.instructions : [],
           signatory: {
             name: n.signatoryName || "মুহতামিম",
@@ -292,12 +274,13 @@ export async function getNotices() {
 }
 
 // 4. Teachers Query (Projected)
-export const teachersQuery = groq`*[_type == "teacher"] | order(serial asc) {
+export const teachersQuery = groq`*[_type == "teacher" && !defined(archivedAt)] | order(serial asc) {
   _id,
   name,
   designation,
   department,
   qualification,
+  honor,
   mobile,
   district,
   institution,
@@ -306,17 +289,18 @@ export const teachersQuery = groq`*[_type == "teacher"] | order(serial asc) {
 }`;
 
 export async function getTeachers() {
-  "use cache";
   try {
-    const options = await getSanityFetchOptions();
-    const data = await client.fetch(teachersQuery, {}, options);
+    const data = await fetchSiteQuery<TeacherDocument[]>(teachersQuery, {});
     if (Array.isArray(data) && data.length > 0) {
-      return data.map((t: any) => ({
+      return data.map((t) => ({
+        _id: t._id,
+        _type: "teacher",
         id: t._id,
         name: t.name,
         designation: t.designation,
         department: t.department,
         qualification: t.qualification || "",
+        honor: t.honor || "",
         mobile: t.mobile || "",
         district: t.district || "",
         institution: t.institution || "",
@@ -331,7 +315,7 @@ export async function getTeachers() {
 }
 
 // 5. Committee Members Query (Projected)
-export const committeeQuery = groq`*[_type == "committeeMember"] | order(serial asc) {
+export const committeeQuery = groq`*[_type == "committeeMember" && !defined(archivedAt)] | order(serial asc) {
   _id,
   name,
   designation,
@@ -344,18 +328,20 @@ export const committeeQuery = groq`*[_type == "committeeMember"] | order(serial 
 }`;
 
 export async function getCommitteeMembers() {
-  "use cache";
   try {
-    const options = await getSanityFetchOptions();
-    const data = await client.fetch(committeeQuery, {}, options);
-    if (Array.isArray(data) && data.length > 0) {
-      return data.map((m: any) => ({
+    const data = await fetchSiteQuery<CommitteeDocument[]>(committeeQuery, {});
+    if (Array.isArray(data)) {
+      return data.map((m) => ({
+        _id: m._id,
+        _type: "committeeMember",
         id: m._id,
         name: m.name,
         designation: m.designation,
         mobile: m.mobile || "",
         address: m.address || "",
         isLandDonor: !!m.isLandDonor,
+        donorContribution: m.donorContribution || "",
+        photo: m.photo || "/avatar-member.svg",
         serial: m.serial || 1,
       }));
     }
@@ -366,7 +352,7 @@ export async function getCommitteeMembers() {
 }
 
 // 6. Academic Departments Query (Projected)
-export const departmentsQuery = groq`*[_type == "academicDepartment" && (
+export const departmentsQuery = groq`*[_type == "academicDepartment" && !defined(archivedAt) && (
   !$homepageOnly || coalesce(showOnHomepage, slug.current != "orphanage", true)
 )] | order(serial asc, _updatedAt desc, _id asc) {
   _id,
@@ -384,10 +370,8 @@ export const departmentsQuery = groq`*[_type == "academicDepartment" && (
 }`;
 
 export async function getAcademicDepartments({ homepageOnly = false }: { homepageOnly?: boolean } = {}) {
-  "use cache";
   try {
-    const options = await getSanityFetchOptions();
-    const data = await client.fetch<AcademicDepartmentRecord[]>(departmentsQuery, { homepageOnly }, options);
+    const data = await fetchSiteQuery<AcademicDepartmentRecord[]>(departmentsQuery, { homepageOnly });
     if (Array.isArray(data) && data.length > 0) {
       return mapAcademicDepartments(data);
     }
@@ -398,7 +382,7 @@ export async function getAcademicDepartments({ homepageOnly = false }: { homepag
 }
 
 // 7. Admission Info Query (Projected)
-export const admissionInfoQuery = groq`*[_type == "admissionInfo"][0] {
+export const admissionInfoQuery = groq`*[_type == "admissionInfo" && !defined(archivedAt)][0] {
   _id,
   sessionName,
   hijriYear,
@@ -422,10 +406,8 @@ export const admissionInfoQuery = groq`*[_type == "admissionInfo"][0] {
 }`;
 
 export async function getAdmissionInfo() {
-  "use cache";
   try {
-    const options = await getSanityFetchOptions();
-    const data = await client.fetch(admissionInfoQuery, {}, options);
+    const data = await fetchSiteQuery<AdmissionContent | null>(admissionInfoQuery, {});
     if (data && data.sessionName) {
       return data;
     }
@@ -450,10 +432,8 @@ export const badriKafilaQuery = groq`*[_type == "badriKafila"][0] {
 }`;
 
 export async function getBadriKafila() {
-  "use cache";
   try {
-    const options = await getSanityFetchOptions();
-    const data = await client.fetch(badriKafilaQuery, {}, options);
+    const data = await fetchSiteQuery<(Record<string, unknown> & { title?: string }) | null>(badriKafilaQuery, {});
     if (data && data.title) {
       return data;
     }
@@ -464,20 +444,20 @@ export async function getBadriKafila() {
 }
 
 // 9. Class Routines Query (Projected)
-export const classRoutinesQuery = groq`*[_type == "classRoutine"] | order(academicYear desc) {
+export const classRoutinesQuery = groq`*[_type == "classRoutine" && !defined(archivedAt)] | order(academicYear desc) {
   _id,
   title,
   className,
   academicYear,
+  classId,
+  timetableRows,
   scheduleRows,
   "pdfUrl": pdfFile.asset->url
 }`;
 
 export async function getClassRoutines() {
-  "use cache";
   try {
-    const options = await getSanityFetchOptions();
-    const data = await client.fetch(classRoutinesQuery, {}, options);
+    const data = await fetchSiteQuery<ClassRoutineDocument[]>(classRoutinesQuery, {});
     return data || [];
   } catch (err) {
     console.warn("Using fallback class routines:", err);
@@ -486,22 +466,21 @@ export async function getClassRoutines() {
 }
 
 // 10. Exam Routines Query (Projected)
-export const examRoutinesQuery = groq`*[_type == "examRoutine"] | order(academicYear desc) {
+export const examRoutinesQuery = groq`*[_type == "examRoutine" && !defined(archivedAt)] | order(academicYear desc) {
   _id,
   title,
   examTerm,
   academicYear,
   className,
+  classId,
   examRows,
   instructions,
   "pdfUrl": pdfFile.asset->url
 }`;
 
 export async function getExamRoutines() {
-  "use cache";
   try {
-    const options = await getSanityFetchOptions();
-    const data = await client.fetch(examRoutinesQuery, {}, options);
+    const data = await fetchSiteQuery<ExamRoutineDocument[]>(examRoutinesQuery, {});
     return data || [];
   } catch (err) {
     console.warn("Using fallback exam routines:", err);
@@ -510,22 +489,21 @@ export async function getExamRoutines() {
 }
 
 // 11. Exam Results Query (Projected — published summary metadata only)
-export const examResultsQuery = groq`*[_type == "examResult" && isPublished == true] | order(academicYear desc) {
+export const examResultsQuery = groq`*[_type == "examResult" && !defined(archivedAt) && isPublished != false] | order(academicYear desc) {
   _id,
   title,
   academicYear,
   examTerm,
   className,
+  classId,
   isPublished,
   summaryNotes,
   "meritListPdfUrl": meritListPdf.asset->url
 }`;
 
 export async function getExamResults() {
-  "use cache";
   try {
-    const options = await getSanityFetchOptions();
-    const data = await client.fetch(examResultsQuery, {}, options);
+    const data = await fetchSiteQuery<ResultDocument[]>(examResultsQuery, {});
     return data || [];
   } catch (err) {
     console.warn("Using fallback exam results:", err);
@@ -534,20 +512,18 @@ export async function getExamResults() {
 }
 
 // 12. Gallery Photos Query (Projected)
-export const galleryPhotosQuery = groq`*[_type == "galleryPhoto"] | order(_createdAt desc) {
+export const galleryPhotosQuery = groq`*[_type == "galleryPhoto" && !defined(archivedAt)] | order(displayOrder asc,_createdAt desc) {
   _id,
   title,
   category,
   caption,
   date,
-  "imageUrl": image.asset->url
+  "imageUrl": coalesce(image.asset->url,imageUrl)
 }`;
 
 export async function getGalleryPhotos() {
-  "use cache";
   try {
-    const options = await getSanityFetchOptions();
-    const data = await client.fetch(galleryPhotosQuery, {}, options);
+    const data = await fetchSiteQuery<PhotoDocument[]>(galleryPhotosQuery, {});
     return data || [];
   } catch (err) {
     console.warn("Using fallback gallery photos:", err);
@@ -556,20 +532,21 @@ export async function getGalleryPhotos() {
 }
 
 // 13. Gallery Videos Query (Projected)
-export const galleryVideosQuery = groq`*[_type == "galleryVideo"] | order(_createdAt desc) {
+export const galleryVideosQuery = groq`*[_type == "galleryVideo" && !defined(archivedAt)] | order(displayOrder asc,_createdAt desc) {
   _id,
   title,
   youtubeId,
+  localVideoUrl,
+  speaker,
+  "thumbnail": coalesce(thumbnail.asset->url,thumbnailUrl),
   category,
   duration,
   date
 }`;
 
 export async function getGalleryVideos() {
-  "use cache";
   try {
-    const options = await getSanityFetchOptions();
-    const data = await client.fetch(galleryVideosQuery, {}, options);
+    const data = await fetchSiteQuery<VideoDocument[]>(galleryVideosQuery, {});
     return data || [];
   } catch (err) {
     console.warn("Using fallback gallery videos:", err);
@@ -577,8 +554,9 @@ export async function getGalleryVideos() {
   }
 }
 // 14. Blog Posts Query (Projected)
-export const blogPostsQuery = groq`*[_type == "blogPost"] | order(publishedAt desc, _createdAt desc) {
+export const blogPostsQuery = groq`*[_type == "blogPost" && !defined(archivedAt)] | order(publishedAt desc, _createdAt desc) {
   _id,
+  legacyId,
   title,
   "slug": slug.current,
   category,
@@ -593,13 +571,13 @@ export const blogPostsQuery = groq`*[_type == "blogPost"] | order(publishedAt de
 }`;
 
 export async function getBlogPosts() {
-  "use cache";
   try {
-    const options = await getSanityFetchOptions();
-    const data = await client.fetch(blogPostsQuery, {}, options);
-    if (Array.isArray(data) && data.length > 0) {
-      return data.map((post: any, idx: number) => ({
-        id: idx + 1,
+    const data = await fetchSiteQuery<BlogDocument[]>(blogPostsQuery, {});
+    if (Array.isArray(data)) {
+      return data.map((post, idx) => ({
+        _id: post._id,
+        _type: "blogPost",
+        id: post.legacyId ?? post._id,
         slug: post.slug || `post-${idx + 1}`,
         title: post.title,
         thumbnail: post.thumbnail || fallbackBlogPosts[idx % fallbackBlogPosts.length]?.thumbnail || "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&q=80&w=600",
@@ -617,4 +595,13 @@ export async function getBlogPosts() {
     console.warn("Using fallback blog posts:", err);
   }
   return fallbackBlogPosts;
+}
+
+export async function getCalendar() {
+  try { return await fetchSiteQuery<CalendarDocument[]>('*[_type == "calendarEvent" && !defined(archivedAt)] | order(date desc){_id,"_type":"calendarEvent",title,kind,date,endDate,dateBn,description,location,"imageUrl":coalesce(image.asset->url,imageUrl),"pdfUrl":pdfFile.asset->url}'); }
+  catch { return []; }
+}
+export async function getVacancies() {
+  try { return await fetchSiteQuery<VacancyDocument[]>('*[_type == "vacancy" && !defined(archivedAt)] | order(deadline desc){_id,"_type":"vacancy",title,department,qualification,deadline,postedAt,salary,vacancies,"pdfUrl":pdfFile.asset->url}'); }
+  catch { return []; }
 }

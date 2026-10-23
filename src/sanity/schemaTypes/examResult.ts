@@ -1,10 +1,13 @@
 import { defineField, defineType } from "sanity";
+import { availableClasses } from "@/data/siteData";
 
 export const examResultType = defineType({
   name: "examResult",
   title: "পরীক্ষার ফলাফল ও মেধা তালিকা (Exam Results & Merit Lists)",
   type: "document",
+  description: "এখানে কেবল প্রকাশের অনুমোদনপ্রাপ্ত ফলাফলের বিজ্ঞপ্তি ও পাবলিক তালিকা দিন। ব্যক্তিগত শিক্ষার্থী রেকর্ড ইনবক্সের সুরক্ষিত ব্যবস্থার বাইরে প্রকাশ করবেন না।",
   fields: [
+    defineField({ name: "classId", title: "ফলাফলের শ্রেণি", type: "string", options: { list: availableClasses.map((item) => ({ title: item.name, value: item.id })) } }),
     defineField({
       name: "title",
       title: "ফলাফলের শিরোনাম",
@@ -40,13 +43,14 @@ export const examResultType = defineType({
     }),
     defineField({
       name: "isPublished",
+      hidden: true,
       title: "ওয়েবসাইটে প্রকাশ করুন (Publish to Web)",
       type: "boolean",
       initialValue: true,
     }),
     defineField({
       name: "meritListPdf",
-      title: "অফিসিয়াল মেধা তালিকা ও মার্কশিট PDF",
+      title: "অনুমোদিত পাবলিক ফলাফলের PDF",
       type: "file",
       options: {
         accept: ".pdf",

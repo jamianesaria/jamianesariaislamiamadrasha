@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
@@ -6,13 +6,13 @@ import Footer from "@/components/Footer";
 import BadriKafilaSection from "@/components/BadriKafilaSection";
 import { getSiteSettings, getNewsTicker } from "@/sanity/lib/queries";
 
-export const metadata: Metadata = {
+export const generateMetadata = editableMetadata("/badri-kafila", {
   title: "৩১৩ জন বদরি কাফেলা | আজীবন দাতা সদস্য প্রকল্প | জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা",
   description:
     "জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানার সার্বিক উন্নয়ন ও দ্বীনি শিক্ষার অগ্রযাত্রায় ‘৩১৩ জন বদরি কাফেলা’ আজীবন দাতা সদস্য প্রকল্প। ৩১৩ সংখ্যার বরকতময় রহস্য, বার্ষিক অনুদান ও অনলাইন সদস্য আবেদন।",
-};
+});
 
-export default async function BadriKafilaPage() {
+async function BadriKafilaPage() {
   const [siteData, newsTicker] = await Promise.all([
     getSiteSettings(),
     getNewsTicker(),
@@ -39,3 +39,4 @@ export default async function BadriKafilaPage() {
     </div>
   );
 }
+export default editableRoute("/badri-kafila", BadriKafilaPage);

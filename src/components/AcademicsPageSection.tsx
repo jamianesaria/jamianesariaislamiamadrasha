@@ -1,6 +1,7 @@
-import Image from "next/image";
+
 import Link from "next/link";
-import { academicsPageData, siteSettings } from "@/data/siteData";
+import type { AcademicDepartment } from "@/sanity/lib/departments";
+import { academicsPageData as _fallback_academicsPageData, siteSettings as _fallback_siteSettings } from "@/data/siteData";
 import {
   GraduationCap,
   BookOpen,
@@ -18,12 +19,18 @@ import {
   Rocket,
   ShieldCheck,
 } from "lucide-react";
+import { EditableImage as Image, getEditableData, EditableText } from "@/content/server";
+import { fieldSource } from "@/content/model";
+
 
 interface AcademicsPageSectionProps {
-  initialDepartments?: any[];
+  initialDepartments?: AcademicDepartment[];
 }
 
-export default function AcademicsPageSection({ initialDepartments }: AcademicsPageSectionProps = {}) {
+export default async function AcademicsPageSection({ initialDepartments }: AcademicsPageSectionProps = {}) {
+  const academicsPageData = await getEditableData("copy.data.academicsPageData", _fallback_academicsPageData);
+  const siteSettings = await getEditableData("siteSettings", _fallback_siteSettings);
+
   const {
     header,
     overview,
@@ -35,7 +42,7 @@ export default function AcademicsPageSection({ initialDepartments }: AcademicsPa
     conclusion,
   } = academicsPageData;
 
-  const tocItems = [
+  const tocItems = await getEditableData("copy.ui.AcademicsPageSection", [
     { id: "overview", num: "০", label: "শিক্ষাব্যবস্থার পরিচিতি" },
     { id: "maktab", num: "১", label: "মক্তব বিভাগ" },
     { id: "hifz", num: "২", label: "হিফজ বিভাগ" },
@@ -46,7 +53,7 @@ export default function AcademicsPageSection({ initialDepartments }: AcademicsPa
     { id: "future-plans", num: "৭", label: "ভবিষ্যৎ পরিকল্পনা" },
     { id: "academic-goals", num: "৮", label: "শিক্ষার লক্ষ্য ও প্রত্যয়" },
     { id: "conclusion", num: "❖", label: "উপসংহার" },
-  ];
+  ], ["local","tocItems"]);
 
   const maktabDept = departments[0];
   const hifzDept = departments[1];
@@ -63,21 +70,18 @@ export default function AcademicsPageSection({ initialDepartments }: AcademicsPa
           <div className="flex items-center gap-2.5">
             <GraduationCap size={19} className="text-amber-300 shrink-0" />
             <span className="font-bold text-sm sm:text-base tracking-wide">
-              {header.pageTitle} — পূর্ণাঙ্গ একাডেমিক বিবরণী ও পাঠ্যক্রম
-            </span>
+              {header.pageTitle}<EditableText document="copy.ui.AcademicsPageSection" entry="ewuvzo" fallback={" — পূর্ণাঙ্গ একাডেমিক বিবরণী ও পাঠ্যক্রম"} /></span>
           </div>
           <Link
             href="/"
             className="text-xs font-semibold text-amber-200 hover:text-white bg-black/20 px-3 py-1 rounded-full border border-amber-300/30 transition-colors"
-          >
-            ← হোমপেজে ফিরে যান
-          </Link>
+          ><EditableText document="copy.ui.AcademicsPageSection" entry="e1k1qppm" fallback={"← হোমপেজে ফিরে যান"} /></Link>
         </div>
 
         <div className="p-6 sm:p-8 bg-gradient-to-b from-[#FAF7F0]/70 to-white">
           <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
             <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-3 border-[#8B111A] ring-4 ring-amber-100/80 p-0.5 bg-white shadow-md shrink-0 overflow-hidden">
-              <Image
+              <Image document="copy.ui.AcademicsPageSection" entry="e1s9brw3" source={fieldSource(siteSettings, "logoUrl")}
                 src={siteSettings.logoUrl || "/jamia-logo-v2.png"}
                 alt={header.institutionName}
                 width={112}
@@ -105,9 +109,7 @@ export default function AcademicsPageSection({ initialDepartments }: AcademicsPa
                 </span>
               </div>
 
-              <p className="text-sm sm:text-base font-bold text-[#8B111A] pt-1">
-                “{header.slogan}”
-              </p>
+              <p className="text-sm sm:text-base font-bold text-[#8B111A] pt-1"><EditableText document="copy.ui.AcademicsPageSection" entry="e12w83ws" fallback={"“"} />{header.slogan}<EditableText document="copy.ui.AcademicsPageSection" entry="e1yijzdy" fallback={"”"} /></p>
             </div>
           </div>
         </div>
@@ -122,9 +124,7 @@ export default function AcademicsPageSection({ initialDepartments }: AcademicsPa
           <div className="bg-white rounded-xl border border-gray-200/90 shadow-sm overflow-hidden">
             <div className="bg-gradient-to-r from-[#750d15] via-[#8B111A] to-[#9e141e] text-white px-4 py-2.5 border-b-2 border-[#D9822B] flex items-center gap-2">
               <Compass size={16} className="text-amber-300" />
-              <h2 className="text-sm font-bold tracking-wide">
-                শিক্ষা বিভাগ সূচিপত্র
-              </h2>
+              <h2 className="text-sm font-bold tracking-wide"><EditableText document="copy.ui.AcademicsPageSection" entry="emuic32" fallback={"শিক্ষা বিভাগ সূচিপত্র"} /></h2>
             </div>
 
             <nav className="p-2 divide-y divide-gray-100">
@@ -147,17 +147,15 @@ export default function AcademicsPageSection({ initialDepartments }: AcademicsPa
           <div className="bg-gradient-to-br from-[#014d26] to-[#016332] text-white rounded-xl p-4 border border-[#D9822B]/50 shadow-sm space-y-3 hidden lg:block">
             <h3 className="text-sm font-bold text-amber-200 flex items-center gap-1.5">
               <GraduationCap size={16} />
-              <span>ভর্তি ও তথ্য ডেস্ক</span>
+              <span><EditableText document="copy.ui.AcademicsPageSection" entry="e1y5dm0q" fallback={"ভর্তি ও তথ্য ডেস্ক"} /></span>
             </h3>
-            <p className="text-xs text-emerald-100 leading-relaxed">
-              সকল বিভাগে নির্ধারিত শিক্ষাবর্ষের শুরুতে ও আসন খালি থাকা সাপেক্ষে ভর্তি কার্যক্রম পরিচালিত হয়।
-            </p>
+            <p className="text-xs text-emerald-100 leading-relaxed"><EditableText document="copy.ui.AcademicsPageSection" entry="ebkpcfu" fallback={"সকল বিভাগে নির্ধারিত শিক্ষাবর্ষের শুরুতে ও আসন খালি থাকা সাপেক্ষে ভর্তি কার্যক্রম পরিচালিত হয়।"} /></p>
             <div className="space-y-2 pt-1">
               <Link
                 href="/apply"
                 className="w-full inline-flex items-center justify-center gap-1.5 bg-[#8B111A] hover:bg-[#6e0b13] text-white text-xs font-bold py-2 px-3 rounded-md border border-amber-300/30 transition-colors"
               >
-                <span>অনলাইন ভর্তি আবেদন</span>
+                <span><EditableText document="copy.ui.AcademicsPageSection" entry="e4l0ov8" fallback={"অনলাইন ভর্তি আবেদন"} /></span>
                 <ArrowRight size={13} />
               </Link>
               <a
@@ -165,7 +163,7 @@ export default function AcademicsPageSection({ initialDepartments }: AcademicsPa
                 className="w-full inline-flex items-center justify-center gap-1.5 bg-white text-[#016332] hover:bg-amber-50 text-xs font-bold py-2 px-3 rounded-md transition-colors"
               >
                 <Phone size={12} />
-                <span>হটলাইন: {siteSettings.phone}</span>
+                <span><EditableText document="copy.ui.AcademicsPageSection" entry="e12rrbb8" fallback={"হটলাইন: "} />{siteSettings.phone}</span>
               </a>
             </div>
           </div>
@@ -213,9 +211,7 @@ export default function AcademicsPageSection({ initialDepartments }: AcademicsPa
                   {maktabDept.title}
                 </h2>
               </div>
-              <span className="text-xs bg-white/15 text-amber-200 px-2.5 py-0.5 rounded-full font-semibold">
-                প্রাথমিক দ্বীনি ও সাধারণ শিক্ষা
-              </span>
+              <span className="text-xs bg-white/15 text-amber-200 px-2.5 py-0.5 rounded-full font-semibold"><EditableText document="copy.ui.AcademicsPageSection" entry="ebbmzyv" fallback={"প্রাথমিক দ্বীনি ও সাধারণ শিক্ষা"} /></span>
             </div>
 
             <div className="p-5 sm:p-7 grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -267,9 +263,7 @@ export default function AcademicsPageSection({ initialDepartments }: AcademicsPa
                   {hifzDept.title}
                 </h2>
               </div>
-              <span className="text-xs bg-white/15 text-amber-200 px-2.5 py-0.5 rounded-full font-semibold">
-                তাহফিজুল কুরআন ও ইয়াদ
-              </span>
+              <span className="text-xs bg-white/15 text-amber-200 px-2.5 py-0.5 rounded-full font-semibold"><EditableText document="copy.ui.AcademicsPageSection" entry="e10le5c9" fallback={"তাহফিজুল কুরআন ও ইয়াদ"} /></span>
             </div>
 
             <div className="p-5 sm:p-7 grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -321,9 +315,7 @@ export default function AcademicsPageSection({ initialDepartments }: AcademicsPa
                   {kitabDept.title}
                 </h2>
               </div>
-              <span className="text-xs bg-white/15 text-amber-200 px-2.5 py-0.5 rounded-full font-semibold">
-                ইবতেদায়ী থেকে দাওরায়ে হাদিস (মাস্টার্স সমমান)
-              </span>
+              <span className="text-xs bg-white/15 text-amber-200 px-2.5 py-0.5 rounded-full font-semibold"><EditableText document="copy.ui.AcademicsPageSection" entry="e1cve7xb" fallback={"ইবতেদায়ী থেকে দাওরায়ে হাদিস (মাস্টার্স সমমান)"} /></span>
             </div>
 
             <div className="p-5 sm:p-7 space-y-6">
@@ -357,8 +349,7 @@ export default function AcademicsPageSection({ initialDepartments }: AcademicsPa
                         </span>
                         <div>
                           <span className="font-bold text-sm sm:text-[15px] text-gray-900">
-                            {lvl.name}:
-                          </span>{" "}
+                            {lvl.name}<EditableText document="copy.ui.AcademicsPageSection" entry="e4pv6f5" fallback={":"} /></span>{" "}
                           <span className="text-xs sm:text-sm text-gray-700 font-medium">
                             {lvl.classes}
                           </span>
@@ -383,8 +374,7 @@ export default function AcademicsPageSection({ initialDepartments }: AcademicsPa
                   <p
                     key={idx}
                     className="text-xs sm:text-sm text-gray-800 leading-relaxed font-medium"
-                  >
-                    ▪ {bp}
+                  ><EditableText document="copy.ui.AcademicsPageSection" entry="e1ces204" fallback={"▪ "} />{bp}
                   </p>
                 ))}
               </div>
@@ -485,7 +475,7 @@ export default function AcademicsPageSection({ initialDepartments }: AcademicsPa
                             key={sIdx}
                             className="text-xs text-gray-800 font-medium flex items-start gap-1.5"
                           >
-                            <span className="text-[#8B111A] font-bold">•</span>
+                            <span className="text-[#8B111A] font-bold"><EditableText document="copy.ui.AcademicsPageSection" entry="efj8xef" fallback={"•"} /></span>
                             <span>{subj}</span>
                           </li>
                         ))}
@@ -558,9 +548,7 @@ export default function AcademicsPageSection({ initialDepartments }: AcademicsPa
                   {futurePlans.title}
                 </h2>
               </div>
-              <span className="text-xs bg-amber-400/20 text-amber-200 border border-amber-300/40 px-2.5 py-0.5 rounded-full font-semibold">
-                উন্নয়ন ও সম্প্রসারণ রূপরেখা
-              </span>
+              <span className="text-xs bg-amber-400/20 text-amber-200 border border-amber-300/40 px-2.5 py-0.5 rounded-full font-semibold"><EditableText document="copy.ui.AcademicsPageSection" entry="e106ch56" fallback={"উন্নয়ন ও সম্প্রসারণ রূপরেখা"} /></span>
             </div>
 
             <div className="p-5 sm:p-7 space-y-5">
@@ -670,7 +658,7 @@ export default function AcademicsPageSection({ initialDepartments }: AcademicsPa
                   className="inline-flex items-center gap-1.5 bg-[#8B111A] hover:bg-[#6e0b13] text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-md border border-amber-300/40 transition-colors self-start sm:self-center"
                 >
                   <GraduationCap size={15} className="text-amber-300" />
-                  <span>ভর্তি আবেদন করুন</span>
+                  <span><EditableText document="copy.ui.AcademicsPageSection" entry="e1wg0ehb" fallback={"ভর্তি আবেদন করুন"} /></span>
                 </Link>
               </div>
             </div>

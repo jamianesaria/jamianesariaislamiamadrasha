@@ -18,8 +18,11 @@ export const galleryPhotoType = defineType({
       options: {
         hotspot: true,
       },
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.custom((value, context) => value || context.document?.imageUrl ? true : "একটি ছবি আপলোড করুন।"),
     }),
+    defineField({ name: "imageUrl", title: "আগের ছবির ঠিকানা", type: "string", hidden: true }),
+    defineField({ name: "migrationKey", title: "স্থানান্তর পরিচিতি", type: "string", hidden: true, readOnly: true }),
+    defineField({ name: "displayOrder", title: "প্রদর্শনের ক্রম", type: "number", initialValue: 10 }),
     defineField({
       name: "category",
       title: "ক্যাটাগরি",

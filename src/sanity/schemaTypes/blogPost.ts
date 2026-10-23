@@ -5,6 +5,8 @@ export const blogPostType = defineType({
   title: "ব্লগ ও সমকালীন প্রবন্ধ (Blog Posts)",
   type: "document",
   fields: [
+    defineField({ name: "migrationKey", title: "স্থানান্তর পরিচিতি", type: "string", hidden: true, readOnly: true }),
+    defineField({ name: "legacyId", title: "আগের লিংকের পরিচিতি", type: "number", hidden: true, readOnly: true }),
     defineField({
       name: "title",
       title: "ব্লগের শিরোনাম (Title)",

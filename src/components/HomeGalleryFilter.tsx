@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+
+import { EditableImage as Image, EditableText, useEditableData } from "@/content/client";
+import { fieldSource } from "@/content/model";
+
 
 interface GalleryCategory {
   id: string;
@@ -29,9 +32,11 @@ interface HomeGalleryFilterProps {
 export default function HomeGalleryFilter({
   title,
   subtitle,
-  categories,
-  items,
+  categories: initialCategories,
+  items: initialItems,
 }: HomeGalleryFilterProps) {
+  const categories = useEditableData("copy.data.homePageContent", initialCategories, ["gallery", "categories"]);
+  const items = useEditableData("copy.data.homePageContent", initialItems, ["gallery", "items"]);
   const [activeGalleryCategory, setActiveGalleryCategory] = useState<string>("all");
 
   const filteredGallery =
@@ -64,9 +69,7 @@ export default function HomeGalleryFilter({
                 ? "bg-[#016332] text-white border-[#016332] shadow-2xs"
                 : "bg-[#F9FAF8] text-gray-700 border-gray-300 hover:border-[#016332]"
             }`}
-          >
-            সকল ছবি
-          </button>
+          ><EditableText document="copy.ui.HomeGalleryFilter" entry="ej4bffj" fallback={"সকল ছবি"} /></button>
           {categories.map((cat) => (
             <button
               key={cat.id}
@@ -91,7 +94,7 @@ export default function HomeGalleryFilter({
             className="border border-gray-200/90 rounded-xl bg-white overflow-hidden group shadow-xs hover:shadow-md hover:border-[#016332]/60 hover:-translate-y-0.5 transition-all duration-300"
           >
             <div className="relative h-52 sm:h-56 w-full overflow-hidden bg-gray-100">
-              <Image
+              <Image document="copy.ui.HomeGalleryFilter" entry="e28bn1t" source={fieldSource(item, "image")}
                 src={item.image || "/drone_poster.jpg"}
                 alt={item.title}
                 fill

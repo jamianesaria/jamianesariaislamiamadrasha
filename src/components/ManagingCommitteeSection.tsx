@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import type { PublicMember, PublicSettings } from "@/content/public-types";
+
 import Link from "next/link";
-import { committeeAndFacultyData, siteSettings } from "@/data/siteData";
+import { committeeAndFacultyData as _fallback_committeeAndFacultyData, siteSettings as _fallback_siteSettings } from "@/data/siteData";
 import {
   Users,
   Heart,
@@ -18,9 +19,14 @@ import {
   ArrowRight,
   GraduationCap,
 } from "lucide-react";
+import { EditableImage as Image, useEditableData, EditableText } from "@/content/client";
+import { fieldSource } from "@/content/model";
+
 
 interface CommitteeMemberItem {
-  id: number;
+  id: string | number;
+  _id?: string;
+  _type?: string;
   serial: string;
   name: string;
   designation: string;
@@ -30,23 +36,26 @@ interface CommitteeMemberItem {
 }
 
 interface ManagingCommitteeSectionProps {
-  initialMembers?: any[];
-  initialSettings?: any;
+  initialMembers?: PublicMember[];
+  initialSettings?: PublicSettings;
 }
 
 export default function ManagingCommitteeSection({
   initialMembers,
   initialSettings,
 }: ManagingCommitteeSectionProps = {}) {
+  const committeeAndFacultyData = useEditableData("copy.data.committeeAndFacultyData", _fallback_committeeAndFacultyData);
+  const siteSettings = useEditableData("siteSettings", _fallback_siteSettings);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [selectedMember, setSelectedMember] = useState<CommitteeMemberItem | null>(null);
+  const [selectedMemberRecord, setSelectedMember] = useState<CommitteeMemberItem | null>(null);
 
   const { header, landDonors, managingCommittee, pledge } = committeeAndFacultyData;
-  const currentMembers =
-    initialMembers && initialMembers.length > 0
-      ? initialMembers
-      : managingCommittee.members;
+  const currentMembers: CommitteeMemberItem[] = (initialMembers !== undefined ? initialMembers.filter((member) => !member.isLandDonor) : managingCommittee.members).map((member, index) => ({ ...member, serial: String(member.serial || index + 1), mobile: member.mobile || "" }));
+  const currentDonors: { id: string | number; name: string; role: string; badge: string; contribution: string; photo?: string; _id?: string; _type?: string }[] = initialMembers !== undefined ? initialMembers.filter((member) => member.isLandDonor).map((member) => ({ ...member, role: member.designation, badge: "জমিদাতা", contribution: member.donorContribution || "" })) : landDonors.donors;
+
+  const selectedMember = currentMembers.find((member) => member.id === selectedMemberRecord?.id) || null;
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -78,12 +87,10 @@ export default function ManagingCommitteeSection({
         <div className="relative z-10 max-w-4xl space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-300/40 text-amber-200 text-xs font-semibold backdrop-blur-sm">
             <Building2 size={14} className="text-amber-300" />
-            <span>প্রতিষ্ঠিত: ১৯৬৯ খ্রিষ্টাব্দ | ১৩৭৬ বাংলা | ১৩৮৮ হিজরি</span>
+            <span><EditableText document="copy.ui.ManagingCommitteeSection" entry="ef96tqr" fallback={"প্রতিষ্ঠিত: ১৯৬৯ খ্রিষ্টাব্দ | ১৩৭৬ বাংলা | ১৩৮৮ হিজরি"} /></span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white">
-            পরিচালনা পরিষদ ও জমিদাতাবৃন্দ
-          </h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white"><EditableText document="copy.ui.ManagingCommitteeSection" entry="e9lxa3" fallback={"পরিচালনা পরিষদ ও জমিদাতাবৃন্দ"} /></h1>
 
           <p className="text-sm sm:text-base text-gray-200 leading-relaxed max-w-3xl">
             {header.intro}
@@ -99,7 +106,7 @@ export default function ManagingCommitteeSection({
               className="inline-flex items-center gap-1.5 bg-amber-400 text-gray-900 font-bold px-3 py-1 rounded-full hover:bg-amber-300 transition-colors shadow-xs"
             >
               <GraduationCap size={14} />
-              <span>শিক্ষক মণ্ডলীর তালিকা দেখুন</span>
+              <span><EditableText document="copy.ui.ManagingCommitteeSection" entry="e7pi4wg" fallback={"শিক্ষক মণ্ডলীর তালিকা দেখুন"} /></span>
               <ArrowRight size={13} />
             </Link>
           </div>
@@ -109,11 +116,11 @@ export default function ManagingCommitteeSection({
         <div className="mt-7 pt-5 border-t border-white/15 flex flex-wrap gap-4 text-xs font-semibold">
           <div className="bg-black/20 backdrop-blur-xs px-4 py-2 rounded-xl border border-white/10 flex items-center gap-2">
             <Users size={16} className="text-amber-300" />
-            <span>পরিচালনা পরিষদ: ১৬ জন বিশিষ্ট ব্যক্তিত্ব</span>
+            <span><EditableText document="copy.ui.ManagingCommitteeSection" entry="eqmgby6" fallback={"পরিচালনা পরিষদ: ১৬ জন বিশিষ্ট ব্যক্তিত্ব"} /></span>
           </div>
           <div className="bg-black/20 backdrop-blur-xs px-4 py-2 rounded-xl border border-white/10 flex items-center gap-2">
             <Heart size={16} className="text-amber-300" />
-            <span>জমিদাতা: ৩ জন চিরস্মরণীয় দাতা</span>
+            <span><EditableText document="copy.ui.ManagingCommitteeSection" entry="e19yet6t" fallback={"জমিদাতা: ৩ জন চিরস্মরণীয় দাতা"} /></span>
           </div>
         </div>
       </div>
@@ -133,14 +140,12 @@ export default function ManagingCommitteeSection({
               <span className="text-xs text-amber-200 block">{landDonors.subtitle}</span>
             </div>
           </div>
-          <span className="text-xs bg-amber-400/20 text-amber-200 border border-amber-300/40 px-3 py-1 rounded-full font-bold">
-            সদকায়ে জারিয়া
-          </span>
+          <span className="text-xs bg-amber-400/20 text-amber-200 border border-amber-300/40 px-3 py-1 rounded-full font-bold"><EditableText document="copy.ui.ManagingCommitteeSection" entry="e1ob6zq9" fallback={"সদকায়ে জারিয়া"} /></span>
         </div>
 
         <div className="p-5 sm:p-7 space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {landDonors.donors.map((donor) => (
+            {currentDonors.map((donor) => (
               <div
                 key={donor.id}
                 className="rounded-2xl border border-amber-200 bg-gradient-to-br from-[#FAF7F0] via-white to-amber-50/40 p-5 space-y-4 relative overflow-hidden shadow-2xs hover:shadow-md transition-all group"
@@ -150,8 +155,8 @@ export default function ManagingCommitteeSection({
                 <div className="flex items-center gap-3.5">
                   {/* Photo / Avatar with Image on every card */}
                   <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-[#D9822B] p-0.5 bg-white shadow-xs shrink-0 group-hover:scale-105 transition-transform">
-                    <Image
-                      src="/avatar-member.svg"
+                    <Image document="copy.ui.ManagingCommitteeSection" entry="e1p91qtj" source={fieldSource(donor, "photo")}
+                      src={donor.photo || "/avatar-member.svg"}
                       alt={donor.name}
                       fill
                       sizes="64px"
@@ -179,9 +184,7 @@ export default function ManagingCommitteeSection({
             ))}
           </div>
 
-          <div className="bg-amber-50 border-l-4 border-l-[#D9822B] rounded-r-xl p-4 text-xs sm:text-sm font-bold text-[#8B111A] leading-relaxed text-center shadow-2xs">
-            “{landDonors.closingDua}”
-          </div>
+          <div className="bg-amber-50 border-l-4 border-l-[#D9822B] rounded-r-xl p-4 text-xs sm:text-sm font-bold text-[#8B111A] leading-relaxed text-center shadow-2xs"><EditableText document="copy.ui.ManagingCommitteeSection" entry="ehor9wr" fallback={"“"} />{landDonors.closingDua}<EditableText document="copy.ui.ManagingCommitteeSection" entry="ewe3luu" fallback={"”"} /></div>
         </div>
       </section>
 
@@ -200,9 +203,7 @@ export default function ManagingCommitteeSection({
               <span className="text-xs text-amber-200 block">{managingCommittee.subtitle}</span>
             </div>
           </div>
-          <span className="text-xs bg-white/15 px-3 py-1 rounded-full border border-white/20 font-bold">
-            মোট ১৬ জন সদস্য
-          </span>
+          <span className="text-xs bg-white/15 px-3 py-1 rounded-full border border-white/20 font-bold"><EditableText document="copy.ui.ManagingCommitteeSection" entry="ei7hbr5" fallback={"মোট ১৬ জন সদস্য"} /></span>
         </div>
 
         <div className="p-5 sm:p-7 space-y-6">
@@ -239,8 +240,8 @@ export default function ManagingCommitteeSection({
                   <div className="flex items-center gap-3">
                     {/* Member Photo on every single card */}
                     <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-[#016332]/40 bg-gray-100 p-0.5 shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
-                      <Image
-                        src="/avatar-member.svg"
+                      <Image document="copy.ui.ManagingCommitteeSection" entry="e6mibhe" source={fieldSource(member, "photo")}
+                        src={member.photo || "/avatar-member.svg"}
                         alt={member.name}
                         fill
                         sizes="56px"
@@ -249,8 +250,7 @@ export default function ManagingCommitteeSection({
                     </div>
 
                     <div className="min-w-0 flex-1">
-                      <span className="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full inline-block mb-1">
-                        ক্রম: {member.serial}
+                      <span className="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full inline-block mb-1"><EditableText document="copy.ui.ManagingCommitteeSection" entry="ea9re07" fallback={"ক্রম: "} />{member.serial}
                       </span>
                       <h3 className="text-sm font-bold text-gray-900 group-hover:text-[#8B111A] transition-colors leading-snug line-clamp-2">
                         {member.name}
@@ -291,9 +291,7 @@ export default function ManagingCommitteeSection({
                     type="button"
                     onClick={() => setSelectedMember(member)}
                     className="shrink-0 text-xs text-[#016332] hover:bg-[#016332]/10 px-2 py-1 rounded-md font-semibold transition-colors cursor-pointer"
-                  >
-                    বিস্তারিত
-                  </button>
+                  ><EditableText document="copy.ui.ManagingCommitteeSection" entry="ega7daq" fallback={"বিস্তারিত"} /></button>
                 </div>
               </div>
             ))}
@@ -318,15 +316,13 @@ export default function ManagingCommitteeSection({
         </p>
 
         <div className="bg-white/10 rounded-xl p-4 border border-white/20 backdrop-blur-sm">
-          <p className="text-sm sm:text-base font-bold text-amber-200 text-center leading-relaxed">
-            “{pledge.closingDua}”
-          </p>
+          <p className="text-sm sm:text-base font-bold text-amber-200 text-center leading-relaxed"><EditableText document="copy.ui.ManagingCommitteeSection" entry="e1r6tut1" fallback={"“"} />{pledge.closingDua}<EditableText document="copy.ui.ManagingCommitteeSection" entry="e1tyt18q" fallback={"”"} /></p>
         </div>
 
         <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-white/20 text-xs sm:text-sm text-gray-300">
           <div>
-            <span className="font-bold text-white block">জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা</span>
-            <span>মরকুন, তিস্তা গেট–আনোয়ার সিল্ক মিলস সংলগ্ন, টঙ্গী, গাজীপুর, বাংলাদেশ।</span>
+            <span className="font-bold text-white block"><EditableText document="copy.ui.ManagingCommitteeSection" entry="ewskr91" fallback={"জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা"} /></span>
+            <span><EditableText document="copy.ui.ManagingCommitteeSection" entry="e5zoc5" fallback={"মরকুন, তিস্তা গেট–আনোয়ার সিল্ক মিলস সংলগ্ন, টঙ্গী, গাজীপুর, বাংলাদেশ।"} /></span>
           </div>
 
           <a
@@ -334,7 +330,7 @@ export default function ManagingCommitteeSection({
             className="inline-flex items-center gap-1.5 bg-[#8B111A] hover:bg-[#6e0b13] text-white font-bold px-4 py-2 rounded-lg text-xs transition-colors shadow-xs self-start sm:self-auto"
           >
             <Phone size={13} />
-            <span>যোগাযোগ করুন: {siteSettings.phone}</span>
+            <span><EditableText document="copy.ui.ManagingCommitteeSection" entry="e1p1az84" fallback={"যোগাযোগ করুন: "} />{siteSettings.phone}</span>
           </a>
         </div>
       </section>
@@ -346,7 +342,7 @@ export default function ManagingCommitteeSection({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4 animate-in fade-in duration-150">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-200">
             <div className="bg-gradient-to-r from-[#016332] to-[#014222] text-white px-5 py-3.5 flex items-center justify-between border-b-2 border-[#D9822B]">
-              <span className="font-bold text-sm sm:text-base">পরিচালনা পরিষদ সদস্যের তথ্য</span>
+              <span className="font-bold text-sm sm:text-base"><EditableText document="copy.ui.ManagingCommitteeSection" entry="e1dapjv7" fallback={"পরিচালনা পরিষদ সদস্যের তথ্য"} /></span>
               <button
                 type="button"
                 onClick={() => setSelectedMember(null)}
@@ -359,8 +355,8 @@ export default function ManagingCommitteeSection({
             <div className="p-5 sm:p-6 space-y-4 text-sm text-gray-800">
               <div className="flex items-center gap-4">
                 <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-[#016332] p-0.5 bg-gray-50 shadow-sm shrink-0">
-                  <Image
-                    src="/avatar-member.svg"
+                  <Image document="copy.ui.ManagingCommitteeSection" entry="e1irrjrx" source={fieldSource(selectedMember, "photo")}
+                    src={selectedMember.photo || "/avatar-member.svg"}
                     alt={selectedMember.name}
                     fill
                     sizes="64px"
@@ -374,9 +370,7 @@ export default function ManagingCommitteeSection({
                   <p className="text-xs font-bold text-[#016332] mt-0.5">
                     {selectedMember.designation}
                   </p>
-                  <span className="inline-block text-[11px] font-semibold text-gray-500 bg-gray-100 px-2.5 py-0.5 rounded-full mt-1">
-                    পরিচালনা পরিষদ (সদস্য নং {selectedMember.serial})
-                  </span>
+                  <span className="inline-block text-[11px] font-semibold text-gray-500 bg-gray-100 px-2.5 py-0.5 rounded-full mt-1"><EditableText document="copy.ui.ManagingCommitteeSection" entry="e18pmab4" fallback={"পরিচালনা পরিষদ (সদস্য নং "} />{selectedMember.serial}<EditableText document="copy.ui.ManagingCommitteeSection" entry="e56ql9y" fallback={")"} /></span>
                 </div>
               </div>
 
@@ -384,7 +378,7 @@ export default function ManagingCommitteeSection({
                 <div className="flex items-center justify-between bg-emerald-50/60 p-3 rounded-xl border border-emerald-200">
                   <div className="flex items-center gap-2">
                     <Phone size={15} className="text-[#016332] shrink-0" />
-                    <span className="font-semibold text-emerald-950">মোবাইল:</span>
+                    <span className="font-semibold text-emerald-950"><EditableText document="copy.ui.ManagingCommitteeSection" entry="e1xeo5el" fallback={"মোবাইল:"} /></span>
                     <a
                       href={`tel:${selectedMember.mobile}`}
                       className="font-bold text-[#016332] hover:underline"
@@ -408,15 +402,13 @@ export default function ManagingCommitteeSection({
                   className="inline-flex items-center gap-1.5 bg-[#016332] hover:bg-[#014222] text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors cursor-pointer"
                 >
                   <Phone size={13} />
-                  <span>কল করুন</span>
+                  <span><EditableText document="copy.ui.ManagingCommitteeSection" entry="e1mkkciz" fallback={"কল করুন"} /></span>
                 </a>
                 <button
                   type="button"
                   onClick={() => setSelectedMember(null)}
                   className="bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold px-4 py-2 rounded-lg transition-colors cursor-pointer"
-                >
-                  বন্ধ করুন
-                </button>
+                ><EditableText document="copy.ui.ManagingCommitteeSection" entry="e11ea7lf" fallback={"বন্ধ করুন"} /></button>
               </div>
             </div>
           </div>

@@ -1,10 +1,16 @@
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
-import { visionTool } from "@sanity/vision";
+import { LayoutDashboard } from "lucide-react";
+import ManagementTool from "./src/sanity/management/ManagementTool";
+import { localizedActions } from "./src/sanity/management/actions";
+import { ArchiveAction } from "./src/sanity/management/ArchiveAction";
 import { presentationTool, defineDocuments, defineLocations } from "sanity/presentation";
-import { apiVersion, dataset, projectId } from "./src/sanity/env";
+import { dataset, projectId } from "./src/sanity/env";
 import { schema } from "./src/sanity/schemaTypes";
 import { structure } from "./src/sanity/structure";
+import coverage from "./src/content/coverage.json";
+
+const singletons = new Set(["homepage", "siteSettings", "badriKafila", "pageContent"]);
 
 export default defineConfig({
   basePath: "/studio",
@@ -13,10 +19,16 @@ export default defineConfig({
   title: "জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা — কন্ট্রোল প্যানেল",
 
   schema,
+  document: {
+    actions: (previous, context) => localizedActions(singletons.has(context.schemaType) ? previous.filter((action) => !["delete", "duplicate"].includes(action.action || "")) : [...previous, ArchiveAction]),
+    newDocumentOptions: (previous) => previous.filter((option) => !singletons.has(option.templateId)),
+  },
+  tools: (previous) => [{ name: "dashboard", title: "ব্যবস্থাপনা", icon: LayoutDashboard, component: ManagementTool }, ...previous],
 
   plugins: [
-    structureTool({ structure }),
+    structureTool({ structure, title: "প্রকাশনা সম্পাদনা" }),
     presentationTool({
+      title: "ওয়েবসাইট সম্পাদনা",
       previewUrl: {
         previewMode: {
           enable: "/api/draft-mode/enable",
@@ -24,6 +36,19 @@ export default defineConfig({
       },
       resolve: {
         locations: {
+          pageContent: defineLocations({ select: { title: "title", route: "route", id: "_id" }, resolve: (document) => {
+            const id = document?.id?.replace(/^drafts\./, "");
+            const locations = Object.entries(coverage).filter(([, item]) => id && (item.documents as string[]).includes(id)).map(([href]) => ({ title: `${document?.title || "ওয়েবসাইটের পাতা"} · ${href}`, href }));
+            return { locations: locations.length ? locations : [{ title: document?.title || "ওয়েবসাইটের পাতা", href: document?.route || "/" }] };
+          } }),
+          classRoutine: defineLocations({ locations: [{ title: "ক্লাস রুটিন", href: "/functions/class-routine" }] }),
+          examRoutine: defineLocations({ locations: [{ title: "পরীক্ষার রুটিন", href: "/exam-routine" }] }),
+          examResult: defineLocations({ locations: [{ title: "পরীক্ষার ফলাফল", href: "/results/academic" }, { title: "ভর্তির ফলাফল", href: "/results/admission" }] }),
+          galleryPhoto: defineLocations({ locations: [{ title: "ফটো গ্যালারি", href: "/gallery/photo" }] }),
+          galleryVideo: defineLocations({ locations: [{ title: "ভিডিও গ্যালারি", href: "/gallery/video" }] }),
+          calendarEvent: defineLocations({ locations: [{ title: "অনুষ্ঠান ও ছুটি", href: "/functions/event-list" }, { title: "ছুটির তালিকা", href: "/functions/holiday" }] }),
+          vacancy: defineLocations({ locations: [{ title: "নিয়োগ বিজ্ঞপ্তি", href: "/about/vacancy" }] }),
+          blogPost: defineLocations({ locations: [{ title: "ব্লগ", href: "/blog" }] }),
           homepage: defineLocations({
             locations: [{ title: "হোমপেজ (Homepage)", href: "/" }],
           }),
@@ -53,10 +78,6 @@ export default defineConfig({
           {
             route: "/",
             type: "homepage",
-          },
-          {
-            route: "/",
-            type: "siteSettings",
           },
           {
             route: "/notices",
@@ -105,6 +126,5 @@ export default defineConfig({
         ]),
       },
     }),
-    visionTool({ defaultApiVersion: apiVersion }),
   ],
 });

@@ -92,12 +92,14 @@ export const admissionInfoType = defineType({
     }),
     defineField({
       name: "newStudentTotalFee",
+      hidden: true,
       title: "৮. নতুন শিক্ষার্থীদের সর্বমোট ভর্তি ফি (টাকা)",
       type: "number",
       initialValue: 3500,
     }),
     defineField({
       name: "oldStudentTotalFee",
+      hidden: true,
       title: "৮. পুরাতন শিক্ষার্থীদের সর্বমোট ভর্তি ফি (টাকা)",
       type: "number",
       initialValue: 3200,
@@ -135,6 +137,7 @@ export const admissionInfoType = defineType({
     }),
     defineField({
       name: "formCollectionTime",
+      hidden: true,
       title: "ফরম সংগ্রহ ও জমার সময়সূচি",
       type: "string",
       initialValue: "প্রতিদিন সকাল ৯:০০ ঘটিকা হতে আসর পর্যন্ত",

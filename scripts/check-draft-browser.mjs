@@ -1,0 +1,45 @@
+import assert from "node:assert/strict";
+import { randomUUID } from "node:crypto";
+import { mkdirSync } from "node:fs";
+import env from "@next/env";
+import { createClient } from "@sanity/client";
+import { createPreviewSecret } from "@sanity/preview-url-secret/create-secret";
+env.loadEnvConfig(process.cwd());
+const { chromium }=await import(process.env.PLAYWRIGHT_MODULE||"playwright");
+const base=process.env.QA_BASE_URL||"http://localhost:3020";
+const client=createClient({projectId:process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,dataset:process.env.NEXT_PUBLIC_SANITY_DATASET,apiVersion:"2026-03-01",useCdn:false,token:process.env.SANITY_API_TOKEN});
+const id="copy.ui.ContactSection";const draftId="drafts."+id;const secretId="qa-preview-"+randomUUID();
+const existing=await client.getDocument(draftId);
+if(existing)throw new Error("An existing staff draft is present; this test will not replace it.");
+const published=await client.getDocument(id);const {_createdAt,_updatedAt,_rev,...document}=published;
+const marker="Preview QA "+randomUUID();const selected=document.entries.find(entry=>entry._key==="e1jai5nk");
+assert.ok(selected);const entryKey=selected._key;
+const draft=await client.create({...document,_id:draftId,entries:document.entries.map(entry=>entry._key===entryKey?{...entry,text:marker}:entry)});
+const browser=await chromium.launch({headless:true,executablePath:process.env.BROWSER_EXECUTABLE||undefined});
+mkdirSync(".cms-work/public-qa",{recursive:true});
+try{
+ const {secret}=await createPreviewSecret(client,"cms-browser-qa",base+"/studio",undefined,secretId);
+ const preview=await browser.newContext();const publicContext=await browser.newContext();
+ const page=await preview.newPage();const errors=[];page.on("pageerror",error=>errors.push(error.message));
+ const url=new URL(base+"/api/draft-mode/enable");url.searchParams.set("sanity-preview-secret",secret);url.searchParams.set("sanity-preview-pathname","/contact");
+ const enabled=await preview.request.get(url.toString());assert.equal(enabled.status(),200,"Authenticated preview redirect");
+ await page.goto(base+"/contact",{waitUntil:"domcontentloaded",timeout:60000});
+ console.log(JSON.stringify({draftCookie: (await preview.cookies()).filter(cookie=>cookie.name.includes("prerender")).map(({name,secure,sameSite,domain})=>({name,secure,sameSite,domain})),markerInBody:(await page.locator("body").textContent()).includes(marker)}));
+ await page.getByText(marker).waitFor();
+ assert.ok(await page.locator('[data-sanity*="headerBanner"]').count(),"Header image resolves to its upload field");
+ const publicPage=await publicContext.newPage();await publicPage.goto(base+"/contact",{waitUntil:"domcontentloaded"});
+ assert.equal(await publicPage.getByText(marker).count(),0,"Draft must not appear publicly");
+ await page.reload({waitUntil:"domcontentloaded"});await page.getByText(marker).waitFor();
+ await page.screenshot({path:".cms-work/public-qa/draft-contact.png"});
+ const disabled=await preview.request.get(base+"/api/draft-mode/disable");assert.equal(disabled.status(),200);
+ await page.goto(base+"/contact",{waitUntil:"domcontentloaded"});assert.equal(await page.getByText(marker).count(),0);
+ assert.deepEqual(errors,[]);
+ console.log("Real Next draft authentication, rendered field override, image source mapping, refresh persistence, public isolation and preview exit passed.");
+}finally{
+ await browser.close();
+ const current=await client.getDocument(draftId);
+ if(current?._rev===draft._rev)await client.delete(draftId);
+ else if(current)console.log("Draft changed elsewhere; preserving it for staff review.");
+ await client.delete("drafts."+secretId);
+ console.log("Only the unchanged temporary draft and its preview secret were removed.");
+}

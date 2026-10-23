@@ -2,10 +2,16 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { navigationItems, siteSettings } from "@/data/navigationData";
+import { navigationItems as _fallback_navigationItems, siteSettings as _fallback_siteSettings } from "@/data/navigationData";
 import { ChevronDown, Menu, X, Phone, GraduationCap } from "lucide-react";
+import { useEditableData, EditableText } from "@/content/client";
+
+
 
 export default function NavigationBar() {
+  const navigationItems = useEditableData("copy.data.navigationItems", _fallback_navigationItems);
+  const siteSettings = useEditableData("siteSettings", _fallback_siteSettings);
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
@@ -24,7 +30,7 @@ export default function NavigationBar() {
             aria-label="মেনু"
           >
             {mobileMenuOpen ? <X size={19} /> : <Menu size={19} />}
-            <span className="font-semibold text-xs sm:text-sm">মেনু নির্বাচন</span>
+            <span className="font-semibold text-xs sm:text-sm"><EditableText document="copy.ui.NavigationBar" entry="e133739m" fallback={"মেনু নির্বাচন"} /></span>
           </button>
 
           <div className="flex items-center gap-2">
@@ -41,7 +47,7 @@ export default function NavigationBar() {
               className="bg-[#8B111A] hover:bg-[#a81b26] text-white text-xs font-bold px-3 py-1.5 rounded shadow-sm inline-flex items-center gap-1.5 border border-[#b31d28] transition-colors"
             >
               <GraduationCap size={14} className="text-amber-300" />
-              <span>ভর্তি আবেদন</span>
+              <span><EditableText document="copy.ui.NavigationBar" entry="eklgrrd" fallback={"ভর্তি আবেদন"} /></span>
             </Link>
           </div>
         </div>
@@ -111,7 +117,7 @@ export default function NavigationBar() {
               title="অনলাইনে ভর্তি আবেদন করুন"
             >
               <GraduationCap size={15} className="text-amber-300 shrink-0" />
-              <span>ভর্তি আবেদন</span>
+              <span><EditableText document="copy.ui.NavigationBar" entry="e1imjhbf" fallback={"ভর্তি আবেদন"} /></span>
             </Link>
           </div>
         </div>
@@ -128,7 +134,7 @@ export default function NavigationBar() {
               className="w-full bg-[#8B111A] hover:bg-[#a81b26] text-white text-sm font-bold py-2 px-3 rounded flex items-center justify-center gap-2 shadow-sm text-center"
             >
               <GraduationCap size={16} className="text-amber-300" />
-              <span>অনলাইনে ভর্তি আবেদন করুন</span>
+              <span><EditableText document="copy.ui.NavigationBar" entry="e1ijt9k4" fallback={"অনলাইনে ভর্তি আবেদন করুন"} /></span>
             </Link>
           </div>
           {navigationItems.map((item, idx) => {
@@ -170,8 +176,7 @@ export default function NavigationBar() {
                         href={child.href}
                         onClick={() => setMobileMenuOpen(false)}
                         className="block py-1.5 px-2 text-xs text-gray-200 hover:text-white hover:bg-[#053b1e] rounded transition-colors"
-                      >
-                        ▪ {child.label}
+                      ><EditableText document="copy.ui.NavigationBar" entry="ewnkzxi" fallback={"▪ "} />{child.label}
                       </Link>
                     ))}
                   </div>

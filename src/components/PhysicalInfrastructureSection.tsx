@@ -1,8 +1,14 @@
-import Image from "next/image";
-import { siteSettings, physicalInfrastructureData } from "@/data/siteData";
-import { Building2, MapPin, Calendar, CheckCircle, ShieldCheck } from "lucide-react";
 
-export default function PhysicalInfrastructureSection() {
+import { siteSettings as _fallback_siteSettings, physicalInfrastructureData as _fallback_physicalInfrastructureData } from "@/data/siteData";
+import { Building2, MapPin, Calendar, CheckCircle, ShieldCheck } from "lucide-react";
+import { EditableImage as Image, getEditableData, EditableText } from "@/content/server";
+import { fieldSource } from "@/content/model";
+
+
+export default async function PhysicalInfrastructureSection() {
+  const siteSettings = await getEditableData("siteSettings", _fallback_siteSettings);
+  const physicalInfrastructureData = await getEditableData("copy.data.physicalInfrastructureData", _fallback_physicalInfrastructureData);
+
   return (
     <article className="bg-white rounded-2xl border border-gray-200/90 shadow-xs overflow-hidden">
       {/* Header Bar */}
@@ -15,7 +21,7 @@ export default function PhysicalInfrastructureSection() {
         {/* Center: Madrasa Logo and Identification */}
         <div className="flex flex-col items-center justify-center text-center">
           <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-[#8B111A] p-0.5 bg-white shadow-md relative overflow-hidden mb-4">
-            <Image
+            <Image document="copy.ui.PhysicalInfrastructureSection" entry="e1kleqqi" source={fieldSource(siteSettings, "logoUrl")}
               src={siteSettings.logoUrl || "/jamia-logo-v2.png"}
               alt={siteSettings.nameBn}
               fill
@@ -33,7 +39,7 @@ export default function PhysicalInfrastructureSection() {
 
           <div className="flex items-center gap-2 mt-2 text-xs sm:text-sm font-semibold text-gray-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
             <Calendar size={14} className="text-[#8B111A]" />
-            <span>প্রতিষ্ঠিত: {siteSettings.establishedFull}</span>
+            <span><EditableText document="copy.ui.PhysicalInfrastructureSection" entry="e1cxnx7j" fallback={"প্রতিষ্ঠিত: "} />{siteSettings.establishedFull}</span>
           </div>
 
           <div className="flex items-center gap-1.5 mt-2 text-xs sm:text-sm text-gray-500">
@@ -46,7 +52,7 @@ export default function PhysicalInfrastructureSection() {
         <div className="pt-6 border-t border-gray-200">
           <h4 className="text-base sm:text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
             <ShieldCheck size={20} className="text-[#016332]" />
-            <span>ভৌত অবকাঠামো ও প্রাতিষ্ঠানিক সুযোগ-সুবিধা</span>
+            <span><EditableText document="copy.ui.PhysicalInfrastructureSection" entry="e2zmkay" fallback={"ভৌত অবকাঠামো ও প্রাতিষ্ঠানিক সুযোগ-সুবিধা"} /></span>
           </h4>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

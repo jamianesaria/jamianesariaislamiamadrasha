@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import { sampleGalleryVideos, GalleryVideoItem } from "@/data/siteData";
+
+import { sampleGalleryVideos as _fallback_sampleGalleryVideos, GalleryVideoItem } from "@/data/siteData";
 import { Video as VideoIcon, Play, X, Calendar, Clock, User, ExternalLink } from "lucide-react";
+import { EditableImage as Image, useEditableData, EditableText, useGalleryRecords } from "@/content/client";
+import { fieldSource } from "@/content/model";
+
 
 const videoCategories = [
   { id: "all", label: "সব ভিডিও" },
@@ -14,8 +17,12 @@ const videoCategories = [
 ];
 
 export default function VideoGallerySection() {
+  const fallbackVideos = useEditableData("copy.data.sampleGalleryVideos", _fallback_sampleGalleryVideos);
+  const sampleGalleryVideos = useGalleryRecords()?.videos ?? fallbackVideos;
+
   const [activeCategory, setActiveCategory] = useState<string>("all");
-  const [activeVideo, setActiveVideo] = useState<GalleryVideoItem | null>(null);
+  const [selectedVideo, setActiveVideo] = useState<GalleryVideoItem | null>(null);
+  const activeVideo = selectedVideo ? sampleGalleryVideos.find((video) => video.id === selectedVideo.id) ?? null : null;
 
   const filteredVideos =
     activeCategory === "all"
@@ -28,11 +35,9 @@ export default function VideoGallerySection() {
       <div className="bg-[#126b59] text-white px-4 py-2.5 flex items-center justify-between font-bold text-sm sm:text-base shadow-xs">
         <div className="flex items-center gap-2">
           <VideoIcon size={18} />
-          <span>ভিডিও (Video Gallery)</span>
+          <span><EditableText document="copy.ui.VideoGallerySection" entry="eyn3zo5" fallback={"ভিডিও (Video Gallery)"} /></span>
         </div>
-        <span className="text-xs bg-white/20 px-2.5 py-0.5 rounded-full font-normal">
-          মোট ভিডিও: {filteredVideos.length} টি
-        </span>
+        <span className="text-xs bg-white/20 px-2.5 py-0.5 rounded-full font-normal"><EditableText document="copy.ui.VideoGallerySection" entry="e8ociwk" fallback={"মোট ভিডিও: "} />{filteredVideos.length}<EditableText document="copy.ui.VideoGallerySection" entry="e17dbglz" fallback={" টি"} /></span>
       </div>
 
       <div className="p-4 sm:p-6 space-y-6">
@@ -70,7 +75,7 @@ export default function VideoGallerySection() {
               >
                 {/* Video Thumbnail with Play Button Overlay */}
                 <div className="relative aspect-video w-full bg-black overflow-hidden">
-                  <Image
+                  <Image document="copy.ui.VideoGallerySection" entry="etb7tl8" source={fieldSource(video, "thumbnail")}
                     src={video.thumbnail}
                     alt={video.title}
                     fill
@@ -112,9 +117,7 @@ export default function VideoGallerySection() {
                       <Calendar size={12} />
                       {video.date}
                     </span>
-                    <span className="text-[#126b59] font-semibold group-hover:underline inline-flex items-center gap-1">
-                      ভিডিও দেখুন
-                    </span>
+                    <span className="text-[#126b59] font-semibold group-hover:underline inline-flex items-center gap-1"><EditableText document="copy.ui.VideoGallerySection" entry="e1e7ayth" fallback={"ভিডিও দেখুন"} /></span>
                   </div>
                 </div>
               </div>
@@ -123,7 +126,7 @@ export default function VideoGallerySection() {
         ) : (
           <div className="py-16 text-center text-gray-400">
             <VideoIcon size={40} className="mx-auto mb-2 opacity-50" />
-            <p className="text-sm">এই ক্যাটাগরিতে কোনো ভিডিও পাওয়া যায়নি।</p>
+            <p className="text-sm"><EditableText document="copy.ui.VideoGallerySection" entry="e19d9xwe" fallback={"এই ক্যাটাগরিতে কোনো ভিডিও পাওয়া যায়নি।"} /></p>
           </div>
         )}
       </div>
@@ -149,13 +152,15 @@ export default function VideoGallerySection() {
 
             {/* Video Iframe Container (16:9 ratio) */}
             <div className="relative aspect-video w-full bg-black">
-              <iframe
+              {activeVideo.localVideoUrl ? (
+                <video src={activeVideo.localVideoUrl} poster={activeVideo.thumbnail} controls autoPlay playsInline className="w-full h-full" />
+              ) : <iframe
                 src={`https://www.youtube-nocookie.com/embed/${activeVideo.youtubeId}?autoplay=1&rel=0`}
                 title={activeVideo.title}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 className="w-full h-full border-0"
-              />
+              />}
             </div>
 
             {/* Modal Footer Details */}
@@ -163,28 +168,26 @@ export default function VideoGallerySection() {
               <div className="text-xs text-gray-600 space-y-1">
                 {activeVideo.speaker && (
                   <p>
-                    <span className="font-bold text-gray-800">বক্তা / পরিবেশক:</span> {activeVideo.speaker}
+                    <span className="font-bold text-gray-800"><EditableText document="copy.ui.VideoGallerySection" entry="ewe3luu" fallback={"বক্তা / পরিবেশক:"} /></span> {activeVideo.speaker}
                   </p>
                 )}
-                <p className="text-gray-400">প্রকাশের তারিখ: {activeVideo.date}</p>
+                <p className="text-gray-400"><EditableText document="copy.ui.VideoGallerySection" entry="e1367jxx" fallback={"প্রকাশের তারিখ: "} />{activeVideo.date}</p>
               </div>
 
               <div className="flex items-center gap-2">
-                <a
+                {!activeVideo.localVideoUrl && <a
                   href={`https://www.youtube.com/watch?v=${activeVideo.youtubeId}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-[#b91c1c] hover:bg-red-800 text-white text-xs font-semibold py-1.5 px-3 rounded inline-flex items-center gap-1.5 transition-colors"
                 >
                   <ExternalLink size={13} />
-                  <span>ইউটিউবে দেখুন</span>
-                </a>
+                  <span><EditableText document="copy.ui.VideoGallerySection" entry="e1qe2jzj" fallback={"ইউটিউবে দেখুন"} /></span>
+                </a>}
                 <button
                   onClick={() => setActiveVideo(null)}
                   className="bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-semibold py-1.5 px-3 rounded transition-colors cursor-pointer"
-                >
-                  বন্ধ করুন
-                </button>
+                ><EditableText document="copy.ui.VideoGallerySection" entry="ea6gn28" fallback={"বন্ধ করুন"} /></button>
               </div>
             </div>
           </div>

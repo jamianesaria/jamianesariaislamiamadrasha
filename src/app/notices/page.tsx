@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
@@ -6,13 +6,13 @@ import Footer from "@/components/Footer";
 import NoticeBoardSection from "@/components/NoticeBoardSection";
 import { getNotices, getSiteSettings, getNewsTicker } from "@/sanity/lib/queries";
 
-export const metadata: Metadata = {
+export const generateMetadata = editableMetadata("/notices", {
   title: "নোটিশ ও বিজ্ঞপ্তি | জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা",
   description:
     "জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানার কেন্দ্রীয় নোটিশ বোর্ড, ভর্তি বিজ্ঞপ্তি, বেফাক ও হাইআতুল উলয়া পরীক্ষার সময়সূচি, বাৎসরিক ছুটির তালিকা এবং অফিশিয়াল প্রজ্ঞাপন।",
-};
+});
 
-export default async function NoticesPage() {
+async function NoticesPage() {
   const [notices, siteData, newsTicker] = await Promise.all([
     getNotices(),
     getSiteSettings(),
@@ -40,3 +40,4 @@ export default async function NoticesPage() {
     </div>
   );
 }
+export default editableRoute("/notices", NoticesPage);

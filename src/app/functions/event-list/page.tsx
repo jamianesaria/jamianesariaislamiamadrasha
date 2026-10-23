@@ -1,16 +1,19 @@
-import type { Metadata } from "next";
+import { stegaClean } from "@sanity/client/stega";
+import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
 import Footer from "@/components/Footer";
 import EventListTable from "@/components/EventListTable";
+import { getCalendar } from "@/sanity/lib/queries";
 
-export const metadata: Metadata = {
+export const generateMetadata = editableMetadata("/functions/event-list", {
   title: "Event List | জামিয়া নেছারিয়া ইসলামিয়া টঙ্গী",
   description: "জামিয়া নেছারিয়া ইসলামিয়া টঙ্গীর সকল সাম্প্রতিক এবং আসন্ন ইভেন্টের তালিকা।",
-};
+});
 
-export default function EventListPage() {
+async function EventListPage() {
+  const records = (await getCalendar()).filter((record) => stegaClean(record.kind) === "event").map((record, index) => ({ ...record, _type: "calendarEvent", id: index + 1, photo: record.imageUrl, eventName: record.title, dateTime: record.dateBn || record.date, venue: record.location, description: record.description }));
   return (
     <div className="min-h-screen bg-[#F0F2F5] flex flex-col">
       {/* 1. Top Identity Banner */}
@@ -24,7 +27,7 @@ export default function EventListPage() {
 
       {/* 4. Main Event List Content Area (Full width container matching screenshot) */}
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-6 w-full flex-1">
-        <EventListTable />
+        <EventListTable records={records} />
       </main>
 
       {/* 5. Footer */}
@@ -32,4 +35,5 @@ export default function EventListPage() {
     </div>
   );
 }
+export default editableRoute("/functions/event-list", EventListPage);
 

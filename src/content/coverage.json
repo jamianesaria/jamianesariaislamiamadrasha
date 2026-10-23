@@ -1,0 +1,753 @@
+{
+  "/313-badri-kafila": {
+    "clientDocuments": [],
+    "documents": [],
+    "components": [],
+    "redirect": true,
+    "context": false
+  },
+  "/about/history": {
+    "clientDocuments": [
+      "copy.data.navigationItems",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.aboutPageData",
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.ui.AboutJamiaSection",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar"
+    ],
+    "components": [
+      "src/components/AboutJamiaSection.tsx",
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/about/infrastructure": {
+    "clientDocuments": [
+      "copy.data.navigationItems",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.data.physicalInfrastructureData",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar",
+      "copy.ui.PhysicalInfrastructureSection"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx",
+      "src/components/PhysicalInfrastructureSection.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/about": {
+    "clientDocuments": [
+      "copy.data.navigationItems",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.aboutPageData",
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.ui.AboutJamiaSection",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar"
+    ],
+    "components": [
+      "src/components/AboutJamiaSection.tsx",
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/about/vacancy": {
+    "clientDocuments": [
+      "copy.data.navigationItems",
+      "copy.data.vacancyListTableData",
+      "copy.ui.NavigationBar",
+      "copy.ui.VacancyNoticeTable"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.data.vacancyListTableData",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar",
+      "copy.ui.VacancyNoticeTable"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx",
+      "src/components/VacancyNoticeTable.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/academics": {
+    "clientDocuments": [
+      "copy.data.navigationItems",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.academicsPageData",
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.ui.AcademicsPageSection",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar"
+    ],
+    "components": [
+      "src/components/AcademicsPageSection.tsx",
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/admission": {
+    "clientDocuments": [
+      "copy.data.navigationItems",
+      "copy.data.officialAdmissionData",
+      "copy.ui.AdmissionInfoSection",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.data.officialAdmissionData",
+      "copy.ui.AdmissionInfoSection",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar"
+    ],
+    "components": [
+      "src/components/AdmissionInfoSection.tsx",
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/apply": {
+    "clientDocuments": [
+      "copy.data.availableClasses",
+      "copy.data.navigationItems",
+      "copy.ui.ApplyOnlineForm",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.availableClasses",
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.ui.ApplyOnlineForm",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar"
+    ],
+    "components": [
+      "src/components/ApplyOnlineForm.tsx",
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/badri-kafila": {
+    "clientDocuments": [
+      "copy.data.navigationItems",
+      "copy.ui.BadriKafilaSection",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.ui.BadriKafilaSection",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar"
+    ],
+    "components": [
+      "src/components/BadriKafilaSection.tsx",
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/blog": {
+    "clientDocuments": [
+      "copy.data.navigationItems",
+      "copy.data.sampleBlogPosts",
+      "copy.ui.BlogSection",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.data.sampleBlogPosts",
+      "copy.ui.BlogSection",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar"
+    ],
+    "components": [
+      "src/components/BlogSection.tsx",
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/committee": {
+    "clientDocuments": [
+      "copy.data.committeeAndFacultyData",
+      "copy.data.navigationItems",
+      "copy.ui.ManagingCommitteeSection",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.committeeAndFacultyData",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.ManagingCommitteeSection",
+      "copy.ui.NavigationBar"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/ManagingCommitteeSection.tsx",
+      "src/components/NavigationBar.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/contact": {
+    "clientDocuments": [
+      "copy.data.navigationItems",
+      "copy.ui.ContactSection",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.ContactSection",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/ContactSection.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/exam-routine": {
+    "clientDocuments": [
+      "copy.data.availableClasses",
+      "copy.data.navigationItems",
+      "copy.ui.ExamRoutineSection",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.availableClasses",
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.ExamRoutineSection",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/ExamRoutineSection.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/faculty": {
+    "clientDocuments": [
+      "copy.data.committeeAndFacultyData",
+      "copy.data.navigationItems",
+      "copy.ui.FacultyAndTeachersSection",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.committeeAndFacultyData",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.FacultyAndTeachersSection",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/FacultyAndTeachersSection.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/functions/class-routine": {
+    "clientDocuments": [
+      "copy.data.availableClasses",
+      "copy.data.navigationItems",
+      "copy.ui.ClassRoutineSection",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.availableClasses",
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.ClassRoutineSection",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/ClassRoutineSection.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/functions/event-list": {
+    "clientDocuments": [
+      "copy.data.eventListTableData",
+      "copy.data.navigationItems",
+      "copy.ui.EventListTable",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.eventListTableData",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.EventListTable",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/EventListTable.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/functions/holiday": {
+    "clientDocuments": [
+      "copy.data.holidayListTableData",
+      "copy.data.navigationItems",
+      "copy.ui.HolidayListTable",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.holidayListTableData",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.HolidayListTable",
+      "copy.ui.NavigationBar"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/HolidayListTable.tsx",
+      "src/components/NavigationBar.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/functions/notices": {
+    "clientDocuments": [],
+    "documents": [],
+    "components": [],
+    "redirect": true,
+    "context": false
+  },
+  "/gallery": {
+    "clientDocuments": [
+      "copy.data.navigationItems",
+      "copy.data.sampleGalleryPhotos",
+      "copy.data.sampleGalleryVideos",
+      "copy.ui.MainGallerySection",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.data.sampleGalleryPhotos",
+      "copy.data.sampleGalleryVideos",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.MainGallerySection",
+      "copy.ui.NavigationBar"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/MainGallerySection.tsx",
+      "src/components/NavigationBar.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/gallery/photo": {
+    "clientDocuments": [
+      "copy.data.navigationItems",
+      "copy.data.sampleGalleryPhotos",
+      "copy.ui.NavigationBar",
+      "copy.ui.PhotoGallerySection"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.data.sampleGalleryPhotos",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar",
+      "copy.ui.PhotoGallerySection"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx",
+      "src/components/PhotoGallerySection.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/gallery/video": {
+    "clientDocuments": [
+      "copy.data.navigationItems",
+      "copy.data.sampleGalleryVideos",
+      "copy.ui.NavigationBar",
+      "copy.ui.VideoGallerySection"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.data.sampleGalleryVideos",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar",
+      "copy.ui.VideoGallerySection"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx",
+      "src/components/VideoGallerySection.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/notices": {
+    "clientDocuments": [
+      "copy.data.navigationItems",
+      "copy.data.noticesData",
+      "copy.ui.NavigationBar",
+      "copy.ui.NoticeBoardSection"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.data.noticesData",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar",
+      "copy.ui.NoticeBoardSection"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx",
+      "src/components/NoticeBoardSection.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/orphanage": {
+    "clientDocuments": [
+      "copy.data.navigationItems",
+      "copy.data.orphanagePageData",
+      "copy.ui.NavigationBar",
+      "copy.ui.OrphanageSection"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.data.orphanagePageData",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar",
+      "copy.ui.OrphanageSection"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx",
+      "src/components/OrphanageSection.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/": {
+    "clientDocuments": [
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.ui.HomeGalleryFilter",
+      "copy.ui.HomeNoticeTabs",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.data.sampleBlogPosts",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.HomeGalleryFilter",
+      "copy.ui.HomeNoticeTabs",
+      "copy.ui.HomePrimarySection",
+      "copy.ui.NavigationBar"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/HeroVideo.tsx",
+      "src/components/HomeGalleryFilter.tsx",
+      "src/components/HomeNoticeTabs.tsx",
+      "src/components/HomePrimarySection.tsx",
+      "src/components/IntroPlaybackContext.ts",
+      "src/components/NavigationBar.tsx",
+      "src/components/WebsiteIntro.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/profile/managing-committee": {
+    "clientDocuments": [
+      "copy.data.committeeAndFacultyData",
+      "copy.data.navigationItems",
+      "copy.ui.ManagingCommitteeSection",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.committeeAndFacultyData",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.ManagingCommitteeSection",
+      "copy.ui.NavigationBar"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/ManagingCommitteeSection.tsx",
+      "src/components/ManagingCommitteeTable.tsx",
+      "src/components/NavigationBar.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/profile": {
+    "clientDocuments": [],
+    "documents": [],
+    "components": [],
+    "redirect": true,
+    "context": false
+  },
+  "/results/academic": {
+    "clientDocuments": [
+      "copy.data.navigationItems",
+      "copy.ui.NavigationBar",
+      "copy.ui.PublicResultsSection"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar",
+      "copy.ui.PublicResultsSection"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx",
+      "src/components/PublicResultsSection.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/results/admission": {
+    "clientDocuments": [
+      "copy.data.navigationItems",
+      "copy.ui.NavigationBar",
+      "copy.ui.PublicResultsSection"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar",
+      "copy.ui.PublicResultsSection"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx",
+      "src/components/PublicResultsSection.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/teachers": {
+    "clientDocuments": [
+      "copy.data.committeeAndFacultyData",
+      "copy.data.navigationItems",
+      "copy.ui.FacultyAndTeachersSection",
+      "copy.ui.NavigationBar"
+    ],
+    "documents": [
+      "copy.data.breakingNews",
+      "copy.data.committeeAndFacultyData",
+      "copy.data.homePageContent",
+      "copy.data.navigationItems",
+      "copy.ui.BreakingNewsBar",
+      "copy.ui.FacultyAndTeachersSection",
+      "copy.ui.Footer",
+      "copy.ui.HeaderBanner",
+      "copy.ui.NavigationBar"
+    ],
+    "components": [
+      "src/components/BreakingNewsBar.tsx",
+      "src/components/FacultyAndTeachersSection.tsx",
+      "src/components/Footer.tsx",
+      "src/components/HeaderBanner.tsx",
+      "src/components/NavigationBar.tsx"
+    ],
+    "redirect": false,
+    "context": true
+  },
+  "/vorti-tottho": {
+    "clientDocuments": [],
+    "documents": [],
+    "components": [],
+    "redirect": true,
+    "context": false
+  }
+}

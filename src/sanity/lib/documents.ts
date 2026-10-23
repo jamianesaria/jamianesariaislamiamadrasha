@@ -1,0 +1,20 @@
+export type SettingsDocument = Partial<Record<"title" | "phone" | "arabicTitle" | "englishTitle" | "establishedYear" | "slogan" | "emergencyPhone" | "email" | "address" | "addressFull" | "regSocialWelfare" | "regBefaq" | "regHaiatulUlya" | "mapEmbedUrl" | "facebookUrl" | "youtubeUrl" | "headerBannerUrl" | "logoUrl" | "footerSlogan" | "establishedFull" | "applyUrl" | "onlineClassUrl" | "appDownloadUrl", string>>;
+export type HomepageDocument = Partial<Record<"heroBadge" | "heroHeadline" | "heroSubheadline" | "heroVideoUrl" | "heroPosterUrl" | "principalName" | "principalMessage" | "statsEstablished" | "admissionBannerTitle" | "admissionBannerDesc", string>> & { introVideo?: Partial<typeof import("@/data/siteData").homePageContent.introVideo>; newsTicker?: string[] };
+export interface TextBlock { _key?: string; _type?: string; children?: { text?: string }[] }
+export interface NoticeDocument { _id: string; title: string; category: string; memo?: string; publishDate?: string; publishDateBn?: string; publishDateHijri?: string; isUrgent?: boolean; summary?: string; details?: (string | TextBlock)[]; instructions?: string[]; signatoryName?: string; signatoryDesignation?: string; pdfUrl?: string }
+export interface TeacherDocument { _id: string; name: string; designation: string; department: string; qualification?: string; mobile?: string; district?: string; institution?: string; photo?: string; serial?: number; honor?: string }
+export interface CommitteeDocument { _id: string; name: string; designation: string; mobile?: string; address?: string; isLandDonor?: boolean; donorContribution?: string; photo?: string; serial?: number }
+export interface BlogDocument { _id: string; title: string; slug?: string; legacyId?: number; thumbnail?: string; date?: string; author?: string; readTime?: string; likesCount?: number; commentsCount?: number; category?: string; excerpt?: string; content?: string }
+export interface RoutineDay { _key: string; day: string; period1?: string; period2?: string; period3?: string; period4?: string; period5?: string; period6?: string }
+export interface ClassRoutineDocument { _id: string; title: string; classId?: string; className: string; academicYear: string; timetableRows?: RoutineDay[]; scheduleRows?: { _key?: string; day?: string; time?: string; subject?: string; period?: string; teacher?: string; room?: string }[]; pdfUrl?: string }
+export interface ExamRoutineDocument { _id: string; title: string; classId?: string; className?: string; academicYear: string; examTerm: string; examRows?: { _key: string; date: string; day?: string; subject: string; time: string; room?: string }[]; instructions?: string[]; pdfUrl?: string }
+export interface ResultDocument { _id: string; title: string; academicYear: string; examTerm: string; classId?: string; className: string; summaryNotes?: string; meritListPdfUrl?: string }
+export interface CalendarDocument { _id: string; title: string; kind: "event" | "holiday"; date: string; endDate?: string; dateBn?: string; description?: string; location?: string; imageUrl?: string; pdfUrl?: string }
+export interface VacancyDocument { _id: string; title: string; department?: string; qualification?: string; deadline: string; postedAt?: string; salary?: string; vacancies?: string; pdfUrl?: string }
+export interface PhotoDocument { _id: string; title: string; category?: string; caption?: string; date?: string; imageUrl?: string }
+export interface VideoDocument { _id: string; title: string; youtubeId?: string; localVideoUrl?: string; thumbnail?: string; category?: string; duration?: string; date?: string; speaker?: string }
+
+export function paragraphs(value: (string | TextBlock)[] | undefined, fallback: string): string[] {
+  if (!value?.length) return [fallback];
+  return value.map((block) => typeof block === "string" ? block : (block.children || []).map((span) => span.text || "").join("")).filter(Boolean);
+}

@@ -5,6 +5,11 @@ export const siteSettingsType = defineType({
   title: "প্রতিষ্ঠান সেটিংস ও পরিচিতি (Global Site Settings)",
   type: "document",
   fields: [
+    ...[
+      ["footerSlogan", "ফুটারের পরিচিতি"], ["establishedFull", "সম্পূর্ণ প্রতিষ্ঠাকাল"],
+      ["applyUrl", "আবেদন ফরমের লিংক"], ["onlineClassUrl", "অনলাইন ক্লাসের লিংক"], ["appDownloadUrl", "অ্যাপ ডাউনলোডের লিংক"],
+    ].map(([name, title]) => defineField({ name, title, type: "string" })),
+    defineField({ name: "headerBanner", title: "ওয়েবসাইটের প্রধান ব্যানার (Header banner)", type: "image", options: { hotspot: true }, description: "ওয়েবসাইট সম্পাদনা থেকে ব্যানারে ক্লিক করে ছবিটি পরিবর্তন করতে পারবেন।" }),
     defineField({
       name: "title",
       title: "মাদরাসার নাম (বাংলা)",

@@ -773,7 +773,7 @@ export interface NoticeItem {
 }
 
 export interface NoticeFullItem {
-  id: number;
+  id: string | number;
   memoNo: string;
   title: string;
   category: "ভর্তি সংক্রান্ত" | "পরীক্ষা ও ফলাফল" | "ছুটির তালিকা" | "ক্লাস ও রুটিন" | "প্রশাসনিক ও সাধারণ";
@@ -1821,7 +1821,9 @@ export const footerAwards = [
 
 // Photo Gallery Data for /gallery/photo (Sanity CMS schema ready)
 export interface GalleryPhotoItem {
-  id: number;
+  _id?: string;
+  _type?: string;
+  id: string | number;
   title: string;
   category: "all" | "campus" | "events" | "classroom" | "hifz" | "kitab";
   imageUrl: string;
@@ -1914,7 +1916,9 @@ export const sampleGalleryPhotos: GalleryPhotoItem[] = [
 
 // Video Gallery Data for /gallery/video (Sanity CMS schema ready)
 export interface GalleryVideoItem {
-  id: number;
+  _id?: string;
+  _type?: string;
+  id: string | number;
   title: string;
   category: "all" | "quran" | "waz" | "events" | "madrasa";
   youtubeId: string;
@@ -2001,7 +2005,7 @@ export const sampleGalleryVideos: GalleryVideoItem[] = [
 
 // Blog Posts Data for /blog (Sanity CMS schema ready)
 export interface BlogPostItem {
-  id: number;
+  id: string | number;
   slug: string;
   title: string;
   thumbnail: string;

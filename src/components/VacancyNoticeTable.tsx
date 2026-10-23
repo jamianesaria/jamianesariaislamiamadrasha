@@ -1,11 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import { siteSettings, vacancyListTableData, VacancyItem } from "@/data/siteData";
-import { Briefcase, Calendar, MapPin, X, FileText, Download } from "lucide-react";
 
-export default function VacancyNoticeTable() {
+import { siteSettings as _fallback_siteSettings, vacancyListTableData as _fallback_vacancyListTableData, VacancyItem } from "@/data/siteData";
+import { Briefcase, Calendar, MapPin, X, FileText, Download } from "lucide-react";
+import { EditableImage as Image, useEditableData, EditableText } from "@/content/client";
+import { fieldSource } from "@/content/model";
+
+
+export default function VacancyNoticeTable({ records }: { records?: VacancyItem[] }) {
+  const siteSettings = useEditableData("siteSettings", _fallback_siteSettings);
+  const vacancyListTableData = useEditableData("copy.data.vacancyListTableData", _fallback_vacancyListTableData);
+
+  const vacancies = records ?? vacancyListTableData;
   const [selectedVacancy, setSelectedVacancy] = useState<VacancyItem | null>(null);
 
   return (
@@ -13,14 +20,14 @@ export default function VacancyNoticeTable() {
       {/* Header Bar matching teal/deep cyan-green from screenshot */}
       <div className="bg-[#126b59] text-white px-4 py-2.5 flex items-center gap-2 font-bold text-sm sm:text-base shadow-xs">
         <Briefcase size={18} />
-        <span>Vacancy (Notice)</span>
+        <span><EditableText document="copy.ui.VacancyNoticeTable" entry="eruyt4b" fallback={"Vacancy (Notice)"} /></span>
       </div>
 
       <div className="p-6 sm:p-8 space-y-6">
         {/* Center: Madrasa Logo & Header */}
         <div className="flex flex-col items-center justify-center text-center">
           <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-[#8B111A] p-0.5 bg-white shadow-md relative overflow-hidden mb-3">
-            <Image
+            <Image document="copy.ui.VacancyNoticeTable" entry="ero212q" source={fieldSource(siteSettings, "logoUrl")}
               src={siteSettings.logoUrl || "/jamia-logo-v2.png"}
               alt={siteSettings.nameBn}
               fill
@@ -38,7 +45,7 @@ export default function VacancyNoticeTable() {
 
           <div className="flex items-center gap-2 mt-2 text-xs font-semibold text-gray-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
             <Calendar size={13} className="text-[#8B111A]" />
-            <span>প্রতিষ্ঠিত: {siteSettings.established}</span>
+            <span><EditableText document="copy.ui.VacancyNoticeTable" entry="e1k9nx6l" fallback={"প্রতিষ্ঠিত: "} />{siteSettings.established}</span>
           </div>
 
           <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
@@ -53,15 +60,15 @@ export default function VacancyNoticeTable() {
             <table className="w-full text-left border-collapse text-xs sm:text-sm">
               <thead>
                 <tr className="bg-gray-100/90 text-gray-700 border-b border-gray-300 font-bold">
-                  <th className="py-2.5 px-3 w-12 text-center">#</th>
-                  <th className="py-2.5 px-4">Post name</th>
-                  <th className="py-2.5 px-4 text-center w-40">Posting date</th>
-                  <th className="py-2.5 px-4 text-center w-40">Dateline</th>
-                  <th className="py-2.5 px-3 w-28 text-center">View</th>
+                  <th className="py-2.5 px-3 w-12 text-center"><EditableText document="copy.ui.VacancyNoticeTable" entry="e9kuzfm" fallback={"#"} /></th>
+                  <th className="py-2.5 px-4"><EditableText document="copy.ui.VacancyNoticeTable" entry="e3lnglp" fallback={"Post name"} /></th>
+                  <th className="py-2.5 px-4 text-center w-40"><EditableText document="copy.ui.VacancyNoticeTable" entry="e1sj75rq" fallback={"Posting date"} /></th>
+                  <th className="py-2.5 px-4 text-center w-40"><EditableText document="copy.ui.VacancyNoticeTable" entry="epnw7k3" fallback={"Dateline"} /></th>
+                  <th className="py-2.5 px-3 w-28 text-center"><EditableText document="copy.ui.VacancyNoticeTable" entry="ezh51zi" fallback={"View"} /></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {vacancyListTableData.map((vacancy, index) => (
+              {vacancies.map((vacancy, index) => (
                   <tr
                     key={vacancy.id}
                     className="hover:bg-teal-50/30 transition-colors group"
@@ -92,7 +99,7 @@ export default function VacancyNoticeTable() {
                         onClick={() => setSelectedVacancy(vacancy)}
                         className="inline-flex items-center justify-center gap-1 bg-[#6a1b9a] hover:bg-[#4a148c] text-white text-xs font-semibold px-3 py-1.5 rounded transition-colors shadow-2xs cursor-pointer"
                       >
-                        <span>Details</span>
+                        <span><EditableText document="copy.ui.VacancyNoticeTable" entry="eqiretf" fallback={"Details"} /></span>
                       </button>
                     </td>
                   </tr>
@@ -108,7 +115,7 @@ export default function VacancyNoticeTable() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-150">
           <div className="bg-white rounded-lg shadow-2xl max-w-lg w-full overflow-hidden border border-gray-200">
             <div className="bg-[#126b59] text-white px-4 py-3 flex items-center justify-between font-bold">
-              <span>নিয়োগ বিজ্ঞপ্তির বিস্তারিত</span>
+              <span><EditableText document="copy.ui.VacancyNoticeTable" entry="edkwscw" fallback={"নিয়োগ বিজ্ঞপ্তির বিস্তারিত"} /></span>
               <button
                 onClick={() => setSelectedVacancy(null)}
                 className="text-white hover:text-gray-200 p-1 cursor-pointer"
@@ -125,18 +132,18 @@ export default function VacancyNoticeTable() {
 
               <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 bg-gray-50 p-3 rounded border border-gray-200">
                 <p>
-                  <span className="font-semibold text-gray-800">প্রকাশের তারিখ:</span>{" "}
+                  <span className="font-semibold text-gray-800"><EditableText document="copy.ui.VacancyNoticeTable" entry="e55rlve" fallback={"প্রকাশের তারিখ:"} /></span>{" "}
                   {selectedVacancy.postingDate}
                 </p>
                 <p>
-                  <span className="font-semibold text-red-700">আবেদনের শেষ তারিখ:</span>{" "}
+                  <span className="font-semibold text-red-700"><EditableText document="copy.ui.VacancyNoticeTable" entry="e19w2wti" fallback={"আবেদনের শেষ তারিখ:"} /></span>{" "}
                   {selectedVacancy.dateline}
                 </p>
               </div>
 
               {selectedVacancy.requirements && (
                 <div>
-                  <h5 className="font-bold text-xs text-gray-700 mb-1">যোগ্যতা ও শর্তাবলী:</h5>
+                  <h5 className="font-bold text-xs text-gray-700 mb-1"><EditableText document="copy.ui.VacancyNoticeTable" entry="e674jf8" fallback={"যোগ্যতা ও শর্তাবলী:"} /></h5>
                   <p className="text-xs sm:text-sm text-gray-600 leading-relaxed text-justify">
                     {selectedVacancy.requirements}
                   </p>
@@ -145,7 +152,7 @@ export default function VacancyNoticeTable() {
 
               {selectedVacancy.salary && (
                 <p className="text-xs text-gray-700">
-                  <span className="font-semibold">বেতন স্কেল:</span> {selectedVacancy.salary}
+                  <span className="font-semibold"><EditableText document="copy.ui.VacancyNoticeTable" entry="e583yzq" fallback={"বেতন স্কেল:"} /></span> {selectedVacancy.salary}
                 </p>
               )}
 
@@ -156,15 +163,13 @@ export default function VacancyNoticeTable() {
                   className="inline-flex items-center gap-1.5 bg-[#8B111A] hover:bg-[#6E0B13] text-white text-xs px-3 py-1.5 rounded transition-colors"
                 >
                   <Download size={13} />
-                  <span>সার্কুলার ডাউনলোড</span>
+                  <span><EditableText document="copy.ui.VacancyNoticeTable" entry="eqsp92w" fallback={"সার্কুলার ডাউনলোড"} /></span>
                 </a>
 
                 <button
                   onClick={() => setSelectedVacancy(null)}
                   className="bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-semibold px-4 py-1.5 rounded transition-colors cursor-pointer"
-                >
-                  বন্ধ করুন
-                </button>
+                ><EditableText document="copy.ui.VacancyNoticeTable" entry="e3tnd0d" fallback={"বন্ধ করুন"} /></button>
               </div>
             </div>
           </div>

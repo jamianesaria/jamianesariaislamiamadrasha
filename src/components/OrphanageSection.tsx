@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+
 import Link from "next/link";
 import {
-  orphanagePageData,
-  siteSettings,
-  homePageContent,
+  orphanagePageData as _fallback_orphanagePageData,
+  siteSettings as _fallback_siteSettings,
+  homePageContent as _fallback_homePageContent,
 } from "@/data/siteData";
 import {
   HeartHandshake,
@@ -28,8 +28,12 @@ import {
   Clock,
   Send,
 } from "lucide-react";
+import { EditableImage as Image, useEditableData, EditableText } from "@/content/client";
+
 
 export default function OrphanageSection() {
+  const orphanagePageData = useEditableData("copy.data.orphanagePageData", _fallback_orphanagePageData);
+
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   const handleCopy = (text: string, key: string) => {
@@ -79,15 +83,15 @@ export default function OrphanageSection() {
           <div className="pt-2 flex flex-wrap gap-2 text-xs">
             <span className="inline-flex items-center gap-1.5 bg-black/25 px-3 py-1 rounded-full border border-white/15">
               <FileCheck2 size={13} className="text-amber-300" />
-              <span>সমাজসেবা নিবন্ধন নং: {registration.regNumber}</span>
+              <span><EditableText document="copy.ui.OrphanageSection" entry="e17vdoic" fallback={"সমাজসেবা নিবন্ধন নং: "} />{registration.regNumber}</span>
             </span>
             <span className="inline-flex items-center gap-1.5 bg-black/25 px-3 py-1 rounded-full border border-white/15">
               <Clock size={13} className="text-amber-300" />
-              <span>নিবন্ধন তারিখ: {registration.registrationDate}</span>
+              <span><EditableText document="copy.ui.OrphanageSection" entry="e86wyyr" fallback={"নিবন্ধন তারিখ: "} />{registration.registrationDate}</span>
             </span>
             <span className="inline-flex items-center gap-1.5 bg-black/25 px-3 py-1 rounded-full border border-white/15">
               <Phone size={13} className="text-amber-300" />
-              <span>সহযোগিতা ও অনুদান: {contact.mobile}</span>
+              <span><EditableText document="copy.ui.OrphanageSection" entry="eyncjwj" fallback={"সহযোগিতা ও অনুদান: "} />{contact.mobile}</span>
             </span>
           </div>
         </div>
@@ -103,11 +107,9 @@ export default function OrphanageSection() {
             <h2 className="text-sm font-bold text-gray-900 pb-3 mb-3 border-b border-gray-100 flex items-center justify-between">
               <span className="flex items-center gap-2 text-[#016332]">
                 <Sparkles size={16} />
-                <span>এক নজরে সূচিপত্র</span>
+                <span><EditableText document="copy.ui.OrphanageSection" entry="e1ecoyzv" fallback={"এক নজরে সূচিপত্র"} /></span>
               </span>
-              <span className="text-[11px] font-semibold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
-                ৮টি বিভাগ
-              </span>
+              <span className="text-[11px] font-semibold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full"><EditableText document="copy.ui.OrphanageSection" entry="e1pahj23" fallback={"৮টি বিভাগ"} /></span>
             </h2>
 
             <nav className="space-y-1">
@@ -134,11 +136,9 @@ export default function OrphanageSection() {
           <div className="bg-gradient-to-br from-[#FAF7F0] to-[#F2EDE0] rounded-2xl border border-[#D9822B]/40 p-5 shadow-xs space-y-3">
             <div className="flex items-center gap-2 text-[#8B111A]">
               <Coins size={18} />
-              <h3 className="text-sm font-bold">সরাসরি অনুদান ও তথ্য</h3>
+              <h3 className="text-sm font-bold"><EditableText document="copy.ui.OrphanageSection" entry="ei0wqge" fallback={"সরাসরি অনুদান ও তথ্য"} /></h3>
             </div>
-            <p className="text-xs text-gray-700 leading-relaxed">
-              এতিম ও অসচ্ছল শিক্ষার্থীদের খাবার, বস্ত্র, চিকিৎসা ও আবাসন সম্প্রসারণে আপনার সাদাকাহ পৌঁছে দিন।
-            </p>
+            <p className="text-xs text-gray-700 leading-relaxed"><EditableText document="copy.ui.OrphanageSection" entry="enf2o2m" fallback={"এতিম ও অসচ্ছল শিক্ষার্থীদের খাবার, বস্ত্র, চিকিৎসা ও আবাসন সম্প্রসারণে আপনার সাদাকাহ পৌঁছে দিন।"} /></p>
             <div className="space-y-2 pt-1">
               <button
                 type="button"
@@ -147,18 +147,18 @@ export default function OrphanageSection() {
               >
                 <span className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-pink-500" />
-                  <span>বিকাশ: {paymentMethods.bkash.number}</span>
+                  <span><EditableText document="copy.ui.OrphanageSection" entry="e1g2bnx1" fallback={"বিকাশ: "} />{paymentMethods.bkash.number}</span>
                 </span>
                 <span className="text-[11px] text-[#016332] flex items-center gap-1 font-semibold">
                   {copiedKey === "quick-bkash" ? (
                     <>
                       <Check size={12} className="text-emerald-600" />
-                      <span>কপি হয়েছে</span>
+                      <span><EditableText document="copy.ui.OrphanageSection" entry="ejfww03" fallback={"কপি হয়েছে"} /></span>
                     </>
                   ) : (
                     <>
                       <Copy size={12} />
-                      <span>কপি</span>
+                      <span><EditableText document="copy.ui.OrphanageSection" entry="e1x20bug" fallback={"কপি"} /></span>
                     </>
                   )}
                 </span>
@@ -169,7 +169,7 @@ export default function OrphanageSection() {
                 className="w-full inline-flex items-center justify-center gap-2 px-3 py-2.5 bg-[#016332] hover:bg-[#014724] text-white rounded-lg text-xs font-bold transition-colors shadow-xs"
               >
                 <Phone size={14} />
-                <span>মাদরাসা কর্তৃপক্ষকে কল করুন</span>
+                <span><EditableText document="copy.ui.OrphanageSection" entry="e198uvm4" fallback={"মাদরাসা কর্তৃপক্ষকে কল করুন"} /></span>
               </a>
             </div>
           </div>
@@ -189,9 +189,7 @@ export default function OrphanageSection() {
                 <HeartHandshake size={20} className="text-[#ffd86b]" />
                 <h2 className="text-base sm:text-lg font-bold">{intro.title}</h2>
               </div>
-              <span className="text-xs bg-white/15 px-2.5 py-0.5 rounded-full border border-white/20">
-                শাখা পরিচিতি
-              </span>
+              <span className="text-xs bg-white/15 px-2.5 py-0.5 rounded-full border border-white/20"><EditableText document="copy.ui.OrphanageSection" entry="ezzg896" fallback={"শাখা পরিচিতি"} /></span>
             </div>
 
             <div className="p-5 sm:p-7 space-y-4">
@@ -217,7 +215,7 @@ export default function OrphanageSection() {
               {/* Orphanage Image */}
               <div className="pt-2">
                 <div className="relative h-56 sm:h-64 w-full rounded-xl overflow-hidden border border-gray-200 shadow-xs group">
-                  <Image
+                  <Image document="copy.ui.OrphanageSection" entry="e187pmzj"
                     src="/hifz_bibhag.jpeg"
                     alt="জামিয়া নেছারিয়া ইসলামিয়া এতিমখানা বিভাগ"
                     fill
@@ -227,7 +225,7 @@ export default function OrphanageSection() {
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 text-white">
                     <p className="text-xs font-semibold text-amber-200 flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-amber-400" />
-                      <span>জামিয়া নেছারিয়া ইসলামিয়া এতিমখানা ও হিফজুল কুরআন বিভাগের শিক্ষার্থী ও দারস</span>
+                      <span><EditableText document="copy.ui.OrphanageSection" entry="ehufmgk" fallback={"জামিয়া নেছারিয়া ইসলামিয়া এতিমখানা ও হিফজুল কুরআন বিভাগের শিক্ষার্থী ও দারস"} /></span>
                     </p>
                   </div>
                 </div>
@@ -264,9 +262,7 @@ export default function OrphanageSection() {
             <div className="p-5 sm:p-7 space-y-6">
               {/* Motto Banner */}
               <div className="bg-gradient-to-r from-[#FAF7F0] via-white to-[#FAF7F0] border-l-4 border-l-[#8B111A] rounded-r-xl p-4 border-y border-r border-gray-200 shadow-2xs">
-                <p className="text-base sm:text-lg font-extrabold text-[#8B111A] tracking-tight">
-                  “{hostelConstruction.motto}”
-                </p>
+                <p className="text-base sm:text-lg font-extrabold text-[#8B111A] tracking-tight"><EditableText document="copy.ui.OrphanageSection" entry="eb0sgmj" fallback={"“"} />{hostelConstruction.motto}<EditableText document="copy.ui.OrphanageSection" entry="ehizyim" fallback={"”"} /></p>
                 <p className="text-xs font-semibold text-gray-600 mt-1">
                   {hostelConstruction.salam}
                 </p>
@@ -274,7 +270,7 @@ export default function OrphanageSection() {
 
               {/* Campus Image */}
               <div className="relative h-56 sm:h-64 w-full rounded-xl overflow-hidden border border-gray-200 shadow-xs">
-                <Image
+                <Image document="copy.ui.OrphanageSection" entry="evcwqw9"
                   src="/prodhan_banner.jpeg"
                   alt="জামিয়া নেছারিয়া ইসলামিয়া মাদরাসার নতুন ছাত্রাবাস ও একাডেমিক ভবন"
                   fill
@@ -284,7 +280,7 @@ export default function OrphanageSection() {
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent p-3.5 text-white">
                   <p className="text-xs font-semibold text-amber-200 flex items-center gap-2">
                     <Building2 size={14} className="text-amber-300" />
-                    <span>জামিয়া নেছারিয়া ইসলামিয়া মাদরাসার বর্তমান তিনতলা ছাত্রাবাস ভবন (চতুর্থ তলা সম্প্রসারণের অপেক্ষায়)</span>
+                    <span><EditableText document="copy.ui.OrphanageSection" entry="eojpe69" fallback={"জামিয়া নেছারিয়া ইসলামিয়া মাদরাসার বর্তমান তিনতলা ছাত্রাবাস ভবন (চতুর্থ তলা সম্প্রসারণের অপেক্ষায়)"} /></span>
                   </p>
                 </div>
               </div>
@@ -354,7 +350,7 @@ export default function OrphanageSection() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-xs">
                   <div className="bg-white p-3 rounded-lg border border-gray-200">
-                    <span className="text-gray-500 block font-medium">মোবাইল:</span>
+                    <span className="text-gray-500 block font-medium"><EditableText document="copy.ui.OrphanageSection" entry="e1weprxa" fallback={"মোবাইল:"} /></span>
                     <a
                       href={`tel:${hostelConstruction.contactDetails.phone}`}
                       className="font-bold text-[#8B111A] hover:underline flex items-center gap-1 mt-0.5"
@@ -364,7 +360,7 @@ export default function OrphanageSection() {
                     </a>
                   </div>
                   <div className="bg-white p-3 rounded-lg border border-gray-200">
-                    <span className="text-gray-500 block font-medium">ই-মেইল:</span>
+                    <span className="text-gray-500 block font-medium"><EditableText document="copy.ui.OrphanageSection" entry="e4dmdak" fallback={"ই-মেইল:"} /></span>
                     <a
                       href={`mailto:${hostelConstruction.contactDetails.email}`}
                       className="font-bold text-[#016332] hover:underline flex items-center gap-1 mt-0.5"
@@ -374,7 +370,7 @@ export default function OrphanageSection() {
                     </a>
                   </div>
                   <div className="bg-white p-3 rounded-lg border border-gray-200">
-                    <span className="text-gray-500 block font-medium">ঠিকানা:</span>
+                    <span className="text-gray-500 block font-medium"><EditableText document="copy.ui.OrphanageSection" entry="eakwumu" fallback={"ঠিকানা:"} /></span>
                     <span className="font-semibold text-gray-800 block mt-0.5 leading-snug">
                       {hostelConstruction.contactDetails.address}
                     </span>
@@ -385,7 +381,7 @@ export default function OrphanageSection() {
                 <div className="bg-amber-50 border border-amber-300/80 rounded-lg p-3 text-xs text-amber-900 flex items-start gap-2">
                   <Info size={16} className="text-amber-700 shrink-0 mt-0.5" />
                   <p className="leading-relaxed">
-                    <span className="font-bold">গুরুত্বপূর্ণ নির্দেশনা:</span> {hostelConstruction.donationInstruction}
+                    <span className="font-bold"><EditableText document="copy.ui.OrphanageSection" entry="e1thzm9r" fallback={"গুরুত্বপূর্ণ নির্দেশনা:"} /></span> {hostelConstruction.donationInstruction}
                   </p>
                 </div>
               </div>
@@ -399,9 +395,7 @@ export default function OrphanageSection() {
                   {hostelConstruction.callToActionText}
                 </p>
                 <div className="bg-white p-3.5 rounded-lg border border-emerald-200 shadow-2xs">
-                  <p className="text-xs sm:text-sm font-bold text-[#8B111A] text-center leading-relaxed">
-                    “{hostelConstruction.duaText}”
-                  </p>
+                  <p className="text-xs sm:text-sm font-bold text-[#8B111A] text-center leading-relaxed"><EditableText document="copy.ui.OrphanageSection" entry="e17o22z" fallback={"“"} />{hostelConstruction.duaText}<EditableText document="copy.ui.OrphanageSection" entry="e11b9acu" fallback={"”"} /></p>
                 </div>
                 <div className="text-right text-xs text-gray-700 pt-2 border-t border-gray-200/80">
                   <p className="font-semibold">{hostelConstruction.signatory.text}</p>
@@ -424,40 +418,36 @@ export default function OrphanageSection() {
                 <FileCheck2 size={20} className="text-[#ffd86b]" />
                 <h2 className="text-base sm:text-lg font-bold">{registration.title}</h2>
               </div>
-              <span className="text-xs bg-white/15 px-2.5 py-0.5 rounded-full border border-white/20">
-                সরকারি সনদ
-              </span>
+              <span className="text-xs bg-white/15 px-2.5 py-0.5 rounded-full border border-white/20"><EditableText document="copy.ui.OrphanageSection" entry="e87s6fl" fallback={"সরকারি সনদ"} /></span>
             </div>
 
             <div className="p-5 sm:p-7 space-y-4">
-              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                জামিয়া নেছারিয়া ইসলামিয়ার এতিমখানা বিভাগটি গণপ্রজাতন্ত্রী বাংলাদেশ সরকারের সমাজসেবা অধিদপ্তরের অধীনে ১৯৭৬ খ্রিষ্টাব্দ থেকে নিবন্ধিত হয়ে বিশ্বস্ততা ও শৃঙ্খলার সাথে পরিচালিত হয়ে আসছে।
-              </p>
+              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed"><EditableText document="copy.ui.OrphanageSection" entry="e1tz5x15" fallback={"জামিয়া নেছারিয়া ইসলামিয়ার এতিমখানা বিভাগটি গণপ্রজাতন্ত্রী বাংলাদেশ সরকারের সমাজসেবা অধিদপ্তরের অধীনে ১৯৭৬ খ্রিষ্টাব্দ থেকে নিবন্ধিত হয়ে বিশ্বস্ততা ও শৃঙ্খলার সাথে পরিচালিত হয়ে আসছে।"} /></p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div className="p-4 rounded-xl border border-gray-200 bg-[#FAF7F0] space-y-1">
-                  <span className="text-xs text-gray-500 font-semibold block">১. নিবন্ধিত নাম:</span>
+                  <span className="text-xs text-gray-500 font-semibold block"><EditableText document="copy.ui.OrphanageSection" entry="e1s3u6ee" fallback={"১. নিবন্ধিত নাম:"} /></span>
                   <p className="text-sm font-bold text-[#8B111A]">
                     {registration.registeredName}
                   </p>
                 </div>
 
                 <div className="p-4 rounded-xl border border-gray-200 bg-[#FAF7F0] space-y-1">
-                  <span className="text-xs text-gray-500 font-semibold block">২. নিবন্ধনের তারিখ:</span>
+                  <span className="text-xs text-gray-500 font-semibold block"><EditableText document="copy.ui.OrphanageSection" entry="e1crxgz0" fallback={"২. নিবন্ধনের তারিখ:"} /></span>
                   <p className="text-sm font-bold text-gray-900">
                     {registration.registrationDate}
                   </p>
                 </div>
 
                 <div className="p-4 rounded-xl border border-gray-200 bg-[#FAF7F0] space-y-1">
-                  <span className="text-xs text-gray-500 font-semibold block">৩. নিবন্ধনকারী কর্তৃপক্ষ:</span>
+                  <span className="text-xs text-gray-500 font-semibold block"><EditableText document="copy.ui.OrphanageSection" entry="eya8dsb" fallback={"৩. নিবন্ধনকারী কর্তৃপক্ষ:"} /></span>
                   <p className="text-sm font-bold text-[#016332]">
                     {registration.authority}
                   </p>
                 </div>
 
                 <div className="p-4 rounded-xl border-2 border-emerald-300 bg-emerald-50/60 space-y-1">
-                  <span className="text-xs text-emerald-800 font-semibold block">৪. সরকারি নিবন্ধন নম্বর:</span>
+                  <span className="text-xs text-emerald-800 font-semibold block"><EditableText document="copy.ui.OrphanageSection" entry="e1sggr9m" fallback={"৪. সরকারি নিবন্ধন নম্বর:"} /></span>
                   <div className="flex items-center justify-between">
                     <p className="text-lg font-extrabold text-[#016332] tracking-wide">
                       {registration.regNumber}
@@ -470,12 +460,12 @@ export default function OrphanageSection() {
                       {copiedKey === "reg-no" ? (
                         <>
                           <Check size={12} />
-                          <span>কপি</span>
+                          <span><EditableText document="copy.ui.OrphanageSection" entry="eoarmz6" fallback={"কপি"} /></span>
                         </>
                       ) : (
                         <>
                           <Copy size={12} />
-                          <span>কপি</span>
+                          <span><EditableText document="copy.ui.OrphanageSection" entry="e1uea0gw" fallback={"কপি"} /></span>
                         </>
                       )}
                     </button>
@@ -497,9 +487,7 @@ export default function OrphanageSection() {
                 <HeartHandshake size={20} className="text-[#ffd86b]" />
                 <h2 className="text-base sm:text-lg font-bold">{appeal.title}</h2>
               </div>
-              <span className="text-xs bg-white/15 px-2.5 py-0.5 rounded-full border border-white/20">
-                মহতী আবেদন
-              </span>
+              <span className="text-xs bg-white/15 px-2.5 py-0.5 rounded-full border border-white/20"><EditableText document="copy.ui.OrphanageSection" entry="ephzl13" fallback={"মহতী আবেদন"} /></span>
             </div>
 
             <div className="p-5 sm:p-7 space-y-5">
@@ -536,9 +524,7 @@ export default function OrphanageSection() {
               </div>
 
               <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 rounded-xl p-4 border border-emerald-200 text-center">
-                <p className="text-xs sm:text-sm font-bold text-[#016332] leading-relaxed">
-                  “{appeal.inspiringNote}”
-                </p>
+                <p className="text-xs sm:text-sm font-bold text-[#016332] leading-relaxed"><EditableText document="copy.ui.OrphanageSection" entry="e1unbjpk" fallback={"“"} />{appeal.inspiringNote}<EditableText document="copy.ui.OrphanageSection" entry="eschrzi" fallback={"”"} /></p>
               </div>
             </div>
           </section>
@@ -555,15 +541,11 @@ export default function OrphanageSection() {
                 <Coins size={20} className="text-[#ffd86b]" />
                 <h2 className="text-base sm:text-lg font-bold">{funds.title}</h2>
               </div>
-              <span className="text-xs bg-white/15 px-2.5 py-0.5 rounded-full border border-white/20">
-                শরিয়তসম্মত হিসাব
-              </span>
+              <span className="text-xs bg-white/15 px-2.5 py-0.5 rounded-full border border-white/20"><EditableText document="copy.ui.OrphanageSection" entry="e8d4qcj" fallback={"শরিয়তসম্মত হিসাব"} /></span>
             </div>
 
             <div className="p-5 sm:p-7 space-y-4">
-              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                জামিয়ায় শরিয়তের বিধান অনুসারে প্রতিটি অনুদানকে আলাদা আলাদা ফান্ডের মাধ্যমে যথাযথ খাতে স্বচ্ছতার সাথে ব্যয় করা হয়:
-              </p>
+              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed"><EditableText document="copy.ui.OrphanageSection" entry="eiawpm6" fallback={"জামিয়ায় শরিয়তের বিধান অনুসারে প্রতিটি অনুদানকে আলাদা আলাদা ফান্ডের মাধ্যমে যথাযথ খাতে স্বচ্ছতার সাথে ব্যয় করা হয়:"} /></p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {funds.items.map((item) => (
@@ -603,14 +585,10 @@ export default function OrphanageSection() {
                   <h2 className="text-base sm:text-lg font-bold">
                     {paymentMethods.title}
                   </h2>
-                  <span className="text-xs text-amber-200 font-medium">
-                    বিকাশ মোবাইল ব্যাংকিং ও সোনালী/কৃষি ব্যাংক হিসাব
-                  </span>
+                  <span className="text-xs text-amber-200 font-medium"><EditableText document="copy.ui.OrphanageSection" entry="e19ukt9" fallback={"বিকাশ মোবাইল ব্যাংকিং ও সোনালী/কৃষি ব্যাংক হিসাব"} /></span>
                 </div>
               </div>
-              <span className="text-xs bg-white/15 px-3 py-1 rounded-full border border-white/20 font-semibold">
-                স্বীকৃত প্রাতিষ্ঠানিক মাধ্যম
-              </span>
+              <span className="text-xs bg-white/15 px-3 py-1 rounded-full border border-white/20 font-semibold"><EditableText document="copy.ui.OrphanageSection" entry="e7l6jqx" fallback={"স্বীকৃত প্রাতিষ্ঠানিক মাধ্যম"} /></span>
             </div>
 
             <div className="p-5 sm:p-7 space-y-6">
@@ -618,16 +596,12 @@ export default function OrphanageSection() {
               <div className="bg-gradient-to-r from-pink-50 via-rose-50/50 to-pink-50 rounded-2xl border border-pink-200 p-5 shadow-2xs space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="w-8 h-8 rounded-full bg-pink-600 text-white font-black text-xs flex items-center justify-center shadow-xs">
-                      bK
-                    </span>
+                    <span className="w-8 h-8 rounded-full bg-pink-600 text-white font-black text-xs flex items-center justify-center shadow-xs"><EditableText document="copy.ui.OrphanageSection" entry="e14g9yqe" fallback={"bK"} /></span>
                     <div>
                       <h3 className="text-sm sm:text-base font-bold text-gray-900">
                         {paymentMethods.bkash.title}
                       </h3>
-                      <span className="text-[11px] text-pink-700 font-semibold">
-                        পার্সোনাল / প্রাতিষ্ঠানিক মোবাইল নম্বর
-                      </span>
+                      <span className="text-[11px] text-pink-700 font-semibold"><EditableText document="copy.ui.OrphanageSection" entry="ez5zrnh" fallback={"পার্সোনাল / প্রাতিষ্ঠানিক মোবাইল নম্বর"} /></span>
                     </div>
                   </div>
                   <button
@@ -638,12 +612,12 @@ export default function OrphanageSection() {
                     {copiedKey === "bkash-main" ? (
                       <>
                         <Check size={13} />
-                        <span>কপি হয়েছে</span>
+                        <span><EditableText document="copy.ui.OrphanageSection" entry="exydlmb" fallback={"কপি হয়েছে"} /></span>
                       </>
                     ) : (
                       <>
                         <Copy size={13} />
-                        <span>নম্বর কপি করুন</span>
+                        <span><EditableText document="copy.ui.OrphanageSection" entry="e1ofw6mw" fallback={"নম্বর কপি করুন"} /></span>
                       </>
                     )}
                   </button>
@@ -651,7 +625,7 @@ export default function OrphanageSection() {
 
                 <div className="bg-white p-3.5 rounded-xl border border-pink-200 flex items-center justify-between">
                   <div>
-                    <span className="text-xs text-gray-500 font-medium">বিকাশ মোবাইল নম্বর:</span>
+                    <span className="text-xs text-gray-500 font-medium"><EditableText document="copy.ui.OrphanageSection" entry="e182m8iz" fallback={"বিকাশ মোবাইল নম্বর:"} /></span>
                     <p className="text-lg sm:text-xl font-extrabold text-pink-700 tracking-wider">
                       {paymentMethods.bkash.number}
                     </p>
@@ -661,7 +635,7 @@ export default function OrphanageSection() {
                     className="text-xs text-gray-700 hover:text-pink-600 font-semibold flex items-center gap-1 bg-pink-50 px-2.5 py-1.5 rounded-md border border-pink-200"
                   >
                     <Phone size={12} />
-                    <span>কল করুন</span>
+                    <span><EditableText document="copy.ui.OrphanageSection" entry="e14mx2wh" fallback={"কল করুন"} /></span>
                   </a>
                 </div>
               </div>
@@ -677,29 +651,27 @@ export default function OrphanageSection() {
                         {paymentMethods.gorabaAccount.title}
                       </h3>
                     </div>
-                    <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">
-                      যাকাত ও এতিম কল্যাণ
-                    </span>
+                    <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full"><EditableText document="copy.ui.OrphanageSection" entry="e64rusa" fallback={"যাকাত ও এতিম কল্যাণ"} /></span>
                   </div>
 
                   <div className="space-y-1.5 text-xs text-gray-700">
                     <p>
-                      <span className="font-bold text-gray-900">ব্যাংকের নাম:</span>{" "}
+                      <span className="font-bold text-gray-900"><EditableText document="copy.ui.OrphanageSection" entry="e1d4gwi6" fallback={"ব্যাংকের নাম:"} /></span>{" "}
                       {paymentMethods.gorabaAccount.bankName}
                     </p>
                     <p>
-                      <span className="font-bold text-gray-900">শাখা:</span>{" "}
+                      <span className="font-bold text-gray-900"><EditableText document="copy.ui.OrphanageSection" entry="e1p9qu07" fallback={"শাখা:"} /></span>{" "}
                       {paymentMethods.gorabaAccount.branch}
                     </p>
                     <p>
-                      <span className="font-bold text-gray-900">হিসাবের ধরন:</span>{" "}
+                      <span className="font-bold text-gray-900"><EditableText document="copy.ui.OrphanageSection" entry="e1win5l" fallback={"হিসাবের ধরন:"} /></span>{" "}
                       {paymentMethods.gorabaAccount.accountType}
                     </p>
                   </div>
 
                   <div className="bg-white p-3 rounded-xl border border-emerald-200 flex items-center justify-between">
                     <div>
-                      <span className="text-[11px] text-gray-500 font-medium">হিসাব নম্বর (A/C No):</span>
+                      <span className="text-[11px] text-gray-500 font-medium"><EditableText document="copy.ui.OrphanageSection" entry="e1lou8sq" fallback={"হিসাব নম্বর (A/C No):"} /></span>
                       <p className="text-base sm:text-lg font-extrabold text-[#016332] tracking-wider">
                         {paymentMethods.gorabaAccount.accountNumber}
                       </p>
@@ -712,12 +684,12 @@ export default function OrphanageSection() {
                       {copiedKey === "goraba-ac" ? (
                         <>
                           <Check size={12} />
-                          <span>কপি</span>
+                          <span><EditableText document="copy.ui.OrphanageSection" entry="e11fmjte" fallback={"কপি"} /></span>
                         </>
                       ) : (
                         <>
                           <Copy size={12} />
-                          <span>কপি</span>
+                          <span><EditableText document="copy.ui.OrphanageSection" entry="e8pqhpn" fallback={"কপি"} /></span>
                         </>
                       )}
                     </button>
@@ -737,29 +709,27 @@ export default function OrphanageSection() {
                         {paymentMethods.generalAccount.title}
                       </h3>
                     </div>
-                    <span className="text-[11px] font-semibold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">
-                      সাধারণ ও পরিচালন
-                    </span>
+                    <span className="text-[11px] font-semibold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full"><EditableText document="copy.ui.OrphanageSection" entry="eelj0uu" fallback={"সাধারণ ও পরিচালন"} /></span>
                   </div>
 
                   <div className="space-y-1.5 text-xs text-gray-700">
                     <p>
-                      <span className="font-bold text-gray-900">ব্যাংকের নাম:</span>{" "}
+                      <span className="font-bold text-gray-900"><EditableText document="copy.ui.OrphanageSection" entry="eqqunk1" fallback={"ব্যাংকের নাম:"} /></span>{" "}
                       {paymentMethods.generalAccount.bankName}
                     </p>
                     <p>
-                      <span className="font-bold text-gray-900">শাখা:</span>{" "}
+                      <span className="font-bold text-gray-900"><EditableText document="copy.ui.OrphanageSection" entry="ezarq52" fallback={"শাখা:"} /></span>{" "}
                       {paymentMethods.generalAccount.branch}
                     </p>
                     <p>
-                      <span className="font-bold text-gray-900">হিসাবের ধরন:</span>{" "}
+                      <span className="font-bold text-gray-900"><EditableText document="copy.ui.OrphanageSection" entry="e1fvbvc7" fallback={"হিসাবের ধরন:"} /></span>{" "}
                       {paymentMethods.generalAccount.accountType}
                     </p>
                   </div>
 
                   <div className="bg-white p-3 rounded-xl border border-amber-200 flex items-center justify-between">
                     <div>
-                      <span className="text-[11px] text-gray-500 font-medium">হিসাব নম্বর (A/C No):</span>
+                      <span className="text-[11px] text-gray-500 font-medium"><EditableText document="copy.ui.OrphanageSection" entry="epfmu56" fallback={"হিসাব নম্বর (A/C No):"} /></span>
                       <p className="text-base sm:text-lg font-extrabold text-[#8B111A] tracking-wider">
                         {paymentMethods.generalAccount.accountNumber}
                       </p>
@@ -772,12 +742,12 @@ export default function OrphanageSection() {
                       {copiedKey === "general-ac" ? (
                         <>
                           <Check size={12} />
-                          <span>কপি</span>
+                          <span><EditableText document="copy.ui.OrphanageSection" entry="e18q0dbe" fallback={"কপি"} /></span>
                         </>
                       ) : (
                         <>
                           <Copy size={12} />
-                          <span>কপি</span>
+                          <span><EditableText document="copy.ui.OrphanageSection" entry="ewct4py" fallback={"কপি"} /></span>
                         </>
                       )}
                     </button>
@@ -793,7 +763,7 @@ export default function OrphanageSection() {
               <div className="bg-amber-50 border-l-4 border-l-amber-500 rounded-r-xl p-4 text-xs sm:text-sm text-amber-950 flex items-start gap-2.5">
                 <Info size={18} className="text-amber-700 shrink-0 mt-0.5" />
                 <p className="leading-relaxed">
-                  <span className="font-bold">বিশেষ দ্রষ্টব্য:</span> {paymentMethods.importantNotice}
+                  <span className="font-bold"><EditableText document="copy.ui.OrphanageSection" entry="e17lzapu" fallback={"বিশেষ দ্রষ্টব্য:"} /></span> {paymentMethods.importantNotice}
                 </p>
               </div>
             </div>
@@ -811,19 +781,15 @@ export default function OrphanageSection() {
                 <Phone size={20} className="text-[#ffd86b]" />
                 <h2 className="text-base sm:text-lg font-bold">{contact.title}</h2>
               </div>
-              <span className="text-xs bg-white/15 px-2.5 py-0.5 rounded-full border border-white/20">
-                যোগাযোগ ডেস্ক
-              </span>
+              <span className="text-xs bg-white/15 px-2.5 py-0.5 rounded-full border border-white/20"><EditableText document="copy.ui.OrphanageSection" entry="e1x7fpc0" fallback={"যোগাযোগ ডেস্ক"} /></span>
             </div>
 
             <div className="p-5 sm:p-7 space-y-4">
-              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                অনুদান পাঠানোর পূর্বে হিসাব নিশ্চিতকরণ বা অনুদান পাঠানোর পর মানি রিসিপ্ট সংগ্রহের জন্য নিচের নম্বরে যোগাযোগ করুন:
-              </p>
+              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed"><EditableText document="copy.ui.OrphanageSection" entry="e1elycjv" fallback={"অনুদান পাঠানোর পূর্বে হিসাব নিশ্চিতকরণ বা অনুদান পাঠানোর পর মানি রিসিপ্ট সংগ্রহের জন্য নিচের নম্বরে যোগাযোগ করুন:"} /></p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                 <div className="p-4 rounded-xl border border-gray-200 bg-[#FAF7F0] space-y-1">
-                  <span className="text-xs text-gray-500 font-semibold block">১. মোবাইল নম্বর:</span>
+                  <span className="text-xs text-gray-500 font-semibold block"><EditableText document="copy.ui.OrphanageSection" entry="e1rr4naj" fallback={"১. মোবাইল নম্বর:"} /></span>
                   <a
                     href={`tel:${contact.mobile}`}
                     className="text-sm font-bold text-[#8B111A] hover:underline flex items-center gap-1.5"
@@ -834,7 +800,7 @@ export default function OrphanageSection() {
                 </div>
 
                 <div className="p-4 rounded-xl border border-gray-200 bg-[#FAF7F0] space-y-1">
-                  <span className="text-xs text-gray-500 font-semibold block">২. অফিসিয়াল ই-মেইল:</span>
+                  <span className="text-xs text-gray-500 font-semibold block"><EditableText document="copy.ui.OrphanageSection" entry="e1d4ufkj" fallback={"২. অফিসিয়াল ই-মেইল:"} /></span>
                   <a
                     href={`mailto:${contact.email}`}
                     className="text-sm font-bold text-[#016332] hover:underline flex items-center gap-1.5"
@@ -845,7 +811,7 @@ export default function OrphanageSection() {
                 </div>
 
                 <div className="p-4 rounded-xl border border-gray-200 bg-[#FAF7F0] space-y-1">
-                  <span className="text-xs text-gray-500 font-semibold block">৩. ঠিকানা:</span>
+                  <span className="text-xs text-gray-500 font-semibold block"><EditableText document="copy.ui.OrphanageSection" entry="edhbotn" fallback={"৩. ঠিকানা:"} /></span>
                   <p className="text-xs font-bold text-gray-800 flex items-start gap-1 leading-snug">
                     <MapPin size={14} className="text-[#8B111A] shrink-0 mt-0.5" />
                     <span>{contact.address}</span>
@@ -872,16 +838,14 @@ export default function OrphanageSection() {
             </p>
 
             <div className="bg-white/10 rounded-xl p-4 border border-white/20 backdrop-blur-sm">
-              <p className="text-sm sm:text-base font-bold text-amber-200 text-center leading-relaxed">
-                “{callToAction.duaText}”
-              </p>
+              <p className="text-sm sm:text-base font-bold text-amber-200 text-center leading-relaxed"><EditableText document="copy.ui.OrphanageSection" entry="e1i9akjj" fallback={"“"} />{callToAction.duaText}<EditableText document="copy.ui.OrphanageSection" entry="eky9naz" fallback={"”"} /></p>
             </div>
 
             <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-white/20 text-xs sm:text-sm">
               <div className="whitespace-pre-line font-medium text-gray-200">
-                <span className="font-bold text-white block">আবেদনক্রমে:</span>
-                <span>এতিমখানা পরিচালনা কর্তৃপক্ষ</span>
-                <span className="block text-amber-200 font-bold">জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা</span>
+                <span className="font-bold text-white block"><EditableText document="copy.ui.OrphanageSection" entry="e6g2l0n" fallback={"আবেদনক্রমে:"} /></span>
+                <span><EditableText document="copy.ui.OrphanageSection" entry="e12tuxun" fallback={"এতিমখানা পরিচালনা কর্তৃপক্ষ"} /></span>
+                <span className="block text-amber-200 font-bold"><EditableText document="copy.ui.OrphanageSection" entry="e2d96n8" fallback={"জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা"} /></span>
               </div>
 
               <div className="flex flex-wrap gap-2.5">
@@ -890,14 +854,14 @@ export default function OrphanageSection() {
                   className="inline-flex items-center gap-1.5 bg-[#8B111A] hover:bg-[#6e0b13] text-white font-bold px-4 py-2 rounded-lg text-xs transition-colors shadow-xs"
                 >
                   <Phone size={13} />
-                  <span>সরাসরি কল করুন</span>
+                  <span><EditableText document="copy.ui.OrphanageSection" entry="e62z6sj" fallback={"সরাসরি কল করুন"} /></span>
                 </a>
                 <a
                   href={`#${paymentMethods.id}`}
                   className="inline-flex items-center gap-1.5 bg-white text-[#016332] hover:bg-gray-100 font-bold px-4 py-2 rounded-lg text-xs transition-colors shadow-xs"
                 >
                   <Coins size={13} />
-                  <span>ব্যাংক ও বিকাশ দেখুন</span>
+                  <span><EditableText document="copy.ui.OrphanageSection" entry="ea8i5e6" fallback={"ব্যাংক ও বিকাশ দেখুন"} /></span>
                 </a>
               </div>
             </div>

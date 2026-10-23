@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import Image from "next/image";
+import { stegaClean } from "@sanity/client/stega";
+
 import Link from "next/link";
-import { sampleBlogPosts, BlogPostItem } from "@/data/siteData";
+import { sampleBlogPosts as _fallback_sampleBlogPosts, BlogPostItem } from "@/data/siteData";
 import {
   FileText,
   Calendar,
@@ -30,33 +31,40 @@ import {
   ZoomOut,
   Heart,
 } from "lucide-react";
+import { EditableImage as Image, useEditableData, EditableText } from "@/content/client";
+import { fieldSource } from "@/content/model";
+
 
 interface BlogSectionProps {
   initialPosts?: BlogPostItem[];
 }
 
 export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
-  const posts = initialPosts && initialPosts.length > 0 ? initialPosts : sampleBlogPosts;
+  const sampleBlogPosts = useEditableData("copy.data.sampleBlogPosts", _fallback_sampleBlogPosts);
 
-  const [selectedPost, setSelectedPost] = useState<BlogPostItem | null>(null);
-  const [likes, setLikes] = useState<Record<number, number>>({});
-  const [likedPosts, setLikedPosts] = useState<Record<number, boolean>>({});
+  const posts = initialPosts ?? sampleBlogPosts;
+
+  const [selectedPostRecord, setSelectedPost] = useState<BlogPostItem | null>(null);
+  const [likes, setLikes] = useState<Record<string, number>>({});
+  const [likedPosts, setLikedPosts] = useState<Record<string, boolean>>({});
   const [copied, setCopied] = useState<boolean>(false);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [fontSize, setFontSize] = useState<number>(15); // for modal reader text
 
-  // Support direct anchor linking /blog#post-1
+  const selectedPost = posts.find((post) => post.id === selectedPostRecord?.id) || null;
+
+  // Hash changes are browser events; the first check runs after the page is mounted.
   useEffect(() => {
-    if (typeof window !== "undefined" && window.location.hash) {
-      const match = window.location.hash.match(/^#post-(\d+)$/);
-      if (match) {
-        const id = parseInt(match[1], 10);
-        const found = posts.find((p) => p.id === id);
-        if (found) setSelectedPost(found);
-      }
-    }
+    const openHash = () => {
+      const match = window.location.hash.match(/^#post-(.+)$/);
+      const found = match ? posts.find((post) => String(post.id) === decodeURIComponent(match[1])) : undefined;
+      if (found) setSelectedPost(found);
+    };
+    const frame = requestAnimationFrame(openHash);
+    window.addEventListener("hashchange", openHash);
+    return () => { cancelAnimationFrame(frame); window.removeEventListener("hashchange", openHash); };
   }, [posts]);
 
   // Categories list with distinct counts
@@ -69,7 +77,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
   const filteredPosts = useMemo(() => {
     return posts.filter((post) => {
       const matchesCategory =
-        activeCategory === "all" || post.category === activeCategory;
+        activeCategory === "all" || stegaClean(post.category) === activeCategory;
       const q = searchQuery.trim().toLowerCase();
       const matchesSearch =
         !q ||
@@ -97,7 +105,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
     return filteredPosts;
   }, [spotlightPost, filteredPosts]);
 
-  const handleLike = (id: number, e?: React.MouseEvent) => {
+  const handleLike = (id: BlogPostItem["id"], e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     const isAlreadyLiked = likedPosts[id];
     setLikes((prev) => ({
@@ -138,24 +146,16 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
         <div className="relative z-10 max-w-4xl space-y-4">
           {/* Breadcrumb & Badge */}
           <div className="flex flex-wrap items-center gap-2.5 text-xs text-emerald-200">
-            <Link href="/" className="hover:text-amber-300 transition-colors">
-              হোম
-            </Link>
+            <Link href="/" className="hover:text-amber-300 transition-colors"><EditableText document="copy.ui.BlogSection" entry="etpcj70" fallback={"হোম"} /></Link>
             <ChevronRight size={13} className="text-emerald-400" />
-            <span className="text-amber-300 font-semibold">মাদরাসা ব্লগ ও সাময়িকী</span>
-            <span className="bg-[#8B111A] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-amber-300/30 ml-2">
-              জ্ঞান মঞ্জিল
-            </span>
+            <span className="text-amber-300 font-semibold"><EditableText document="copy.ui.BlogSection" entry="e196gy13" fallback={"মাদরাসা ব্লগ ও সাময়িকী"} /></span>
+            <span className="bg-[#8B111A] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-amber-300/30 ml-2"><EditableText document="copy.ui.BlogSection" entry="ebg0lua" fallback={"জ্ঞান মঞ্জিল"} /></span>
           </div>
 
           {/* Headline */}
           <div className="space-y-2">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-snug text-white">
-              জামিয়া বার্তা, গবেষণা ও সমকালীন প্রবন্ধ
-            </h1>
-            <p className="text-xs sm:text-sm md:text-base text-emerald-100 max-w-3xl leading-relaxed">
-              কুরআন-সুন্নাহর আলোকবর্তিকা, সমকালীন ইসলামি দর্শন, তারবিয়াত, অভিভাবকত্ব ও আদর্শ মানবচরিত্র গঠনের দিকনির্দেশনামূলক নিয়মিত লেখা।
-            </p>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-snug text-white"><EditableText document="copy.ui.BlogSection" entry="e1k5g3tn" fallback={"জামিয়া বার্তা, গবেষণা ও সমকালীন প্রবন্ধ"} /></h1>
+            <p className="text-xs sm:text-sm md:text-base text-emerald-100 max-w-3xl leading-relaxed"><EditableText document="copy.ui.BlogSection" entry="es6vfln" fallback={"কুরআন-সুন্নাহর আলোকবর্তিকা, সমকালীন ইসলামি দর্শন, তারবিয়াত, অভিভাবকত্ব ও আদর্শ মানবচরিত্র গঠনের দিকনির্দেশনামূলক নিয়মিত লেখা।"} /></p>
           </div>
 
           {/* Search Bar & Quick Metrics */}
@@ -185,7 +185,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
 
             <div className="flex items-center gap-2 self-start sm:self-auto text-xs text-emerald-100 bg-white/10 px-3.5 py-2.5 rounded-xl border border-white/10 shrink-0">
               <BookOpen size={14} className="text-amber-300" />
-              <span>মোট লেখা: <strong className="text-white">{filteredPosts.length}</strong> টি</span>
+              <span><EditableText document="copy.ui.BlogSection" entry="enpf8bb" fallback={"মোট লেখা: "} /><strong className="text-white">{filteredPosts.length}</strong><EditableText document="copy.ui.BlogSection" entry="em0tc1w" fallback={" টি"} /></span>
             </div>
           </div>
         </div>
@@ -201,7 +201,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
             const count =
               cat === "all"
                 ? posts.length
-                : posts.filter((p) => p.category === cat).length;
+                : posts.filter((p) => stegaClean(p.category) === cat).length;
             const isActive = activeCategory === cat;
             return (
               <button
@@ -229,7 +229,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
 
         {/* View Toggle */}
         <div className="flex items-center gap-1.5 self-end md:self-auto border-t md:border-t-0 pt-2 md:pt-0 border-gray-100">
-          <span className="text-xs text-gray-400 mr-1 hidden sm:inline">লেআউট:</span>
+          <span className="text-xs text-gray-400 mr-1 hidden sm:inline"><EditableText document="copy.ui.BlogSection" entry="ew6j80" fallback={"লেআউট:"} /></span>
           <button
             type="button"
             onClick={() => setViewMode("grid")}
@@ -267,7 +267,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
         >
           {/* Spotlight Cover Photo */}
           <div className="relative aspect-16/10 lg:aspect-auto lg:h-full lg:col-span-7 overflow-hidden bg-gray-100 min-h-[260px] sm:min-h-[340px]">
-            <Image
+            <Image document="copy.ui.BlogSection" entry="e1e739o3" source={fieldSource(spotlightPost, "thumbnail")}
               src={spotlightPost.thumbnail}
               alt={spotlightPost.title}
               fill
@@ -281,7 +281,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
             <div className="absolute top-3.5 left-3.5 flex flex-wrap items-center gap-2">
               <span className="bg-gradient-to-r from-amber-500 to-amber-600 text-gray-950 font-bold text-xs px-3 py-1 rounded-full shadow-md flex items-center gap-1.5 border border-amber-300">
                 <Sparkles size={13} className="fill-amber-950" />
-                <span>সম্পাদকীয় বিশেষ লেখা</span>
+                <span><EditableText document="copy.ui.BlogSection" entry="e8s2djh" fallback={"সম্পাদকীয় বিশেষ লেখা"} /></span>
               </span>
               <span className="bg-[#8B111A] text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-xs">
                 {spotlightPost.category}
@@ -307,7 +307,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
                   <User size={14} />
                   <span>{spotlightPost.author}</span>
                 </span>
-                <span>•</span>
+                <span><EditableText document="copy.ui.BlogSection" entry="e1n8obvo" fallback={"•"} /></span>
                 <span className="flex items-center gap-1">
                   <Calendar size={13} />
                   <span>{spotlightPost.date}</span>
@@ -331,7 +331,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
                 type="button"
                 className="bg-[#016332] hover:bg-[#8B111A] text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl transition-all inline-flex items-center gap-2 shadow-xs group-hover:shadow-md cursor-pointer"
               >
-                <span>সম্পূর্ণ প্রবন্ধ পড়ুন</span>
+                <span><EditableText document="copy.ui.BlogSection" entry="el13m62" fallback={"সম্পূর্ণ প্রবন্ধ পড়ুন"} /></span>
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </button>
 
@@ -378,10 +378,8 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
           {filteredPosts.length === 0 ? (
             <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center space-y-3">
               <FileText size={44} className="text-gray-300 mx-auto" />
-              <h3 className="text-lg font-bold text-gray-800">কোনো ব্লগ পাওয়া যায়নি</h3>
-              <p className="text-xs sm:text-sm text-gray-500 max-w-md mx-auto">
-                আপনার অনুসন্ধানকৃত শব্দ বা ক্যাটাগরিতে কোনো নিবন্ধ পাওয়া যায়নি। অন্য কীওয়ার্ড দিয়ে চেষ্টা করুন।
-              </p>
+              <h3 className="text-lg font-bold text-gray-800"><EditableText document="copy.ui.BlogSection" entry="eujawxt" fallback={"কোনো ব্লগ পাওয়া যায়নি"} /></h3>
+              <p className="text-xs sm:text-sm text-gray-500 max-w-md mx-auto"><EditableText document="copy.ui.BlogSection" entry="e13b9roh" fallback={"আপনার অনুসন্ধানকৃত শব্দ বা ক্যাটাগরিতে কোনো নিবন্ধ পাওয়া যায়নি। অন্য কীওয়ার্ড দিয়ে চেষ্টা করুন।"} /></p>
               <button
                 type="button"
                 onClick={() => {
@@ -389,9 +387,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
                   setActiveCategory("all");
                 }}
                 className="bg-[#016332] text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-[#8B111A] transition-colors"
-              >
-                সকল ব্লগ দেখুন
-              </button>
+              ><EditableText document="copy.ui.BlogSection" entry="e1ycq5a2" fallback={"সকল ব্লগ দেখুন"} /></button>
             </div>
           ) : viewMode === "grid" ? (
             /* ================= GRID VIEW ================= */
@@ -410,7 +406,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
                     <div>
                       {/* Thumbnail Container */}
                       <div className="relative aspect-16/10 w-full bg-gray-100 overflow-hidden">
-                        <Image
+                        <Image document="copy.ui.BlogSection" entry="e3a7api" source={fieldSource(post, "thumbnail")}
                           src={post.thumbnail}
                           alt={post.title}
                           fill
@@ -442,7 +438,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
                             <User size={13} />
                             <span>{post.author}</span>
                           </span>
-                          <span>•</span>
+                          <span><EditableText document="copy.ui.BlogSection" entry="e1fp3hma" fallback={"•"} /></span>
                           <span className="flex items-center gap-1">
                             <Calendar size={12} />
                             <span>{post.date}</span>
@@ -464,7 +460,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
                     {/* Card Footer */}
                     <div className="px-4 sm:px-5 pb-4 pt-3 border-t border-gray-100 flex items-center justify-between">
                       <span className="inline-flex items-center gap-1 text-xs font-bold text-[#8B111A] group-hover:text-[#016332] transition-colors">
-                        <span>বিস্তারিত পড়ুন</span>
+                        <span><EditableText document="copy.ui.BlogSection" entry="exmkft8" fallback={"বিস্তারিত পড়ুন"} /></span>
                         <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
                       </span>
 
@@ -511,7 +507,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
                   >
                     {/* Small List Thumbnail */}
                     <div className="relative aspect-16/10 sm:w-52 sm:h-36 shrink-0 rounded-lg overflow-hidden bg-gray-100">
-                      <Image
+                      <Image document="copy.ui.BlogSection" entry="ebotvi" source={fieldSource(post, "thumbnail")}
                         src={post.thumbnail}
                         alt={post.title}
                         fill
@@ -530,11 +526,11 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
                       <div className="space-y-1.5">
                         <div className="flex items-center gap-2.5 text-xs text-gray-500">
                           <span className="font-medium text-emerald-800">{post.author}</span>
-                          <span>•</span>
+                          <span><EditableText document="copy.ui.BlogSection" entry="e12peqzx" fallback={"•"} /></span>
                           <span>{post.date}</span>
                           {post.readTime && (
                             <>
-                              <span>•</span>
+                              <span><EditableText document="copy.ui.BlogSection" entry="e1cmv0g5" fallback={"•"} /></span>
                               <span className="text-gray-400">{post.readTime}</span>
                             </>
                           )}
@@ -551,7 +547,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
 
                       <div className="pt-2 flex items-center justify-between">
                         <span className="inline-flex items-center gap-1 text-xs font-bold text-[#8B111A] group-hover:text-[#016332]">
-                          <span>সম্পূর্ণ প্রবন্ধ পড়ুন</span>
+                          <span><EditableText document="copy.ui.BlogSection" entry="edkkr7n" fallback={"সম্পূর্ণ প্রবন্ধ পড়ুন"} /></span>
                           <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
                         </span>
 
@@ -587,24 +583,18 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
             <div className="relative z-10 space-y-3">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
-                <span className="text-xs font-bold text-amber-300 uppercase tracking-wider">
-                  মুহতামিমের বিশেষ বার্তা
-                </span>
+                <span className="text-xs font-bold text-amber-300 uppercase tracking-wider"><EditableText document="copy.ui.BlogSection" entry="e1um5vt3" fallback={"মুহতামিমের বিশেষ বার্তা"} /></span>
               </div>
-              <p className="text-xs sm:text-sm text-emerald-100 italic leading-relaxed">
-                “ইলম অর্জন কেবল সনদ পাওয়ার জন্য নয়; বরং অন্তরে তাকওয়া, চরিত্র গঠন ও মানুষের কল্যাণে নিজেকে বিলিয়ে দেওয়ার জন্যই প্রকৃত ইলম। আমাদের শিক্ষার্থীদের প্রতিটি পদক্ষেপে এই শিক্ষার চর্চা নিশ্চিত করা হয়।”
-              </p>
+              <p className="text-xs sm:text-sm text-emerald-100 italic leading-relaxed"><EditableText document="copy.ui.BlogSection" entry="e7gxa8n" fallback={"“ইলম অর্জন কেবল সনদ পাওয়ার জন্য নয়; বরং অন্তরে তাকওয়া, চরিত্র গঠন ও মানুষের কল্যাণে নিজেকে বিলিয়ে দেওয়ার জন্যই প্রকৃত ইলম। আমাদের শিক্ষার্থীদের প্রতিটি পদক্ষেপে এই শিক্ষার চর্চা নিশ্চিত করা হয়।”"} /></p>
               <div className="pt-2 border-t border-emerald-700/60 flex items-center justify-between">
                 <div>
-                  <div className="text-xs font-bold text-white">মাওলানা মুফতি উবায়দুল্লাহ</div>
-                  <div className="text-[11px] text-emerald-200">মুহতামিম ও শায়খুল হাদিস</div>
+                  <div className="text-xs font-bold text-white"><EditableText document="copy.ui.BlogSection" entry="edd71by" fallback={"মাওলানা মুফতি উবায়দুল্লাহ"} /></div>
+                  <div className="text-[11px] text-emerald-200"><EditableText document="copy.ui.BlogSection" entry="e1j1i2ik" fallback={"মুহতামিম ও শায়খুল হাদিস"} /></div>
                 </div>
                 <Link
                   href="/about"
                   className="text-[11px] text-amber-300 hover:underline"
-                >
-                  পরিচিতি →
-                </Link>
+                ><EditableText document="copy.ui.BlogSection" entry="e1xg68go" fallback={"পরিচিতি →"} /></Link>
               </div>
             </div>
           </div>
@@ -613,13 +603,13 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
           <div className="bg-white rounded-2xl border border-gray-200/90 p-5 shadow-xs space-y-3">
             <h4 className="font-bold text-sm text-gray-900 flex items-center gap-2 border-b border-gray-100 pb-2.5">
               <Tag size={15} className="text-[#016332]" />
-              <span>বিষয়ভিত্তিক ব্লগসমূহ</span>
+              <span><EditableText document="copy.ui.BlogSection" entry="ehou03t" fallback={"বিষয়ভিত্তিক ব্লগসমূহ"} /></span>
             </h4>
             <div className="space-y-1.5">
               {categories
                 .filter((c) => c !== "all")
                 .map((cat) => {
-                  const count = posts.filter((p) => p.category === cat).length;
+                  const count = posts.filter((p) => stegaClean(p.category) === cat).length;
                   const isCurrent = activeCategory === cat;
                   return (
                     <button
@@ -637,8 +627,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
                         <span>{cat}</span>
                       </span>
                       <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-[10px]">
-                        {count} টি
-                      </span>
+                        {count}<EditableText document="copy.ui.BlogSection" entry="e8bxeym" fallback={" টি"} /></span>
                     </button>
                   );
                 })}
@@ -649,16 +638,14 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
           <div className="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-5 shadow-xs space-y-3">
             <div className="flex items-center gap-2 text-amber-900 font-bold text-sm">
               <Send size={16} className="text-[#8B111A]" />
-              <span>লেখা পাঠাতে চান?</span>
+              <span><EditableText document="copy.ui.BlogSection" entry="e1e1r92" fallback={"লেখা পাঠাতে চান?"} /></span>
             </div>
-            <p className="text-xs text-amber-950/80 leading-relaxed">
-              মাদরাসার শিক্ষক, শিক্ষার্থী বা শুভাকাঙ্ক্ষী হিসেবে আপনার মৌলিক গবেষণামূলক দ্বীনি প্রবন্ধ বা শিক্ষণীয় ভাবনা আমাদের সম্পাদকীয় সেলে পাঠাতে পারেন।
-            </p>
+            <p className="text-xs text-amber-950/80 leading-relaxed"><EditableText document="copy.ui.BlogSection" entry="e1cdwqpq" fallback={"মাদরাসার শিক্ষক, শিক্ষার্থী বা শুভাকাঙ্ক্ষী হিসেবে আপনার মৌলিক গবেষণামূলক দ্বীনি প্রবন্ধ বা শিক্ষণীয় ভাবনা আমাদের সম্পাদকীয় সেলে পাঠাতে পারেন।"} /></p>
             <Link
               href="/contact"
               className="inline-flex items-center justify-center gap-1.5 w-full bg-[#8B111A] hover:bg-[#a81b26] text-white text-xs font-bold py-2.5 rounded-xl shadow-xs transition-colors text-center"
             >
-              <span>লেখা প্রেরণের নিয়মাবলী</span>
+              <span><EditableText document="copy.ui.BlogSection" entry="eiqhbf5" fallback={"লেখা প্রেরণের নিয়মাবলী"} /></span>
               <ArrowRight size={13} />
             </Link>
           </div>
@@ -667,25 +654,21 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
           <div className="bg-white rounded-2xl border border-gray-200/90 p-5 shadow-xs space-y-3">
             <h4 className="font-bold text-sm text-gray-900 flex items-center gap-2">
               <Phone size={15} className="text-[#016332]" />
-              <span>জরুরি তথ্য ও যোগাযোগ</span>
+              <span><EditableText document="copy.ui.BlogSection" entry="ev9h1ua" fallback={"জরুরি তথ্য ও যোগাযোগ"} /></span>
             </h4>
-            <p className="text-xs text-gray-600 leading-relaxed">
-              দ্বীনি শিক্ষা, ভর্তি ও এতিমখানা তহবিলে অনুদান সংক্রান্ত যে কোনো তথ্যের জন্য আমাদের হেল্পডেস্কে যোগাযোগ করতে পারেন।
-            </p>
+            <p className="text-xs text-gray-600 leading-relaxed"><EditableText document="copy.ui.BlogSection" entry="emt96lf" fallback={"দ্বীনি শিক্ষা, ভর্তি ও এতিমখানা তহবিলে অনুদান সংক্রান্ত যে কোনো তথ্যের জন্য আমাদের হেল্পডেস্কে যোগাযোগ করতে পারেন।"} /></p>
             <div className="pt-2 border-t border-gray-100 flex flex-col gap-2">
               <a
                 href="tel:01712218086"
                 className="flex items-center justify-between text-xs font-bold text-[#016332] bg-emerald-50 px-3 py-2 rounded-lg hover:bg-emerald-100 transition-colors"
               >
-                <span>অফিস হটলাইন:</span>
-                <span>০১৭১২-২১৮০৮৬</span>
+                <span><EditableText document="copy.ui.BlogSection" entry="ec4zju" fallback={"অফিস হটলাইন:"} /></span>
+                <span><EditableText document="copy.ui.BlogSection" entry="esmlmpc" fallback={"০১৭১২-২১৮০৮৬"} /></span>
               </a>
               <Link
                 href="/admission"
                 className="text-center text-xs text-gray-600 hover:text-[#8B111A] py-1 font-semibold"
-              >
-                অনলাইন ভর্তি তথ্য দেখুন →
-              </Link>
+              ><EditableText document="copy.ui.BlogSection" entry="e1o1fy07" fallback={"অনলাইন ভর্তি তথ্য দেখুন →"} /></Link>
             </div>
           </div>
         </aside>
@@ -748,7 +731,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
             <div className="p-5 sm:p-8 overflow-y-auto space-y-6">
               {/* Cover Image */}
               <div className="relative aspect-16/9 w-full rounded-xl overflow-hidden bg-gray-100 shadow-sm">
-                <Image
+                <Image document="copy.ui.BlogSection" entry="e1aapfa7" source={fieldSource(selectedPost, "thumbnail")}
                   src={selectedPost.thumbnail}
                   alt={selectedPost.title}
                   fill
@@ -772,36 +755,32 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
                     <User size={14} />
                     <span>{selectedPost.author}</span>
                   </span>
-                  <span>•</span>
+                  <span><EditableText document="copy.ui.BlogSection" entry="euy06ix" fallback={"•"} /></span>
                   <span className="flex items-center gap-1">
                     <Calendar size={13} />
                     <span>{selectedPost.date}</span>
                   </span>
                   {selectedPost.readTime && (
                     <>
-                      <span>•</span>
+                      <span><EditableText document="copy.ui.BlogSection" entry="e18ukn0e" fallback={"•"} /></span>
                       <span className="flex items-center gap-1 text-gray-600">
                         <Clock size={13} />
                         <span>{selectedPost.readTime}</span>
                       </span>
                     </>
                   )}
-                  <span>•</span>
+                  <span><EditableText document="copy.ui.BlogSection" entry="et26gsj" fallback={"•"} /></span>
                   <span className="flex items-center gap-1 text-rose-600 font-semibold">
                     <Heart size={13} className="fill-rose-500" />
-                    <span>{selectedPost.likesCount + (likes[selectedPost.id] || 0)} পছন্দ</span>
+                    <span>{selectedPost.likesCount + (likes[selectedPost.id] || 0)}<EditableText document="copy.ui.BlogSection" entry="e13jyod9" fallback={" পছন্দ"} /></span>
                   </span>
                 </div>
               </div>
 
               {/* Lead Excerpt Quote */}
               <div className="bg-[#FAF7F0] border-l-4 border-[#016332] p-4 rounded-r-xl space-y-1">
-                <div className="text-[11px] font-bold text-[#016332] uppercase tracking-wider">
-                  সারসংক্ষেপ
-                </div>
-                <p className="text-xs sm:text-sm text-gray-800 italic leading-relaxed">
-                  “{selectedPost.excerpt}”
-                </p>
+                <div className="text-[11px] font-bold text-[#016332] uppercase tracking-wider"><EditableText document="copy.ui.BlogSection" entry="e1shiww7" fallback={"সারসংক্ষেপ"} /></div>
+                <p className="text-xs sm:text-sm text-gray-800 italic leading-relaxed"><EditableText document="copy.ui.BlogSection" entry="e13r9nc7" fallback={"“"} />{selectedPost.excerpt}<EditableText document="copy.ui.BlogSection" entry="ed8wft" fallback={"”"} /></p>
               </div>
 
               {/* Full Article Content */}
@@ -810,25 +789,17 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
                 style={{ fontSize: `${fontSize}px` }}
               >
                 <p>{selectedPost.content}</p>
-                <p>
-                  আমাদের প্রিয় নবি হজরত মুহাম্মদ সাল্লাল্লাহু আলাইহি ওয়া সাল্লাম ইরশাদ করেছেন: “তোমাদের মধ্যে সর্বোত্তম ব্যক্তি সে, যে নিজে কুরআন শিখে এবং অন্যকে শিক্ষা দেয়।” দ্বীনি শিক্ষার প্রতিটি শাখায় শিক্ষার্থীদের মননশীলতা, মানবিক মূল্যবোধ ও সহমর্মিতা অর্জনের উপর সর্বাধিক গুরুত্বারোপ করা হয়।
-                </p>
-                <p>
-                  একটি সুন্দর ভবিষ্যৎ গড়ার প্রত্যয়ে পরিবার, সমাজ ও শিক্ষাপ্রতিষ্ঠানকে যৌথভাবে কাজ করতে হবে। আল্লাহ তাআলা আমাদের সকলকে সহীহ দ্বীনি জ্ঞান অর্জন এবং সেই অনুযায়ী আমল করার তাওফিক দান করুন। আমিন।
-                </p>
+                <p><EditableText document="copy.ui.BlogSection" entry="e14wg591" fallback={"আমাদের প্রিয় নবি হজরত মুহাম্মদ সাল্লাল্লাহু আলাইহি ওয়া সাল্লাম ইরশাদ করেছেন: “তোমাদের মধ্যে সর্বোত্তম ব্যক্তি সে, যে নিজে কুরআন শিখে এবং অন্যকে শিক্ষা দেয়।” দ্বীনি শিক্ষার প্রতিটি শাখায় শিক্ষার্থীদের মননশীলতা, মানবিক মূল্যবোধ ও সহমর্মিতা অর্জনের উপর সর্বাধিক গুরুত্বারোপ করা হয়।"} /></p>
+                <p><EditableText document="copy.ui.BlogSection" entry="e1pj82f1" fallback={"একটি সুন্দর ভবিষ্যৎ গড়ার প্রত্যয়ে পরিবার, সমাজ ও শিক্ষাপ্রতিষ্ঠানকে যৌথভাবে কাজ করতে হবে। আল্লাহ তাআলা আমাদের সকলকে সহীহ দ্বীনি জ্ঞান অর্জন এবং সেই অনুযায়ী আমল করার তাওফিক দান করুন। আমিন।"} /></p>
               </div>
 
               {/* Author Signature Box */}
               <div className="mt-8 bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-4 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-[#016332] text-white flex items-center justify-center font-bold text-lg shrink-0 shadow-xs">
-                    ✍️
-                  </div>
+                  <div className="w-12 h-12 rounded-full bg-[#016332] text-white flex items-center justify-center font-bold text-lg shrink-0 shadow-xs"><EditableText document="copy.ui.BlogSection" entry="e1mdhjv3" fallback={"✍️"} /></div>
                   <div>
                     <div className="font-bold text-sm text-gray-900">{selectedPost.author}</div>
-                    <div className="text-xs text-gray-600">
-                      জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা, টঙ্গী
-                    </div>
+                    <div className="text-xs text-gray-600"><EditableText document="copy.ui.BlogSection" entry="e109vnki" fallback={"জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা, টঙ্গী"} /></div>
                   </div>
                 </div>
 
@@ -859,18 +830,14 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
                   <span>{copied ? "লিংক কপি হয়েছে!" : "শেয়ার করুন"}</span>
                 </button>
 
-                <span className="text-xs text-gray-500 hidden sm:inline">
-                  (লিংকটি সরাসরি ফেসবুক বা হোয়াটসঅ্যাপে পাঠাতে পারেন)
-                </span>
+                <span className="text-xs text-gray-500 hidden sm:inline"><EditableText document="copy.ui.BlogSection" entry="ey8auxo" fallback={"(লিংকটি সরাসরি ফেসবুক বা হোয়াটসঅ্যাপে পাঠাতে পারেন)"} /></span>
               </div>
 
               <button
                 type="button"
                 onClick={() => setSelectedPost(null)}
                 className="bg-[#016332] hover:bg-[#8B111A] text-white text-xs font-bold py-2 px-5 rounded-lg transition-colors cursor-pointer shadow-xs"
-              >
-                বন্ধ করুন
-              </button>
+              ><EditableText document="copy.ui.BlogSection" entry="emrcc5y" fallback={"বন্ধ করুন"} /></button>
             </div>
           </div>
         </div>

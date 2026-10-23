@@ -50,6 +50,7 @@ export const homepageType = defineType({
       initialValue: "/drone_poster.jpg",
       validation: (Rule) => Rule.uri({ allowRelative: true, scheme: ["https"] }),
     }),
+    defineField({ name: "heroPoster", title: "ব্যানারের নতুন প্রচ্ছদ আপলোড", type: "image", options: { hotspot: true } }),
     defineField({
       name: "newsTicker",
       title: "জরুরি ঘোষণা / টিকার বার্তা (News Ticker Announcements)",
@@ -78,18 +79,21 @@ export const homepageType = defineType({
     }),
     defineField({
       name: "statsTotalStudents",
+      hidden: true,
       title: "পরিসংখ্যান: মোট শিক্ষার্থী সংখ্যা",
       type: "string",
       initialValue: "৮৫০+",
     }),
     defineField({
       name: "statsTeachers",
+      hidden: true,
       title: "পরিসংখ্যান: অভিজ্ঞ শিক্ষকবৃন্দ",
       type: "string",
       initialValue: "৩৫+",
     }),
     defineField({
       name: "statsHafiz",
+      hidden: true,
       title: "পরিসংখ্যান: বার্ষিক হাফেজ গ্র্যাজুয়েট",
       type: "string",
       initialValue: "৪০+",
@@ -108,6 +112,7 @@ export const homepageType = defineType({
     }),
     defineField({
       name: "principalDesignation",
+      hidden: true,
       title: "পদবি",
       type: "string",
       initialValue: "মুহতামিম ও শিক্ষা সচিব",
@@ -120,6 +125,7 @@ export const homepageType = defineType({
     }),
     defineField({
       name: "principalPhoto",
+      hidden: true,
       title: "মুহতামিমের ছবি (Portrait)",
       type: "image",
       options: {

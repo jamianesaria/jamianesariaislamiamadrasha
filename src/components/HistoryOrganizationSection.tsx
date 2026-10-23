@@ -1,8 +1,14 @@
-import Image from "next/image";
-import { siteSettings, organizationHistoryData } from "@/data/siteData";
-import { BookOpen, MapPin, Calendar, CheckCircle2 } from "lucide-react";
 
-export default function HistoryOrganizationSection() {
+import { siteSettings as _fallback_siteSettings, organizationHistoryData as _fallback_organizationHistoryData } from "@/data/siteData";
+import { BookOpen, MapPin, Calendar, CheckCircle2 } from "lucide-react";
+import { EditableImage as Image, getEditableData, EditableText } from "@/content/server";
+import { fieldSource } from "@/content/model";
+
+
+export default async function HistoryOrganizationSection() {
+  const siteSettings = await getEditableData("siteSettings", _fallback_siteSettings);
+  const organizationHistoryData = await getEditableData("copy.data.organizationHistoryData", _fallback_organizationHistoryData);
+
   return (
     <article className="bg-white rounded border border-gray-200 shadow-xs overflow-hidden">
       {/* Header Bar matching teal/deep cyan-green from screenshot */}
@@ -15,7 +21,7 @@ export default function HistoryOrganizationSection() {
         {/* Center: Madrasa Emblem Logo matching screenshot */}
         <div className="flex flex-col items-center justify-center text-center">
           <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[3px] border-[#8B111A] p-0.5 bg-white shadow-lg ring-4 ring-amber-100/80 relative overflow-hidden mb-4">
-            <Image
+            <Image document="copy.ui.HistoryOrganizationSection" entry="efioy2q" source={fieldSource(siteSettings, "logoUrl")}
               src={siteSettings.logoUrl || "/jamia-logo-v2.png"}
               alt={siteSettings.nameBn}
               fill
@@ -35,7 +41,7 @@ export default function HistoryOrganizationSection() {
 
           <div className="flex items-center gap-2 mt-2 text-xs sm:text-sm font-semibold text-gray-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
             <Calendar size={14} className="text-[#8B111A]" />
-            <span>প্রতিষ্ঠিত: {siteSettings.established}</span>
+            <span><EditableText document="copy.ui.HistoryOrganizationSection" entry="ehganrq" fallback={"প্রতিষ্ঠিত: "} />{siteSettings.established}</span>
           </div>
 
           <div className="flex items-center gap-1.5 mt-2 text-xs sm:text-sm text-gray-500">
@@ -55,25 +61,23 @@ export default function HistoryOrganizationSection() {
 
         {/* Feature / Milestone Highlights */}
         <div className="bg-[#FAF8F5] rounded border border-[#E9E4DC] p-5 sm:p-6 mt-6">
-          <h4 className="font-bold text-sm sm:text-base text-[#8B111A] mb-3">
-            আমাদের লক্ষ্য ও ঐতিহ্যগত বৈশিষ্ট্য:
-          </h4>
+          <h4 className="font-bold text-sm sm:text-base text-[#8B111A] mb-3"><EditableText document="copy.ui.HistoryOrganizationSection" entry="ewzzd14" fallback={"আমাদের লক্ষ্য ও ঐতিহ্যগত বৈশিষ্ট্য:"} /></h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-[13px] text-gray-700">
             <div className="flex items-start gap-2">
               <CheckCircle2 size={16} className="text-[#126b59] shrink-0 mt-0.5" />
-              <span>হিফজ ও কওমী সিলেবাসের সাথে যুগোপযোগী জেনারেল শিক্ষার সমন্বয়।</span>
+              <span><EditableText document="copy.ui.HistoryOrganizationSection" entry="e7lsxka" fallback={"হিফজ ও কওমী সিলেবাসের সাথে যুগোপযোগী জেনারেল শিক্ষার সমন্বয়।"} /></span>
             </div>
             <div className="flex items-start gap-2">
               <CheckCircle2 size={16} className="text-[#126b59] shrink-0 mt-0.5" />
-              <span>আন্তর্জাতিক মানের তাজবিদ ও ক্বেরাত শিক্ষা।</span>
+              <span><EditableText document="copy.ui.HistoryOrganizationSection" entry="eo1ljlq" fallback={"আন্তর্জাতিক মানের তাজবিদ ও ক্বেরাত শিক্ষা।"} /></span>
             </div>
             <div className="flex items-start gap-2">
               <CheckCircle2 size={16} className="text-[#126b59] shrink-0 mt-0.5" />
-              <span>অভিজ্ঞ ও নিষ্ঠাবান শিক্ষকমণ্ডলী দ্বারা পাঠদান।</span>
+              <span><EditableText document="copy.ui.HistoryOrganizationSection" entry="e93g5db" fallback={"অভিজ্ঞ ও নিষ্ঠাবান শিক্ষকমণ্ডলী দ্বারা পাঠদান।"} /></span>
             </div>
             <div className="flex items-start gap-2">
               <CheckCircle2 size={16} className="text-[#126b59] shrink-0 mt-0.5" />
-              <span>আদর্শ চরিত্র গঠন ও নৈতিক মূল্যবোধ চর্চা।</span>
+              <span><EditableText document="copy.ui.HistoryOrganizationSection" entry="ec2jhde" fallback={"আদর্শ চরিত্র গঠন ও নৈতিক মূল্যবোধ চর্চা।"} /></span>
             </div>
           </div>
         </div>

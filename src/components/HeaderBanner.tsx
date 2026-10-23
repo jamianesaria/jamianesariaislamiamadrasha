@@ -1,12 +1,19 @@
-import Image from "next/image";
+
 import Link from "next/link";
-import { siteSettings as defaultSettings } from "@/data/siteData";
+import type { PublicSettings } from "@/content/public-types";
+import { siteSettings as _fallback_defaultSettings } from "@/data/siteData";
+import { EditableImage as Image, getEditableData } from "@/content/server";
+import { fieldSource } from "@/content/model";
+
+
 
 interface HeaderBannerProps {
-  initialSettings?: any;
+  initialSettings?: PublicSettings;
 }
 
-export default function HeaderBanner({ initialSettings }: HeaderBannerProps = {}) {
+export default async function HeaderBanner({ initialSettings }: HeaderBannerProps = {}) {
+  const defaultSettings = await getEditableData("siteSettings", _fallback_defaultSettings);
+
   const settings = initialSettings || defaultSettings;
 
   return (
@@ -15,11 +22,11 @@ export default function HeaderBanner({ initialSettings }: HeaderBannerProps = {}
         <Link
           href="/"
           className="block w-full relative aspect-[1329/230] sm:aspect-[1329/215] md:aspect-[1329/205] overflow-hidden bg-[#016332]"
-          title={`${settings.nameBn || settings.title || defaultSettings.nameBn} - হোমপেজ`}
+          title={`${settings.nameBn || defaultSettings.nameBn} - হোমপেজ`}
         >
-          <Image
+          <Image document="copy.ui.HeaderBanner" entry="eghezdc" source={fieldSource(settings, "headerBannerUrl")}
             src={settings.headerBannerUrl || defaultSettings.headerBannerUrl || "/header.jpeg"}
-            alt={`${settings.nameBn || settings.title || defaultSettings.nameBn} - ${settings.nameEn || settings.englishTitle || defaultSettings.nameEn}`}
+            alt={`${settings.nameBn || defaultSettings.nameBn} - ${settings.nameEn || defaultSettings.nameEn}`}
             width={1329}
             height={585}
             sizes="(max-width: 1536px) 88vw, 1440px"

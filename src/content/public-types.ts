@@ -1,0 +1,6 @@
+import type { siteSettings, homePageContent } from "@/data/siteData";
+export type PublicSettings = typeof siteSettings & { _id?: string; _type?: string; emergencyPhone?: string };
+export type HomepageContent = typeof homePageContent;
+export interface PublicTeacher { _id?: string; _type?: string; id: string | number; name: string; designation: string; department: string; serial?: number | string; qualification?: string; honor?: string; district?: string; mobile?: string; institution?: string; photo?: string }
+export interface PublicMember { _id?: string; _type?: string; id: string | number; name: string; designation: string; serial?: number | string; mobile?: string; address?: string; photo?: string; isLandDonor?: boolean; donorContribution?: string }
+export interface AdmissionContent { _id?: string; _type?: string; sessionName?: string; hijriYear?: string; status?: "open" | "upcoming" | "closed"; memoNo?: string; overview?: string; arabicTimeline?: string; englishTimeline?: string; examMethod?: string; examResultPublish?: string; orphanPolicy?: string; orphanConditions?: string[]; guardianGuidelines?: string[]; admissionFormPdfUrl?: string; phoneMuhtamim?: string; phoneNazemeTalimat?: string; phoneOffice?: string; formCollectionTime?: string }

@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import { sampleGalleryPhotos, GalleryPhotoItem } from "@/data/siteData";
+
+import { sampleGalleryPhotos as _fallback_sampleGalleryPhotos, GalleryPhotoItem } from "@/data/siteData";
 import { Image as ImageIcon, ZoomIn, X, ChevronLeft, ChevronRight, Calendar, Download } from "lucide-react";
+import { EditableImage as Image, useEditableData, EditableText, useGalleryRecords } from "@/content/client";
+import { fieldSource } from "@/content/model";
+
 
 const categories = [
   { id: "all", label: "সব ছবি" },
@@ -14,6 +17,9 @@ const categories = [
 ];
 
 export default function PhotoGallerySection() {
+  const fallbackPhotos = useEditableData("copy.data.sampleGalleryPhotos", _fallback_sampleGalleryPhotos);
+  const sampleGalleryPhotos = useGalleryRecords()?.photos ?? fallbackPhotos;
+
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
 
@@ -53,11 +59,9 @@ export default function PhotoGallerySection() {
       <div className="bg-[#126b59] text-white px-4 py-2.5 flex items-center justify-between font-bold text-sm sm:text-base shadow-xs">
         <div className="flex items-center gap-2">
           <ImageIcon size={18} />
-          <span>ছবি (Photo Gallery)</span>
+          <span><EditableText document="copy.ui.PhotoGallerySection" entry="eglqq37" fallback={"ছবি (Photo Gallery)"} /></span>
         </div>
-        <span className="text-xs bg-white/20 px-2.5 py-0.5 rounded-full font-normal">
-          মোট ছবি: {filteredPhotos.length} টি
-        </span>
+        <span className="text-xs bg-white/20 px-2.5 py-0.5 rounded-full font-normal"><EditableText document="copy.ui.PhotoGallerySection" entry="e1pk3bd1" fallback={"মোট ছবি: "} />{filteredPhotos.length}<EditableText document="copy.ui.PhotoGallerySection" entry="esj1ztg" fallback={" টি"} /></span>
       </div>
 
       <div className="p-4 sm:p-6 space-y-6">
@@ -95,7 +99,7 @@ export default function PhotoGallerySection() {
               >
                 {/* Photo Thumbnail */}
                 <div className="relative aspect-4/3 w-full bg-gray-200 overflow-hidden">
-                  <Image
+                  <Image document="copy.ui.PhotoGallerySection" entry="e123315m" source={fieldSource(photo, "imageUrl")}
                     src={photo.imageUrl}
                     alt={photo.title}
                     fill
@@ -127,9 +131,7 @@ export default function PhotoGallerySection() {
                       <Calendar size={12} />
                       {photo.date}
                     </span>
-                    <span className="text-[#126b59] font-medium group-hover:underline">
-                      বড় করে দেখুন
-                    </span>
+                    <span className="text-[#126b59] font-medium group-hover:underline"><EditableText document="copy.ui.PhotoGallerySection" entry="eff5fae" fallback={"বড় করে দেখুন"} /></span>
                   </div>
                 </div>
               </div>
@@ -138,7 +140,7 @@ export default function PhotoGallerySection() {
         ) : (
           <div className="py-16 text-center text-gray-400">
             <ImageIcon size={40} className="mx-auto mb-2 opacity-50" />
-            <p className="text-sm">এই ক্যাটাগরিতে কোনো ছবি পাওয়া যায়নি।</p>
+            <p className="text-sm"><EditableText document="copy.ui.PhotoGallerySection" entry="e1wswelz" fallback={"এই ক্যাটাগরিতে কোনো ছবি পাওয়া যায়নি।"} /></p>
           </div>
         )}
       </div>
@@ -185,7 +187,7 @@ export default function PhotoGallerySection() {
             className="max-w-4xl w-full bg-white rounded-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
           >
             <div className="relative w-full h-[55vh] sm:h-[65vh] bg-black">
-              <Image
+              <Image document="copy.ui.PhotoGallerySection" entry="e17dtsb2" source={fieldSource(activePhoto, "imageUrl")}
                 src={activePhoto.imageUrl}
                 alt={activePhoto.title}
                 fill
@@ -208,8 +210,7 @@ export default function PhotoGallerySection() {
                     <Calendar size={12} />
                     {activePhoto.date}
                   </span>
-                  <span>
-                    ছবি {selectedPhotoIndex + 1} / {filteredPhotos.length}
+                  <span><EditableText document="copy.ui.PhotoGallerySection" entry="e1ptjjk8" fallback={"ছবি "} />{selectedPhotoIndex + 1}<EditableText document="copy.ui.PhotoGallerySection" entry="e1m6faue" fallback={" / "} />{filteredPhotos.length}
                   </span>
                 </div>
               </div>
@@ -222,7 +223,7 @@ export default function PhotoGallerySection() {
                   className="bg-[#126b59] hover:bg-[#0e5244] text-white text-xs font-semibold py-2 px-3.5 rounded transition-colors inline-flex items-center gap-1.5"
                 >
                   <Download size={14} />
-                  <span>মূল ছবি দেখুন</span>
+                  <span><EditableText document="copy.ui.PhotoGallerySection" entry="e1mtrioe" fallback={"মূল ছবি দেখুন"} /></span>
                 </a>
               </div>
             </div>

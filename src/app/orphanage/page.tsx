@@ -1,17 +1,17 @@
-import type { Metadata } from "next";
+import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
 import Footer from "@/components/Footer";
 import OrphanageSection from "@/components/OrphanageSection";
 
-export const metadata: Metadata = {
+export const generateMetadata = editableMetadata("/orphanage", {
   title: "এতিমখানা ও সহযোগিতা | জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা",
   description:
     "জামিয়া নেছারিয়া ইসলামিয়া এতিমখানা পরিচিতি, ছাত্রাবাসের চতুর্থ তলা নির্মাণ প্রকল্প, সরকারি নিবন্ধন (ঢ-০৫০৪), সহযোগিতার আবেদন, সাধারণ ও গোরাবা ফান্ড, এবং বিকাশ ও ব্যাংক অনুদান পাঠানোর মাধ্যম।",
-};
+});
 
-export default function OrphanagePage() {
+function OrphanagePage() {
   return (
     <div className="min-h-screen bg-[#F4F5F0] flex flex-col">
       <HeaderBanner />
@@ -26,4 +26,5 @@ export default function OrphanagePage() {
     </div>
   );
 }
+export default editableRoute("/orphanage", OrphanagePage);
 

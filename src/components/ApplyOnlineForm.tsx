@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { preparePrivatePhoto, useSubmission } from "@/lib/submissions/useSubmission";
+
 import Link from "next/link";
 import { 
   UserCheck, 
@@ -16,7 +18,9 @@ import {
   Upload,
   ArrowRight
 } from "lucide-react";
-import { availableClasses, siteSettings } from "@/data/siteData";
+import { availableClasses as _fallback_availableClasses, siteSettings as _fallback_siteSettings } from "@/data/siteData";
+import { useEditableData, EditableText } from "@/content/client";
+
 
 const divisions = [
   "Dhaka",
@@ -71,6 +75,9 @@ const admissionYears = ["2026", "2025", "2024"];
 const residentialTypes = ["অনাবাসিক", "আবাসিক", "ডে-কেয়ার"];
 
 export default function ApplyOnlineForm() {
+  const availableClasses = useEditableData("copy.data.availableClasses", _fallback_availableClasses);
+  const siteSettings = useEditableData("siteSettings", _fallback_siteSettings);
+
   const [formData, setFormData] = useState({
     // Student's Details (Part 1)
     studentName: "",
@@ -120,6 +127,9 @@ export default function ApplyOnlineForm() {
   });
 
   const [studentImage, setStudentImage] = useState<string | null>(null);
+  const [photoError, setPhotoError] = useState("");
+  const [preparingPhoto, setPreparingPhoto] = useState(false);
+  const { submit, isSubmitting, error } = useSubmission("/api/apply");
   const [submittedApplication, setSubmittedApplication] = useState<{
     appId: string;
     date: string;
@@ -156,54 +166,29 @@ export default function ApplyOnlineForm() {
     });
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setStudentImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      setPreparingPhoto(true);
+      try { setPhotoError(""); setStudentImage(await preparePrivatePhoto(file)); }
+      catch (failure) { setPhotoError(failure instanceof Error ? failure.message : "ছবি প্রস্তুত করা যায়নি।"); }
+      finally { setPreparingPhoto(false); }
     }
   };
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const res = await fetch("/api/apply", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      const finalId = data.success && data.applicationId 
-        ? data.applicationId 
-        : `JNI-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-
+    if (photoError || preparingPhoto) return;
+    const saved = await submit({ ...formData, studentImage });
+    if (saved) {
       setSubmittedApplication({
-        appId: finalId,
+        appId: saved.reference,
         date: new Date().toLocaleDateString("en-GB", {
           day: "2-digit",
           month: "short",
           year: "numeric",
         }),
       });
-    } catch {
-      const randomNum = Math.floor(1000 + Math.random() * 9000);
-      setSubmittedApplication({
-        appId: `JNI-2026-${randomNum}`,
-        date: new Date().toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }),
-      });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -211,14 +196,12 @@ export default function ApplyOnlineForm() {
     <article className="bg-white rounded border border-gray-200 shadow-xs overflow-hidden">
       {/* Top Admission Rules Link Notice */}
       <div className="bg-amber-50 border-b border-amber-200 px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs text-amber-900">
-        <span className="font-medium">
-          ভর্তি সংক্রান্ত বিভাগভিত্তিক নিয়মাবলি, বয়সসীমা, আসন সংখ্যা ও ফি তালিকা দেখতে:
-        </span>
+        <span className="font-medium"><EditableText document="copy.ui.ApplyOnlineForm" entry="e11j42up" fallback={"ভর্তি সংক্রান্ত বিভাগভিত্তিক নিয়মাবলি, বয়সসীমা, আসন সংখ্যা ও ফি তালিকা দেখতে:"} /></span>
         <Link
           href="/admission"
           className="font-bold text-[#014d26] hover:text-[#8B111A] inline-flex items-center gap-1 underline underline-offset-2"
         >
-          <span>ভর্তি তথ্য ও নির্দেশিকা পাতা দেখুন</span>
+          <span><EditableText document="copy.ui.ApplyOnlineForm" entry="e159y87w" fallback={"ভর্তি তথ্য ও নির্দেশিকা পাতা দেখুন"} /></span>
           <ArrowRight size={13} />
         </Link>
       </div>
@@ -227,20 +210,19 @@ export default function ApplyOnlineForm() {
       <div className="bg-[#371b61] text-white px-4 py-2.5 flex items-center justify-center font-bold text-sm sm:text-base shadow-xs">
         <div className="flex items-center gap-2">
           <UserCheck size={18} />
-          <span>Online Registration</span>
+          <span><EditableText document="copy.ui.ApplyOnlineForm" entry="epyabya" fallback={"Online Registration"} /></span>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="p-4 sm:p-6 md:p-8 space-y-8">
+        {(error || photoError) && <p role="alert" className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-800">{error || photoError}</p>}
         {/* =========================================
             SECTION 1: Student's Details (Part 1)
         ========================================= */}
         <section className="space-y-4">
           <div className="flex items-center gap-2 pb-1.5 border-b border-gray-200">
             <User size={16} className="text-[#371b61]" />
-            <h3 className="font-bold text-sm sm:text-base text-[#1b3a4b]">
-              Student&apos;s Details
-            </h3>
+            <h3 className="font-bold text-sm sm:text-base text-[#1b3a4b]"><EditableText document="copy.ui.ApplyOnlineForm" entry="e19cij18" fallback={"Student&apos;s Details"} /></h3>
           </div>
 
           <div className="space-y-4">
@@ -249,8 +231,7 @@ export default function ApplyOnlineForm() {
               <label
                 htmlFor="studentName"
                 className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-              >
-                Student Name: <span className="text-red-500">*</span>
+              ><EditableText document="copy.ui.ApplyOnlineForm" entry="e53o3qz" fallback={"Student Name: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e1yzxjp9" fallback={"*"} /></span>
               </label>
               <input
                 id="studentName"
@@ -270,9 +251,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="studentUid"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Student UID:
-                </label>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="ecai6sk" fallback={"Student UID:"} /></label>
                 <input
                   id="studentUid"
                   name="studentUid"
@@ -288,8 +267,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="dateOfBirth"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Date of Birth: <span className="text-red-500">*</span>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="e1w99x93" fallback={"Date of Birth: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e1q2uv5m" fallback={"*"} /></span>
                 </label>
                 <input
                   id="dateOfBirth"
@@ -309,9 +287,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="birthCertificateNumber"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Birth Certificate Number:
-                </label>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="e11izja9" fallback={"Birth Certificate Number:"} /></label>
                 <input
                   id="birthCertificateNumber"
                   name="birthCertificateNumber"
@@ -324,8 +300,7 @@ export default function ApplyOnlineForm() {
               </div>
 
               <div>
-                <span className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-2">
-                  Gender: <span className="text-red-500">*</span>
+                <span className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-2"><EditableText document="copy.ui.ApplyOnlineForm" entry="e1z0t3q3" fallback={"Gender: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e2vyk4g" fallback={"*"} /></span>
                 </span>
                 <div className="flex items-center gap-6 pt-0.5">
                   <label className="inline-flex items-center gap-2 text-xs sm:text-sm text-gray-700 cursor-pointer">
@@ -337,7 +312,7 @@ export default function ApplyOnlineForm() {
                       onChange={handleChange}
                       className="text-[#371b61] focus:ring-[#371b61] cursor-pointer"
                     />
-                    <span>Male</span>
+                    <span><EditableText document="copy.ui.ApplyOnlineForm" entry="eaathth" fallback={"Male"} /></span>
                   </label>
                   <label className="inline-flex items-center gap-2 text-xs sm:text-sm text-gray-700 cursor-pointer">
                     <input
@@ -348,7 +323,7 @@ export default function ApplyOnlineForm() {
                       onChange={handleChange}
                       className="text-[#371b61] focus:ring-[#371b61] cursor-pointer"
                     />
-                    <span>Female</span>
+                    <span><EditableText document="copy.ui.ApplyOnlineForm" entry="eiw6sbb" fallback={"Female"} /></span>
                   </label>
                 </div>
               </div>
@@ -362,9 +337,7 @@ export default function ApplyOnlineForm() {
         <section className="space-y-4">
           <div className="flex items-center gap-2 pb-1.5 border-b border-gray-200">
             <ShieldCheck size={16} className="text-[#371b61]" />
-            <h3 className="font-bold text-sm sm:text-base text-[#1b3a4b]">
-              Father&apos;s Details
-            </h3>
+            <h3 className="font-bold text-sm sm:text-base text-[#1b3a4b]"><EditableText document="copy.ui.ApplyOnlineForm" entry="e741lvo" fallback={"Father&apos;s Details"} /></h3>
           </div>
 
           <div className="space-y-4">
@@ -374,8 +347,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="fatherName"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Father&apos;s Name: <span className="text-red-500">*</span>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="e1rkd4ce" fallback={"Father&apos;s Name: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e1ry3mkp" fallback={"*"} /></span>
                 </label>
                 <input
                   id="fatherName"
@@ -393,9 +365,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="fatherProfession"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Father&apos;s Profession:
-                </label>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="e1eidpfv" fallback={"Father&apos;s Profession:"} /></label>
                 <input
                   id="fatherProfession"
                   name="fatherProfession"
@@ -414,8 +384,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="fatherMobile"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Father&apos;s Mobile No.: <span className="text-red-500">*</span>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="ekr40h3" fallback={"Father&apos;s Mobile No.: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e143kgtd" fallback={"*"} /></span>
                 </label>
                 <input
                   id="fatherMobile"
@@ -433,8 +402,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="fatherNid"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Father&apos;s NID: <span className="text-red-500">*</span>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="ey92oh9" fallback={"Father&apos;s NID: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e1mtw4rz" fallback={"*"} /></span>
                 </label>
                 <input
                   id="fatherNid"
@@ -455,9 +423,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="guardianName"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Guardian Name:
-                </label>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="ejr9ia7" fallback={"Guardian Name:"} /></label>
                 <input
                   id="guardianName"
                   name="guardianName"
@@ -473,9 +439,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="guardianRelation"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Relation:
-                </label>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="e1ywsi5z" fallback={"Relation:"} /></label>
                 <input
                   id="guardianRelation"
                   name="guardianRelation"
@@ -496,9 +460,7 @@ export default function ApplyOnlineForm() {
         <section className="space-y-4">
           <div className="flex items-center gap-2 pb-1.5 border-b border-gray-200">
             <Heart size={16} className="text-[#371b61]" />
-            <h3 className="font-bold text-sm sm:text-base text-[#1b3a4b]">
-              Mother&apos;s Details
-            </h3>
+            <h3 className="font-bold text-sm sm:text-base text-[#1b3a4b]"><EditableText document="copy.ui.ApplyOnlineForm" entry="e1cbl3z0" fallback={"Mother&apos;s Details"} /></h3>
           </div>
 
           <div className="space-y-4">
@@ -508,8 +470,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="motherName"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Mother&apos;s Name: <span className="text-red-500">*</span>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="e1jt7hx" fallback={"Mother&apos;s Name: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e5a6dng" fallback={"*"} /></span>
                 </label>
                 <input
                   id="motherName"
@@ -527,9 +488,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="motherProfession"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Mother&apos;s Profession:
-                </label>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="e1rfgkdp" fallback={"Mother&apos;s Profession:"} /></label>
                 <input
                   id="motherProfession"
                   name="motherProfession"
@@ -548,9 +507,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="motherMobile"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Mother&apos;s Mobile No:
-                </label>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="e1ekzz24" fallback={"Mother&apos;s Mobile No:"} /></label>
                 <input
                   id="motherMobile"
                   name="motherMobile"
@@ -566,9 +523,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="motherNid"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Mother&apos;s NID:
-                </label>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="etblhdc" fallback={"Mother&apos;s NID:"} /></label>
                 <input
                   id="motherNid"
                   name="motherNid"
@@ -589,9 +544,7 @@ export default function ApplyOnlineForm() {
         <section className="space-y-4">
           <div className="flex items-center gap-2 pb-1.5 border-b border-gray-200">
             <MapPin size={16} className="text-[#371b61]" />
-            <h3 className="font-bold text-sm sm:text-base text-[#1b3a4b]">
-              Present Address
-            </h3>
+            <h3 className="font-bold text-sm sm:text-base text-[#1b3a4b]"><EditableText document="copy.ui.ApplyOnlineForm" entry="eyd9b0w" fallback={"Present Address"} /></h3>
           </div>
 
           <div className="space-y-4">
@@ -601,8 +554,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="presentCountry"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Country: <span className="text-red-500">*</span>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="ev0eudg" fallback={"Country: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="endnt3v" fallback={"*"} /></span>
                 </label>
                 <select
                   id="presentCountry"
@@ -611,7 +563,7 @@ export default function ApplyOnlineForm() {
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
                 >
-                  <option value="Bangladesh">Bangladesh</option>
+                  <option value="Bangladesh"><EditableText document="copy.ui.ApplyOnlineForm" entry="e7n09ji" fallback={"Bangladesh"} /></option>
                 </select>
               </div>
 
@@ -619,8 +571,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="presentDivision"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Division: <span className="text-red-500">*</span>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="ekozygi" fallback={"Division: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="ejvm9z7" fallback={"*"} /></span>
                 </label>
                 <select
                   id="presentDivision"
@@ -630,7 +581,7 @@ export default function ApplyOnlineForm() {
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
                 >
-                  <option value="">Select Division</option>
+                  <option value=""><EditableText document="copy.ui.ApplyOnlineForm" entry="e1s90hid" fallback={"Select Division"} /></option>
                   {divisions.map((div) => (
                     <option key={div} value={div}>
                       {div}
@@ -646,8 +597,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="presentDistrict"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  District: <span className="text-red-500">*</span>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="e1ku5jtc" fallback={"District: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="emq3k3d" fallback={"*"} /></span>
                 </label>
                 <select
                   id="presentDistrict"
@@ -657,7 +607,7 @@ export default function ApplyOnlineForm() {
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
                 >
-                  <option value="">Select District</option>
+                  <option value=""><EditableText document="copy.ui.ApplyOnlineForm" entry="e1lismnc" fallback={"Select District"} /></option>
                   {districts.map((dist) => (
                     <option key={dist} value={dist}>
                       {dist}
@@ -670,8 +620,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="presentUpazila"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Upazila/Thana: <span className="text-red-500">*</span>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="e3bu9ue" fallback={"Upazila/Thana: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e15km1xo" fallback={"*"} /></span>
                 </label>
                 <select
                   id="presentUpazila"
@@ -681,7 +630,7 @@ export default function ApplyOnlineForm() {
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
                 >
-                  <option value="">Select Upazila/Thana</option>
+                  <option value=""><EditableText document="copy.ui.ApplyOnlineForm" entry="e1nbkejo" fallback={"Select Upazila/Thana"} /></option>
                   {upazilas.map((upa) => (
                     <option key={upa} value={upa}>
                       {upa}
@@ -697,8 +646,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="presentPostOffice"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Post Office: <span className="text-red-500">*</span>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="e1kybuqz" fallback={"Post Office: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="ekfy1bn" fallback={"*"} /></span>
                 </label>
                 <input
                   id="presentPostOffice"
@@ -716,9 +664,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="presentPostalCode"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Postal Code:
-                </label>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="eo9504b" fallback={"Postal Code:"} /></label>
                 <input
                   id="presentPostalCode"
                   name="presentPostalCode"
@@ -736,8 +682,7 @@ export default function ApplyOnlineForm() {
               <label
                 htmlFor="presentVillage"
                 className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-              >
-                Village: <span className="text-red-500">*</span>
+              ><EditableText document="copy.ui.ApplyOnlineForm" entry="e1cs057e" fallback={"Village: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e1rqb0qr" fallback={"*"} /></span>
               </label>
               <input
                 id="presentVillage"
@@ -760,7 +705,7 @@ export default function ApplyOnlineForm() {
                   onChange={handleCheckboxChange}
                   className="rounded text-[#371b61] focus:ring-[#371b61] cursor-pointer w-4 h-4"
                 />
-                <span>Same as Present Address</span>
+                <span><EditableText document="copy.ui.ApplyOnlineForm" entry="e1lx1wft" fallback={"Same as Present Address"} /></span>
               </label>
             </div>
           </div>
@@ -772,9 +717,7 @@ export default function ApplyOnlineForm() {
         <section className="space-y-4">
           <div className="flex items-center gap-2 pb-1.5 border-b border-gray-200">
             <MapPin size={16} className="text-[#371b61]" />
-            <h3 className="font-bold text-sm sm:text-base text-[#1b3a4b]">
-              Permanent Address
-            </h3>
+            <h3 className="font-bold text-sm sm:text-base text-[#1b3a4b]"><EditableText document="copy.ui.ApplyOnlineForm" entry="e1hil1qm" fallback={"Permanent Address"} /></h3>
           </div>
 
           <div className="space-y-4">
@@ -784,8 +727,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="permanentCountry"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Country: <span className="text-red-500">*</span>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="e444ugp" fallback={"Country: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e12i6fvn" fallback={"*"} /></span>
                 </label>
                 <select
                   id="permanentCountry"
@@ -795,7 +737,7 @@ export default function ApplyOnlineForm() {
                   disabled={formData.sameAsPresent}
                   className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white disabled:bg-gray-100 focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
                 >
-                  <option value="Bangladesh">Bangladesh</option>
+                  <option value="Bangladesh"><EditableText document="copy.ui.ApplyOnlineForm" entry="eiiep7r" fallback={"Bangladesh"} /></option>
                 </select>
               </div>
 
@@ -803,8 +745,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="permanentDivision"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Division: <span className="text-red-500">*</span>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="evekt51" fallback={"Division: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e53xr2v" fallback={"*"} /></span>
                 </label>
                 <select
                   id="permanentDivision"
@@ -815,7 +756,7 @@ export default function ApplyOnlineForm() {
                   disabled={formData.sameAsPresent}
                   className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white disabled:bg-gray-100 focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
                 >
-                  <option value="">Select Division</option>
+                  <option value=""><EditableText document="copy.ui.ApplyOnlineForm" entry="e9upicm" fallback={"Select Division"} /></option>
                   {divisions.map((div) => (
                     <option key={div} value={div}>
                       {div}
@@ -831,8 +772,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="permanentDistrict"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  District: <span className="text-red-500">*</span>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="eyoosec" fallback={"District: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="ev28ts3" fallback={"*"} /></span>
                 </label>
                 <select
                   id="permanentDistrict"
@@ -843,7 +783,7 @@ export default function ApplyOnlineForm() {
                   disabled={formData.sameAsPresent}
                   className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white disabled:bg-gray-100 focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
                 >
-                  <option value="">Select District</option>
+                  <option value=""><EditableText document="copy.ui.ApplyOnlineForm" entry="eud2vzn" fallback={"Select District"} /></option>
                   {districts.map((dist) => (
                     <option key={dist} value={dist}>
                       {dist}
@@ -856,8 +796,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="permanentUpazila"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Upazila/Thana: <span className="text-red-500">*</span>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="e9prvi7" fallback={"Upazila/Thana: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e1j242ep" fallback={"*"} /></span>
                 </label>
                 <select
                   id="permanentUpazila"
@@ -868,7 +807,7 @@ export default function ApplyOnlineForm() {
                   disabled={formData.sameAsPresent}
                   className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white disabled:bg-gray-100 focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
                 >
-                  <option value="">Select Upazila/Thana</option>
+                  <option value=""><EditableText document="copy.ui.ApplyOnlineForm" entry="e1m9zpdw" fallback={"Select Upazila/Thana"} /></option>
                   {upazilas.map((upa) => (
                     <option key={upa} value={upa}>
                       {upa}
@@ -884,9 +823,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="permanentPostOffice"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Post Office:
-                </label>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="e1mqd552" fallback={"Post Office:"} /></label>
                 <input
                   id="permanentPostOffice"
                   name="permanentPostOffice"
@@ -903,9 +840,7 @@ export default function ApplyOnlineForm() {
                 <label
                   htmlFor="permanentPostalCode"
                   className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-                >
-                  Postal Code:
-                </label>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="e176gpum" fallback={"Postal Code:"} /></label>
                 <input
                   id="permanentPostalCode"
                   name="permanentPostalCode"
@@ -924,9 +859,7 @@ export default function ApplyOnlineForm() {
               <label
                 htmlFor="permanentVillage"
                 className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-              >
-                Village:
-              </label>
+              ><EditableText document="copy.ui.ApplyOnlineForm" entry="e1yabe52" fallback={"Village:"} /></label>
               <input
                 id="permanentVillage"
                 name="permanentVillage"
@@ -947,9 +880,7 @@ export default function ApplyOnlineForm() {
         <section className="space-y-4">
           <div className="flex items-center gap-2 pb-1.5 border-b border-gray-200">
             <GraduationCap size={16} className="text-[#371b61]" />
-            <h3 className="font-bold text-sm sm:text-base text-[#1b3a4b]">
-              Admission For
-            </h3>
+            <h3 className="font-bold text-sm sm:text-base text-[#1b3a4b]"><EditableText document="copy.ui.ApplyOnlineForm" entry="e1eoapyj" fallback={"Admission For"} /></h3>
           </div>
 
           <div className="space-y-4">
@@ -958,8 +889,7 @@ export default function ApplyOnlineForm() {
               <label
                 htmlFor="admissionClass"
                 className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-              >
-                Class: <span className="text-red-500">*</span>
+              ><EditableText document="copy.ui.ApplyOnlineForm" entry="e66mpli" fallback={"Class: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e11dx7ud" fallback={"*"} /></span>
               </label>
               <select
                 id="admissionClass"
@@ -969,7 +899,7 @@ export default function ApplyOnlineForm() {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
               >
-                <option value="">Select Class</option>
+                <option value=""><EditableText document="copy.ui.ApplyOnlineForm" entry="e1io3gke" fallback={"Select Class"} /></option>
                 {availableClasses.map((cls) => (
                   <option key={cls.id} value={cls.name}>
                     {cls.name}
@@ -983,8 +913,7 @@ export default function ApplyOnlineForm() {
               <label
                 htmlFor="admissionGroup"
                 className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-              >
-                Group: <span className="text-red-500">*</span>
+              ><EditableText document="copy.ui.ApplyOnlineForm" entry="ev5zsag" fallback={"Group: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="eq449kh" fallback={"*"} /></span>
               </label>
               <select
                 id="admissionGroup"
@@ -994,7 +923,7 @@ export default function ApplyOnlineForm() {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
               >
-                <option value="">Select Group</option>
+                <option value=""><EditableText document="copy.ui.ApplyOnlineForm" entry="e1vf7f0y" fallback={"Select Group"} /></option>
                 {groups.map((grp) => (
                   <option key={grp} value={grp}>
                     {grp}
@@ -1008,8 +937,7 @@ export default function ApplyOnlineForm() {
               <label
                 htmlFor="admissionYear"
                 className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-              >
-                Year: <span className="text-red-500">*</span>
+              ><EditableText document="copy.ui.ApplyOnlineForm" entry="e1ebvlcx" fallback={"Year: "} /><span className="text-red-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="el1f79m" fallback={"*"} /></span>
               </label>
               <select
                 id="admissionYear"
@@ -1019,7 +947,7 @@ export default function ApplyOnlineForm() {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white focus:outline-none focus:border-[#371b61] focus:ring-1 focus:ring-[#371b61] cursor-pointer"
               >
-                <option value="">Select Year</option>
+                <option value=""><EditableText document="copy.ui.ApplyOnlineForm" entry="e19rcwi" fallback={"Select Year"} /></option>
                 {admissionYears.map((yr) => (
                   <option key={yr} value={yr}>
                     {yr}
@@ -1033,9 +961,7 @@ export default function ApplyOnlineForm() {
               <label
                 htmlFor="residentialStatus"
                 className="block text-xs sm:text-[13px] font-semibold text-gray-700 mb-1"
-              >
-                আবাসিক / অনাবাসিক:
-              </label>
+              ><EditableText document="copy.ui.ApplyOnlineForm" entry="eu7ldze" fallback={"আবাসিক / অনাবাসিক:"} /></label>
               <select
                 id="residentialStatus"
                 name="residentialStatus"
@@ -1059,9 +985,7 @@ export default function ApplyOnlineForm() {
         <section className="space-y-4">
           <div className="flex items-center gap-2 pb-1.5 border-b border-gray-200">
             <Camera size={16} className="text-[#371b61]" />
-            <h3 className="font-bold text-sm sm:text-base text-[#1b3a4b]">
-              Student&apos;s Image:
-            </h3>
+            <h3 className="font-bold text-sm sm:text-base text-[#1b3a4b]"><EditableText document="copy.ui.ApplyOnlineForm" entry="e9ojclg" fallback={"Student&apos;s Image:"} /></h3>
           </div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
@@ -1077,7 +1001,7 @@ export default function ApplyOnlineForm() {
               ) : (
                 <div className="text-center p-2 text-gray-400">
                   <User size={40} className="mx-auto mb-1 opacity-60 text-gray-500" />
-                  <span className="text-[10px] block leading-tight">Student Photo</span>
+                  <span className="text-[10px] block leading-tight"><EditableText document="copy.ui.ApplyOnlineForm" entry="ed89olp" fallback={"Student Photo"} /></span>
                 </div>
               )}
             </div>
@@ -1089,7 +1013,7 @@ export default function ApplyOnlineForm() {
                 className="bg-[#371b61] hover:bg-[#251044] text-white text-xs font-semibold py-2 px-4 rounded shadow-xs transition-colors inline-flex items-center gap-2 cursor-pointer"
               >
                 <Upload size={14} />
-                <span>ছবি নির্বাচন করুন (Browse...)</span>
+                <span><EditableText document="copy.ui.ApplyOnlineForm" entry="e1pldq0k" fallback={"ছবি নির্বাচন করুন (Browse...)"} /></span>
               </label>
               <input
                 id="student-photo-upload"
@@ -1098,9 +1022,7 @@ export default function ApplyOnlineForm() {
                 onChange={handleImageUpload}
                 className="hidden"
               />
-              <p className="text-[11px] text-gray-500">
-                পাসপোর্ট সাইজের রঙিন ছবি আপলোড করুন (সর্বোচ্চ 2MB, JPG/PNG)।
-              </p>
+              <p className="text-[11px] text-gray-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e1w92cvz" fallback={"পাসপোর্ট সাইজের রঙিন ছবি আপলোড করুন (সর্বোচ্চ 2MB, JPG/PNG)।"} /></p>
             </div>
           </div>
         </section>
@@ -1109,9 +1031,10 @@ export default function ApplyOnlineForm() {
         <div className="pt-4 border-t border-gray-200 flex items-center justify-end">
           <button
             type="submit"
+            disabled={isSubmitting || preparingPhoto}
             className="bg-[#16a34a] hover:bg-[#15803d] text-white text-xs sm:text-sm font-bold py-2.5 px-8 rounded shadow-sm transition-all duration-150 inline-flex items-center gap-2 cursor-pointer transform hover:scale-[1.02]"
           >
-            <span>Next / আবেদন সম্পন্ন করুন</span>
+            <span><EditableText document="copy.ui.ApplyOnlineForm" entry="e1s6qxm7" fallback={"Next / আবেদন সম্পন্ন করুন"} /></span>
             <ArrowRight size={15} />
           </button>
         </div>
@@ -1126,15 +1049,11 @@ export default function ApplyOnlineForm() {
             {/* Modal Header */}
             <div className="bg-[#126b59] text-white px-5 py-3.5 flex items-center justify-between">
               <h3 className="font-bold text-sm sm:text-base flex items-center gap-2">
-                <CheckCircle size={18} />
-                অনলাইন ভর্তি আবেদন সম্পন্ন হয়েছে
-              </h3>
+                <CheckCircle size={18} /><EditableText document="copy.ui.ApplyOnlineForm" entry="ep9h5z9" fallback={"অনলাইন ভর্তি আবেদন সম্পন্ন হয়েছে"} /></h3>
               <button
                 onClick={() => setSubmittedApplication(null)}
                 className="text-white/80 hover:text-white p-1 rounded hover:bg-white/10"
-              >
-                ✕
-              </button>
+              ><EditableText document="copy.ui.ApplyOnlineForm" entry="eakk5b5" fallback={"✕"} /></button>
             </div>
 
             {/* Modal Slip Body */}
@@ -1142,48 +1061,46 @@ export default function ApplyOnlineForm() {
               <div className="text-center pb-3 border-b-2 border-teal-800">
                 <h2 className="text-lg font-bold text-gray-900">{siteSettings.nameBn}</h2>
                 <p className="text-xs text-gray-600">{siteSettings.address}</p>
-                <span className="inline-block mt-2 bg-[#371b61] text-white text-xs font-bold px-3 py-1 rounded">
-                  ভর্তি আবেদন স্লিপ (Application Slip)
-                </span>
+                <span className="inline-block mt-2 bg-[#371b61] text-white text-xs font-bold px-3 py-1 rounded"><EditableText document="copy.ui.ApplyOnlineForm" entry="esah45g" fallback={"ভর্তি আবেদন স্লিপ (Application Slip)"} /></span>
               </div>
 
               <div className="grid grid-cols-2 gap-3 text-xs bg-gray-50 p-4 rounded border border-gray-200">
                 <div>
-                  <span className="text-gray-500">আবেদনপত্র নং:</span>
+                  <span className="text-gray-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e1ibsum8" fallback={"আবেদনপত্র নং:"} /></span>
                   <p className="font-mono font-bold text-sm text-[#8B111A]">
                     {submittedApplication.appId}
                   </p>
                 </div>
                 <div>
-                  <span className="text-gray-500">আবেদনের তারিখ:</span>
+                  <span className="text-gray-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e1kc2fem" fallback={"আবেদনের তারিখ:"} /></span>
                   <p className="font-bold text-gray-800">{submittedApplication.date}</p>
                 </div>
                 <div>
-                  <span className="text-gray-500">শিক্ষার্থীর নাম:</span>
+                  <span className="text-gray-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e1b240ol" fallback={"শিক্ষার্থীর নাম:"} /></span>
                   <p className="font-bold text-gray-900">{formData.studentName || "—"}</p>
                 </div>
                 <div>
-                  <span className="text-gray-500">পিতার নাম:</span>
+                  <span className="text-gray-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e4g6b2y" fallback={"পিতার নাম:"} /></span>
                   <p className="font-bold text-gray-900">{formData.fatherName || "—"}</p>
                 </div>
                 <div>
-                  <span className="text-gray-500">পিতার মোবাইল:</span>
+                  <span className="text-gray-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e1ogc6iq" fallback={"পিতার মোবাইল:"} /></span>
                   <p className="font-mono text-gray-800">{formData.fatherMobile || "—"}</p>
                 </div>
                 <div>
-                  <span className="text-gray-500">ভর্তির শ্রেণি:</span>
+                  <span className="text-gray-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="efmu9d7" fallback={"ভর্তির শ্রেণি:"} /></span>
                   <p className="font-bold text-teal-800">{formData.admissionClass || "—"}</p>
                 </div>
                 <div>
-                  <span className="text-gray-500">বিভাগ / গ্রুপ:</span>
+                  <span className="text-gray-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e1r0rs3p" fallback={"বিভাগ / গ্রুপ:"} /></span>
                   <p className="font-medium text-gray-800">{formData.admissionGroup || "—"}</p>
                 </div>
                 <div>
-                  <span className="text-gray-500">আবাসন ধরন:</span>
+                  <span className="text-gray-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="e15j8ckk" fallback={"আবাসন ধরন:"} /></span>
                   <p className="font-medium text-gray-800">{formData.residentialStatus}</p>
                 </div>
                 <div className="col-span-2">
-                  <span className="text-gray-500">বর্তমান ঠিকানা:</span>
+                  <span className="text-gray-500"><EditableText document="copy.ui.ApplyOnlineForm" entry="ebbm7d8" fallback={"বর্তমান ঠিকানা:"} /></span>
                   <p className="text-gray-800">
                     {[
                       formData.presentVillage,
@@ -1198,10 +1115,8 @@ export default function ApplyOnlineForm() {
               </div>
 
               <div className="bg-amber-50 p-3 rounded text-[11px] text-amber-900 border border-amber-200">
-                <p className="font-bold mb-1">গুরুত্বপূর্ণ নির্দেশনা:</p>
-                <p>
-                  এই স্লিপটি প্রিন্ট অথবা স্ক্রিনশট সংরক্ষণ করে রাখুন। ভর্তি পরীক্ষার দিন মূল কপি ও প্রয়োজনীয় কাগজপত্র সহ অফিসে উপস্থিত হতে হবে।
-                </p>
+                <p className="font-bold mb-1"><EditableText document="copy.ui.ApplyOnlineForm" entry="e1kcp9mb" fallback={"গুরুত্বপূর্ণ নির্দেশনা:"} /></p>
+                <p><EditableText document="copy.ui.ApplyOnlineForm" entry="ekamwjk" fallback={"এই স্লিপটি প্রিন্ট অথবা স্ক্রিনশট সংরক্ষণ করে রাখুন। ভর্তি পরীক্ষার দিন মূল কপি ও প্রয়োজনীয় কাগজপত্র সহ অফিসে উপস্থিত হতে হবে।"} /></p>
               </div>
 
               {/* Action Buttons */}
@@ -1212,15 +1127,13 @@ export default function ApplyOnlineForm() {
                   className="flex-1 bg-[#126b59] hover:bg-[#0e5244] text-white py-2 rounded text-xs font-bold flex items-center justify-center gap-2 transition-colors cursor-pointer"
                 >
                   <Printer size={15} />
-                  <span>স্লিপ প্রিন্ট করুন</span>
+                  <span><EditableText document="copy.ui.ApplyOnlineForm" entry="e1c8io94" fallback={"স্লিপ প্রিন্ট করুন"} /></span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setSubmittedApplication(null)}
                   className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded text-xs font-bold transition-colors cursor-pointer"
-                >
-                  বন্ধ করুন
-                </button>
+                ><EditableText document="copy.ui.ApplyOnlineForm" entry="einw4ji" fallback={"বন্ধ করুন"} /></button>
               </div>
             </div>
           </div>

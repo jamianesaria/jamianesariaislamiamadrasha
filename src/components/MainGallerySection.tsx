@@ -2,10 +2,10 @@
 
 import { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import Image from "next/image";
+
 import {
-  sampleGalleryPhotos,
-  sampleGalleryVideos,
+  sampleGalleryPhotos as _fallback_sampleGalleryPhotos,
+  sampleGalleryVideos as _fallback_sampleGalleryVideos,
   GalleryPhotoItem,
   GalleryVideoItem,
 } from "@/data/siteData";
@@ -26,11 +26,20 @@ import {
   Share2,
   Check,
 } from "lucide-react";
+import { EditableImage as Image, useEditableData, EditableText, useGalleryRecords } from "@/content/client";
+import { fieldSource } from "@/content/model";
+
 
 type MediaTab = "photos" | "videos" | "all";
 type CategoryFilter = "all" | "campus" | "hifz" | "kitab" | "classroom" | "events" | "quran" | "waz" | "madrasa";
 
 function GalleryContent() {
+  const fallbackPhotos = useEditableData("copy.data.sampleGalleryPhotos", _fallback_sampleGalleryPhotos);
+  const fallbackVideos = useEditableData("copy.data.sampleGalleryVideos", _fallback_sampleGalleryVideos);
+  const galleryRecords = useGalleryRecords();
+  const sampleGalleryPhotos = galleryRecords?.photos ?? fallbackPhotos;
+  const sampleGalleryVideos = galleryRecords?.videos ?? fallbackVideos;
+
   const searchParams = useSearchParams();
   const initialTab = (searchParams.get("type") as MediaTab) || "photos";
   const initialCategory = (searchParams.get("category") as CategoryFilter) || "all";
@@ -41,36 +50,9 @@ function GalleryContent() {
 
   // Lightbox modal states
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const [activeVideo, setActiveVideo] = useState<GalleryVideoItem | null>(null);
+  const [selectedVideo, setActiveVideo] = useState<GalleryVideoItem | null>(null);
+  const activeVideo = selectedVideo ? sampleGalleryVideos.find((video) => video.id === selectedVideo.id) ?? null : null;
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
-
-  // Sync tab from URL if present
-  useEffect(() => {
-    const t = searchParams.get("type") as MediaTab;
-    if (t && ["photos", "videos", "all"].includes(t)) {
-      setActiveTab(t);
-    }
-    const c = searchParams.get("category") as CategoryFilter;
-    if (c) {
-      setActiveCategory(c);
-    }
-  }, [searchParams]);
-
-  // Keyboard navigation for lightbox
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (lightboxIndex !== null) {
-        if (e.key === "Escape") setLightboxIndex(null);
-        if (e.key === "ArrowLeft") handlePrevPhoto();
-        if (e.key === "ArrowRight") handleNextPhoto();
-      }
-      if (activeVideo !== null && e.key === "Escape") {
-        setActiveVideo(null);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  });
 
   // Filtered Photos
   const filteredPhotos = useMemo(() => {
@@ -91,7 +73,7 @@ function GalleryContent() {
     }
 
     return list;
-  }, [activeTab, activeCategory, searchQuery]);
+  }, [activeTab, activeCategory, searchQuery, sampleGalleryPhotos]);
 
   // Filtered Videos
   const filteredVideos = useMemo(() => {
@@ -117,10 +99,10 @@ function GalleryContent() {
     }
 
     return list;
-  }, [activeTab, activeCategory, searchQuery]);
+  }, [activeTab, activeCategory, searchQuery, sampleGalleryVideos]);
 
   // Lightbox handlers
-  const openLightbox = (photoId: number) => {
+  const openLightbox = (photoId: GalleryPhotoItem["id"]) => {
     const idx = filteredPhotos.findIndex((p) => p.id === photoId);
     if (idx !== -1) setLightboxIndex(idx);
   };
@@ -138,6 +120,22 @@ function GalleryContent() {
       prev! < filteredPhotos.length - 1 ? prev! + 1 : 0
     );
   };
+
+  // Keyboard navigation for lightbox
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (lightboxIndex !== null) {
+        if (e.key === "Escape") setLightboxIndex(null);
+        if (e.key === "ArrowLeft") handlePrevPhoto();
+        if (e.key === "ArrowRight") handleNextPhoto();
+      }
+      if (activeVideo !== null && e.key === "Escape") {
+        setActiveVideo(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  });
 
   const currentPhoto =
     lightboxIndex !== null ? filteredPhotos[lightboxIndex] : null;
@@ -158,15 +156,10 @@ function GalleryContent() {
       <div className="text-center space-y-3 max-w-2xl mx-auto pt-2">
         <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#016332] bg-emerald-50 px-3.5 py-1 rounded-full border border-emerald-200">
           <Camera size={13} />
-          <span>ফটোগ্রাফি ও মিডিয়া আর্কাইভ</span>
+          <span><EditableText document="copy.ui.MainGallerySection" entry="e1yl7i7k" fallback={"ফটোগ্রাফি ও মিডিয়া আর্কাইভ"} /></span>
         </span>
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 tracking-tight">
-          ছবি ও ভিডিও গ্যালারি
-        </h1>
-        <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-          জামিয়া নেছারিয়া ইসলামিয়া মাদরাসার ক্যাম্পাস, শিক্ষাকার্যক্রম, হিফজুল কুরআন ও দ্বীনি
-          মাহফিলের প্রামাণ্য চিত্রশালা।
-        </p>
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 tracking-tight"><EditableText document="copy.ui.MainGallerySection" entry="e1eu7nqm" fallback={"ছবি ও ভিডিও গ্যালারি"} /></h1>
+        <p className="text-xs sm:text-sm text-gray-600 leading-relaxed"><EditableText document="copy.ui.MainGallerySection" entry="e1eyoaoc" fallback={"জামিয়া নেছারিয়া ইসলামিয়া মাদরাসার ক্যাম্পাস, শিক্ষাকার্যক্রম, হিফজুল কুরআন ও দ্বীনি মাহফিলের প্রামাণ্য চিত্রশালা।"} /></p>
       </div>
 
       {/* =====================================================================
@@ -187,7 +180,7 @@ function GalleryContent() {
               }`}
             >
               <Camera size={16} />
-              <span>স্থিরচিত্র (ছবি)</span>
+              <span><EditableText document="copy.ui.MainGallerySection" entry="eopm6ol" fallback={"স্থিরচিত্র (ছবি)"} /></span>
               <span
                 className={`text-[11px] font-mono px-2 py-0.2 rounded-full font-bold ${
                   activeTab === "photos"
@@ -209,7 +202,7 @@ function GalleryContent() {
               }`}
             >
               <Film size={16} />
-              <span>ভিডিও ও ড্রোন</span>
+              <span><EditableText document="copy.ui.MainGallerySection" entry="e1hxw8tl" fallback={"ভিডিও ও ড্রোন"} /></span>
               <span
                 className={`text-[11px] font-mono px-2 py-0.2 rounded-full font-bold ${
                   activeTab === "videos"
@@ -231,7 +224,7 @@ function GalleryContent() {
               }`}
             >
               <Sparkles size={14} />
-              <span>সবগুলো</span>
+              <span><EditableText document="copy.ui.MainGallerySection" entry="e1sfxt9k" fallback={"সবগুলো"} /></span>
             </button>
           </div>
 
@@ -295,7 +288,7 @@ function GalleryContent() {
       {activeTab !== "photos" && activeCategory === "all" && !searchQuery && (
         <div className="relative rounded-3xl overflow-hidden bg-black shadow-xl group border-2 border-stone-800">
           <div className="relative aspect-[21/9] sm:aspect-[21/8] min-h-[220px] sm:min-h-[340px] w-full">
-            <Image
+            <Image document="copy.ui.MainGallerySection" entry="eithl6p"
               src="/drone_poster.jpg"
               alt="জামিয়া নেছারিয়া ক্যাম্পাস ও ড্রোন শট"
               fill
@@ -306,20 +299,14 @@ function GalleryContent() {
             {/* Play Button & Details */}
             <div className="absolute inset-0 flex flex-col justify-end p-5 sm:p-8 text-white space-y-2">
               <div className="flex items-center gap-2">
-                <span className="bg-red-600 text-white text-[10px] sm:text-xs font-black uppercase px-2.5 py-0.5 rounded-md tracking-wider">
-                  অফিশিয়াল ড্রোন ফুটেজ
-                </span>
-                <span className="text-xs text-amber-300 font-mono font-bold">০১:৪৫ মিনিট</span>
+                <span className="bg-red-600 text-white text-[10px] sm:text-xs font-black uppercase px-2.5 py-0.5 rounded-md tracking-wider"><EditableText document="copy.ui.MainGallerySection" entry="e1vvgoqi" fallback={"অফিশিয়াল ড্রোন ফুটেজ"} /></span>
+                <span className="text-xs text-amber-300 font-mono font-bold"><EditableText document="copy.ui.MainGallerySection" entry="e12qjscs" fallback={"০১:৪৫ মিনিট"} /></span>
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
                 <div className="space-y-1 max-w-2xl">
-                  <h2 className="text-lg sm:text-2xl font-black text-white leading-tight">
-                    পাখির চোখে জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা
-                  </h2>
-                  <p className="text-xs sm:text-sm text-gray-300 line-clamp-1">
-                    মরকুন, তিস্তা গেট–আনোয়ার সিল্ক মিলস সংলগ্ন সুবিশাল ৪ তলা ক্যাম্পাস ও প্রাঙ্গণের আকাশদৃশ্য।
-                  </p>
+                  <h2 className="text-lg sm:text-2xl font-black text-white leading-tight"><EditableText document="copy.ui.MainGallerySection" entry="e1g8k0tn" fallback={"পাখির চোখে জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা"} /></h2>
+                  <p className="text-xs sm:text-sm text-gray-300 line-clamp-1"><EditableText document="copy.ui.MainGallerySection" entry="e1p278lq" fallback={"মরকুন, তিস্তা গেট–আনোয়ার সিল্ক মিলস সংলগ্ন সুবিশাল ৪ তলা ক্যাম্পাস ও প্রাঙ্গণের আকাশদৃশ্য।"} /></p>
                 </div>
 
                 <button
@@ -340,7 +327,7 @@ function GalleryContent() {
                   className="inline-flex items-center gap-2 bg-[#8B111A] hover:bg-[#a81b26] text-white text-xs sm:text-sm font-bold px-5 py-2.5 rounded-xl shadow-lg transition-all transform hover:scale-105 cursor-pointer shrink-0"
                 >
                   <Play size={16} className="fill-white" />
-                  <span>ড্রোন ভিডিও দেখুন</span>
+                  <span><EditableText document="copy.ui.MainGallerySection" entry="e14tsqgi" fallback={"ড্রোন ভিডিও দেখুন"} /></span>
                 </button>
               </div>
             </div>
@@ -354,8 +341,8 @@ function GalleryContent() {
       {filteredPhotos.length === 0 && filteredVideos.length === 0 ? (
         <div className="bg-white rounded-3xl border border-gray-200 p-12 text-center space-y-3">
           <Camera size={40} className="mx-auto text-gray-400" />
-          <h3 className="text-base font-bold text-gray-800">কোনো ছবি বা ভিডিও পাওয়া যায়নি</h3>
-          <p className="text-xs text-gray-500">আপনার অনুসন্ধানের সাথে মিলে এমন কোনো ছবি নেই।</p>
+          <h3 className="text-base font-bold text-gray-800"><EditableText document="copy.ui.MainGallerySection" entry="eitorpx" fallback={"কোনো ছবি বা ভিডিও পাওয়া যায়নি"} /></h3>
+          <p className="text-xs text-gray-500"><EditableText document="copy.ui.MainGallerySection" entry="e1jfdhx" fallback={"আপনার অনুসন্ধানের সাথে মিলে এমন কোনো ছবি নেই।"} /></p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
@@ -366,7 +353,7 @@ function GalleryContent() {
               onClick={() => openLightbox(photo.id)}
               className="group relative rounded-2xl overflow-hidden bg-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer aspect-[4/3] border border-gray-200/80"
             >
-              <Image
+              <Image document="copy.ui.MainGallerySection" entry="eaajngl" source={fieldSource(photo, "imageUrl")}
                 src={photo.imageUrl}
                 alt={photo.title}
                 fill
@@ -429,7 +416,7 @@ function GalleryContent() {
               onClick={() => setActiveVideo(video)}
               className="group relative rounded-2xl overflow-hidden bg-black shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer aspect-[16/10] border-2 border-red-500/30"
             >
-              <Image
+              <Image document="copy.ui.MainGallerySection" entry="e12sgre9" source={fieldSource(video, "thumbnail")}
                 src={video.thumbnail}
                 alt={video.title}
                 fill
@@ -492,8 +479,7 @@ function GalleryContent() {
           >
             {/* Top Toolbar */}
             <div className="flex items-center justify-between pb-3 text-xs text-gray-400">
-              <span className="font-mono text-sm font-bold text-white">
-                ছবি {lightboxIndex! + 1} / {filteredPhotos.length}
+              <span className="font-mono text-sm font-bold text-white"><EditableText document="copy.ui.MainGallerySection" entry="erug8ny" fallback={"ছবি "} />{lightboxIndex! + 1}<EditableText document="copy.ui.MainGallerySection" entry="e1tyehfl" fallback={" / "} />{filteredPhotos.length}
               </span>
 
               <div className="flex items-center gap-3">
@@ -526,7 +512,7 @@ function GalleryContent() {
 
             {/* Main Stage: High-Res Photo with Prev/Next buttons */}
             <div className="relative flex-1 min-h-[350px] sm:min-h-[520px] flex items-center justify-center">
-              <Image
+              <Image document="copy.ui.MainGallerySection" entry="edk114n" source={fieldSource(currentPhoto, "imageUrl")}
                 src={currentPhoto.imageUrl}
                 alt={currentPhoto.title}
                 fill
@@ -629,17 +615,19 @@ function GalleryContent() {
   );
 }
 
+function GalleryRoute() { const params = useSearchParams(); return <GalleryContent key={params.toString()} />; }
+
 export default function MainGallerySection() {
   return (
     <Suspense
       fallback={
         <div className="p-16 text-center text-gray-500 space-y-3">
           <div className="w-10 h-10 border-4 border-[#016332] border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-sm font-semibold">গ্যালারি লোড হচ্ছে...</p>
+          <p className="text-sm font-semibold"><EditableText document="copy.ui.MainGallerySection" entry="e1ks35lc" fallback={"গ্যালারি লোড হচ্ছে..."} /></p>
         </div>
       }
     >
-      <GalleryContent />
+      <GalleryRoute />
     </Suspense>
   );
 }

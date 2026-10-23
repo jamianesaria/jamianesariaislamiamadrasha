@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { siteSettings } from "@/data/navigationData";
+import type { PublicSettings } from "@/content/public-types";
+import { useSubmission } from "@/lib/submissions/useSubmission";
+import { siteSettings as _fallback_siteSettings } from "@/data/navigationData";
 import { 
   Mail, 
   MapPin, 
@@ -12,12 +14,18 @@ import {
   ExternalLink,
   Building2
 } from "lucide-react";
+import { useEditableData, EditableText, useFieldAttribute } from "@/content/client";
+import { stegaClean } from "@sanity/client/stega";
+
 
 interface ContactSectionProps {
-  initialSettings?: any;
+  initialSettings?: PublicSettings;
 }
 
 export default function ContactSection({ initialSettings }: ContactSectionProps = {}) {
+  const fieldAttribute = useFieldAttribute();
+  const siteSettings = useEditableData("siteSettings", _fallback_siteSettings);
+
   const currentSettings = initialSettings || siteSettings;
   const [formData, setFormData] = useState({
     name: "",
@@ -26,30 +34,18 @@ export default function ContactSection({ initialSettings }: ContactSectionProps 
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { submit, isSubmitting, error } = useSubmission("/api/contact");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          phone: "০১৭১৬২৯৬৩৭৯", // default or fallback if not entered
-        }),
-      });
-    } catch (err) {
-      console.warn("Contact submission offline fallback:", err);
-    } finally {
-      setIsSubmitting(false);
+    const saved = await submit(formData);
+    if (saved) {
       setSubmitted(true);
       setFormData({ name: "", email: "", subject: "", message: "" });
     }
   };
 
-  const mapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(
+  const mapEmbedUrl = /^https:\/\//.test(stegaClean(currentSettings.mapQuery || "")) ? stegaClean(currentSettings.mapQuery) : `https://maps.google.com/maps?q=${encodeURIComponent(
     "Jamia Nesaria Islamia, Morkun, Tongi, Gazipur"
   )}&t=m&z=15&output=embed&iwloc=near`;
 
@@ -62,7 +58,7 @@ export default function ContactSection({ initialSettings }: ContactSectionProps 
             <Building2 size={20} />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-gray-800">প্রতিষ্ঠানের নাম</h4>
+            <h4 className="text-xs font-bold text-gray-800"><EditableText document="copy.ui.ContactSection" entry="e1jai5nk" fallback={"প্রতিষ্ঠানের নাম"} /></h4>
             <p className="text-xs text-gray-600 font-medium line-clamp-1">{currentSettings.nameBn}</p>
           </div>
         </div>
@@ -72,8 +68,8 @@ export default function ContactSection({ initialSettings }: ContactSectionProps 
             <MapPin size={20} />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-gray-800">ঠিকানা</h4>
-            <p className="text-xs text-gray-600 line-clamp-1">{currentSettings.address}</p>
+            <h4 className="text-xs font-bold text-gray-800"><EditableText document="copy.ui.ContactSection" entry="ep49j4" fallback={"ঠিকানা"} /></h4>
+            <p data-sanity={fieldAttribute(currentSettings, "address")} className="text-xs text-gray-600 line-clamp-1">{currentSettings.address}</p>
           </div>
         </div>
 
@@ -82,8 +78,8 @@ export default function ContactSection({ initialSettings }: ContactSectionProps 
             <Phone size={20} />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-gray-800">হেল্পলাইন / ফোন</h4>
-            <p className="text-xs text-gray-600">{currentSettings.phone}</p>
+            <h4 className="text-xs font-bold text-gray-800"><EditableText document="copy.ui.ContactSection" entry="e1ahkfov" fallback={"হেল্পলাইন / ফোন"} /></h4>
+            <p data-sanity={fieldAttribute(currentSettings, "phone")} className="text-xs text-gray-600">{currentSettings.phone}</p>
           </div>
         </div>
 
@@ -92,8 +88,8 @@ export default function ContactSection({ initialSettings }: ContactSectionProps 
             <Clock size={20} />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-gray-800">অফিস সময়</h4>
-            <p className="text-xs text-gray-600">সকাল ৮:০০ - বিকাল ৪:৩০</p>
+            <h4 className="text-xs font-bold text-gray-800"><EditableText document="copy.ui.ContactSection" entry="eqpvswo" fallback={"অফিস সময়"} /></h4>
+            <p className="text-xs text-gray-600"><EditableText document="copy.ui.ContactSection" entry="ewvpqej" fallback={"সকাল ৮:০০ - বিকাল ৪:৩০"} /></p>
           </div>
         </div>
 
@@ -110,9 +106,9 @@ export default function ContactSection({ initialSettings }: ContactSectionProps 
             </svg>
           </div>
           <div className="overflow-hidden">
-            <h4 className="text-xs font-bold text-gray-800">অফিশিয়াল ফেসবুক</h4>
+            <h4 className="text-xs font-bold text-gray-800"><EditableText document="copy.ui.ContactSection" entry="e161to9" fallback={"অফিশিয়াল ফেসবুক"} /></h4>
             <p className="text-xs text-[#1877F2] font-semibold truncate group-hover:underline flex items-center gap-1">
-              <span>/jamianesaria</span>
+              <span><EditableText document="copy.ui.ContactSection" entry="e1xbecdj" fallback={"/jamianesaria"} /></span>
               <ExternalLink size={11} />
             </p>
           </div>
@@ -128,12 +124,8 @@ export default function ContactSection({ initialSettings }: ContactSectionProps 
             </svg>
           </div>
           <div>
-            <h3 className="font-bold text-sm sm:text-base text-white">
-              জামিয়া নেছারিয়ার অফিশিয়াল ফেসবুক পেজে যুক্ত থাকুন
-            </h3>
-            <p className="text-xs text-blue-100 mt-0.5">
-              মাদরাসার সর্বশেষ বিজ্ঞপ্তি, লাইভ মাহফিল, বার্ষিক অনুষ্ঠান ও গুরুত্বপূর্ণ নোটিশ পেতে আমাদের পেজটি ফলো করুন।
-            </p>
+            <h3 className="font-bold text-sm sm:text-base text-white"><EditableText document="copy.ui.ContactSection" entry="e1t6dahr" fallback={"জামিয়া নেছারিয়ার অফিশিয়াল ফেসবুক পেজে যুক্ত থাকুন"} /></h3>
+            <p className="text-xs text-blue-100 mt-0.5"><EditableText document="copy.ui.ContactSection" entry="e17ynnby" fallback={"মাদরাসার সর্বশেষ বিজ্ঞপ্তি, লাইভ মাহফিল, বার্ষিক অনুষ্ঠান ও গুরুত্বপূর্ণ নোটিশ পেতে আমাদের পেজটি ফলো করুন।"} /></p>
           </div>
         </div>
 
@@ -143,7 +135,7 @@ export default function ContactSection({ initialSettings }: ContactSectionProps 
           rel="noopener noreferrer"
           className="shrink-0 bg-white hover:bg-amber-300 text-[#1877F2] hover:text-gray-950 text-xs sm:text-sm font-bold px-5 py-2.5 rounded-lg shadow-md transition-all hover:scale-105 flex items-center gap-2"
         >
-          <span>ফেসবুক পেজ ভিজিট করুন</span>
+          <span><EditableText document="copy.ui.ContactSection" entry="e1t49iwb" fallback={"ফেসবুক পেজ ভিজিট করুন"} /></span>
           <ExternalLink size={14} />
         </a>
       </div>
@@ -153,34 +145,29 @@ export default function ContactSection({ initialSettings }: ContactSectionProps 
         {/* Header Bar matching teal/deep cyan-green from screenshot */}
         <div className="bg-[#126b59] text-white px-4 py-2.5 flex items-center gap-2 font-bold text-sm sm:text-base shadow-xs">
           <Mail size={18} />
-          <span>আমাদের মেসেজ পাঠান</span>
+          <span><EditableText document="copy.ui.ContactSection" entry="e18c5vw4" fallback={"আমাদের মেসেজ পাঠান"} /></span>
         </div>
 
         <div className="p-4 sm:p-6">
           {submitted ? (
             <div className="bg-emerald-50 border border-emerald-300 rounded p-6 text-center space-y-2 animate-in fade-in">
               <CheckCircle2 size={36} className="text-emerald-600 mx-auto" />
-              <h4 className="font-bold text-emerald-900 text-base">আপনার বার্তাটি সফলভাবে পাঠানো হয়েছে!</h4>
-              <p className="text-xs text-emerald-700">
-                আমাদের প্রতিনিধি শীঘ্রই আপনার সাথে যোগাযোগ করবেন। জাযাকাল্লাহু খাইরান।
-              </p>
+              <h4 className="font-bold text-emerald-900 text-base"><EditableText document="copy.ui.ContactSection" entry="e1ykzc5o" fallback={"আপনার বার্তাটি সফলভাবে পাঠানো হয়েছে!"} /></h4>
+              <p className="text-xs text-emerald-700"><EditableText document="copy.ui.ContactSection" entry="emuvams" fallback={"আমাদের প্রতিনিধি শীঘ্রই আপনার সাথে যোগাযোগ করবেন। জাযাকাল্লাহু খাইরান।"} /></p>
               <button
                 onClick={() => setSubmitted(false)}
                 className="mt-3 bg-[#126b59] text-white text-xs font-bold py-1.5 px-4 rounded hover:bg-[#0e5244] transition-colors cursor-pointer"
-              >
-                আরেকটি বার্তা পাঠান
-              </button>
+              ><EditableText document="copy.ui.ContactSection" entry="e10tqxyg" fallback={"আরেকটি বার্তা পাঠান"} /></button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
+              {error && <p role="alert" className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-800">{error}</p>}
               {/* Name field */}
               <div>
                 <label 
                   htmlFor="contact-name" 
                   className="block text-xs sm:text-sm font-bold text-gray-700 mb-1"
-                >
-                  নাম:
-                </label>
+                ><EditableText document="copy.ui.ContactSection" entry="e1u3dgbr" fallback={"নাম:"} /></label>
                 <input
                   id="contact-name"
                   type="text"
@@ -197,9 +184,7 @@ export default function ContactSection({ initialSettings }: ContactSectionProps 
                 <label 
                   htmlFor="contact-email" 
                   className="block text-xs sm:text-sm font-bold text-gray-700 mb-1"
-                >
-                  ইমেইল ঠিকানা:
-                </label>
+                ><EditableText document="copy.ui.ContactSection" entry="el36eu7" fallback={"ইমেইল ঠিকানা:"} /></label>
                 <input
                   id="contact-email"
                   type="email"
@@ -216,9 +201,7 @@ export default function ContactSection({ initialSettings }: ContactSectionProps 
                 <label 
                   htmlFor="contact-subject" 
                   className="block text-xs sm:text-sm font-bold text-gray-700 mb-1"
-                >
-                  বিষয়:
-                </label>
+                ><EditableText document="copy.ui.ContactSection" entry="e8ubpbq" fallback={"বিষয়:"} /></label>
                 <input
                   id="contact-subject"
                   type="text"
@@ -235,9 +218,7 @@ export default function ContactSection({ initialSettings }: ContactSectionProps 
                 <label 
                   htmlFor="contact-message" 
                   className="block text-xs sm:text-sm font-bold text-gray-700 mb-1"
-                >
-                  বার্তা লিখুন
-                </label>
+                ><EditableText document="copy.ui.ContactSection" entry="egkgls" fallback={"বার্তা লিখুন"} /></label>
                 <textarea
                   id="contact-message"
                   required
@@ -271,7 +252,7 @@ export default function ContactSection({ initialSettings }: ContactSectionProps 
         <div className="bg-[#126b59] text-white px-4 py-2.5 flex items-center justify-between font-bold text-sm sm:text-base shadow-xs">
           <div className="flex items-center gap-2">
             <MapPin size={18} />
-            <span>ম্যাপে আমাদের অবস্থান</span>
+            <span><EditableText document="copy.ui.ContactSection" entry="e1y6birt" fallback={"ম্যাপে আমাদের অবস্থান"} /></span>
           </div>
           <a
             href={`https://maps.google.com/?q=${encodeURIComponent(
@@ -281,7 +262,7 @@ export default function ContactSection({ initialSettings }: ContactSectionProps 
             rel="noopener noreferrer"
             className="text-xs text-white hover:text-amber-200 flex items-center gap-1 font-normal"
           >
-            <span>Open in Maps</span>
+            <span><EditableText document="copy.ui.ContactSection" entry="ewub55w" fallback={"Open in Maps"} /></span>
             <ExternalLink size={12} />
           </a>
         </div>
@@ -311,7 +292,7 @@ export default function ContactSection({ initialSettings }: ContactSectionProps 
                   {currentSettings.address}
                 </p>
                 <div className="mt-2 pt-2 border-t border-gray-100 flex items-center justify-between text-[11px]">
-                  <span className="text-gray-500">টঙ্গী, গাজীপুর</span>
+                  <span className="text-gray-500"><EditableText document="copy.ui.ContactSection" entry="e14dn80b" fallback={"টঙ্গী, গাজীপুর"} /></span>
                   <a
                     href={`https://maps.google.com/?q=${encodeURIComponent(
                       "জামিয়া নেছারিয়া ইসলামিয়া টঙ্গী মরকুন গাজীপুর"
@@ -319,9 +300,7 @@ export default function ContactSection({ initialSettings }: ContactSectionProps 
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[#126b59] font-bold hover:underline"
-                  >
-                    দিকনির্দেশনা পান →
-                  </a>
+                  ><EditableText document="copy.ui.ContactSection" entry="e1qgea9s" fallback={"দিকনির্দেশনা পান →"} /></a>
                 </div>
               </div>
             </div>

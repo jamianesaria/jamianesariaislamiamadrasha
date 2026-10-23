@@ -1,13 +1,20 @@
-import Image from "next/image";
+
 import Link from "next/link";
-import { siteSettings as defaultSettings, homePageContent as defaultHome } from "@/data/siteData";
+import type { PublicSettings, HomepageContent } from "@/content/public-types";
+import { siteSettings as _fallback_defaultSettings, homePageContent as _fallback_defaultHome } from "@/data/siteData";
+import { EditableImage as Image, getEditableData, EditableText } from "@/content/server";
+import { fieldSource } from "@/content/model";
+
 
 interface FooterProps {
-  initialSettings?: any;
-  initialData?: any;
+  initialSettings?: PublicSettings;
+  initialData?: HomepageContent;
 }
 
-export default function Footer({ initialSettings, initialData }: FooterProps = {}) {
+export default async function Footer({ initialSettings, initialData }: FooterProps = {}) {
+  const defaultSettings = await getEditableData("siteSettings", _fallback_defaultSettings);
+  const defaultHome = await getEditableData("copy.data.homePageContent", _fallback_defaultHome);
+
   const settings = initialSettings || defaultSettings;
   const content = initialData || defaultHome;
   const footer = content.footer || defaultHome.footer;
@@ -21,7 +28,7 @@ export default function Footer({ initialSettings, initialData }: FooterProps = {
           <div className="md:col-span-5 space-y-3">
             <div className="flex items-center gap-3.5">
               <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-[#D9822B] bg-white p-0.5 shrink-0 shadow-sm flex items-center justify-center">
-                <Image
+                <Image document="copy.ui.Footer" entry="e1skobu0" source={fieldSource(settings, "logoUrl")}
                   src={settings.logoUrl || defaultSettings.logoUrl || "/jamia-logo-v2.png"}
                   alt={footer.title || settings.nameBn}
                   width={56}
@@ -33,8 +40,7 @@ export default function Footer({ initialSettings, initialData }: FooterProps = {
                 <h3 className="text-base sm:text-lg font-bold text-white leading-snug">
                   {footer.title || settings.nameBn}
                 </h3>
-                <p className="text-xs text-amber-300 font-semibold mt-0.5">
-                  স্থাপিত: {settings.established} | গভঃ রেজিঃ নং {settings.regNo}
+                <p className="text-xs text-amber-300 font-semibold mt-0.5"><EditableText document="copy.ui.Footer" entry="eay35vn" fallback={"স্থাপিত: "} />{settings.established}<EditableText document="copy.ui.Footer" entry="e1em0cz1" fallback={" | গভঃ রেজিঃ নং "} />{settings.regNo}
                 </p>
               </div>
             </div>
@@ -55,7 +61,7 @@ export default function Footer({ initialSettings, initialData }: FooterProps = {
                 <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                 </svg>
-                <span>অফিশিয়াল ফেসবুক পেজ</span>
+                <span><EditableText document="copy.ui.Footer" entry="e49ujqn" fallback={"অফিশিয়াল ফেসবুক পেজ"} /></span>
               </a>
             </div>
           </div>
@@ -64,16 +70,16 @@ export default function Footer({ initialSettings, initialData }: FooterProps = {
           <div className="md:col-span-4 space-y-3">
             <h4 className="font-bold text-sm text-amber-300 pb-2 border-b border-emerald-800/80 flex items-center gap-2">
               <span className="w-1 h-4 bg-[#D9822B] rounded-full inline-block" />
-              <span>প্রয়োজনীয় লিংকসমূহ</span>
+              <span><EditableText document="copy.ui.Footer" entry="eqwihs1" fallback={"প্রয়োজনীয় লিংকসমূহ"} /></span>
             </h4>
             <ul className="grid grid-cols-2 gap-y-2 gap-x-3 text-xs sm:text-[13.5px]">
-              {(footer.links || defaultHome.footer.links).map((item: any, idx: number) => (
+              {(footer.links || defaultHome.footer.links).map((item, idx) => (
                 <li key={idx}>
                   <Link
                     href={item.href}
                     className="text-emerald-100 hover:text-amber-300 transition-colors flex items-center gap-1.5 group"
                   >
-                    <span className="text-[#D9822B] group-hover:translate-x-0.5 transition-transform">▪</span>
+                    <span className="text-[#D9822B] group-hover:translate-x-0.5 transition-transform"><EditableText document="copy.ui.Footer" entry="emgfzjn" fallback={"▪"} /></span>
                     <span>{item.label}</span>
                   </Link>
                 </li>
@@ -85,21 +91,21 @@ export default function Footer({ initialSettings, initialData }: FooterProps = {
           <div className="md:col-span-3 space-y-3">
             <h4 className="font-bold text-sm text-amber-300 pb-2 border-b border-emerald-800/80 flex items-center gap-2">
               <span className="w-1 h-4 bg-[#D9822B] rounded-full inline-block" />
-              <span>যোগাযোগের ঠিকানা</span>
+              <span><EditableText document="copy.ui.Footer" entry="e1v3hitr" fallback={"যোগাযোগের ঠিকানা"} /></span>
             </h4>
             <div className="space-y-2 text-xs sm:text-[13.5px] text-emerald-100 bg-black/20 p-3.5 rounded-lg border border-emerald-800/60">
               <p>
-                <span className="font-semibold text-amber-200">{contact.addressLabel || "ঠিকানা"}:</span>{" "}
+                <span className="font-semibold text-amber-200">{contact.addressLabel || "ঠিকানা"}<EditableText document="copy.ui.Footer" entry="e1yhhlk7" fallback={":"} /></span>{" "}
                 {settings.address || contact.addressValue}
               </p>
               <p>
-                <span className="font-semibold text-amber-200">{contact.phoneLabel || "মোবাইল"}:</span>{" "}
+                <span className="font-semibold text-amber-200">{contact.phoneLabel || "মোবাইল"}<EditableText document="copy.ui.Footer" entry="e18lzrji" fallback={":"} /></span>{" "}
                 <a href={`tel:${settings.phone || contact.phoneValue}`} className="hover:text-amber-300 font-semibold">
                   {settings.phone || contact.phoneValue}
                 </a>
               </p>
               <p>
-                <span className="font-semibold text-amber-200">{contact.emailLabel || "ইমেইল"}:</span>{" "}
+                <span className="font-semibold text-amber-200">{contact.emailLabel || "ইমেইল"}<EditableText document="copy.ui.Footer" entry="emaj4p4" fallback={":"} /></span>{" "}
                 <a
                   href={`mailto:${settings.email || contact.emailValue}`}
                   className="hover:text-amber-300 break-all"
@@ -108,15 +114,13 @@ export default function Footer({ initialSettings, initialData }: FooterProps = {
                 </a>
               </p>
               <p>
-                <span className="font-semibold text-amber-200">ফেসবুক:</span>{" "}
+                <span className="font-semibold text-amber-200"><EditableText document="copy.ui.Footer" entry="e156ogw9" fallback={"ফেসবুক:"} /></span>{" "}
                 <a
                   href={settings.facebookUrl || "https://www.facebook.com/jamianesaria/"}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-amber-300 text-amber-200 underline font-medium"
-                >
-                  facebook.com/jamianesaria
-                </a>
+                ><EditableText document="copy.ui.Footer" entry="el9dgx6" fallback={"facebook.com/jamianesaria"} /></a>
               </p>
             </div>
           </div>

@@ -1,0 +1,8 @@
+{
+  "HomePrimarySection": "/", "HomeGalleryFilter": "/", "HomeNoticeTabs": "/", "NavigationBar": "/", "HeaderBanner": "/", "Footer": "/", "BreakingNewsBar": "/",
+  "AboutJamiaSection": "/about", "HistoryOrganizationSection": "/about/history", "PhysicalInfrastructureSection": "/about/infrastructure", "VacancyNoticeTable": "/about/vacancy",
+  "AcademicsPageSection": "/academics", "AdmissionInfoSection": "/admission", "ApplyOnlineForm": "/apply", "ContactSection": "/contact", "BadriKafilaSection": "/badri-kafila", "OrphanageSection": "/orphanage",
+  "FacultyAndTeachersSection": "/teachers", "ManagingCommitteeSection": "/committee", "ManagingCommitteeTable": "/profile/managing-committee",
+  "MainGallerySection": "/gallery", "PhotoGallerySection": "/gallery/photo", "VideoGallerySection": "/gallery/video", "BlogSection": "/blog",
+  "ClassRoutineSection": "/functions/class-routine", "ExamRoutineSection": "/exam-routine", "EventListTable": "/functions/event-list", "HolidayListTable": "/functions/holiday", "NoticeListTable": "/notices", "NoticeBoardSection": "/notices", "PublicResultsSection": "/results/academic", "RightSidebar": "/about"
+}

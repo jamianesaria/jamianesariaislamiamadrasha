@@ -1,0 +1,14 @@
+import env from "@next/env";
+import { createClient } from "@sanity/client";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+env.loadEnvConfig(process.cwd());
+const client=createClient({projectId:process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,dataset:process.env.NEXT_PUBLIC_SANITY_DATASET,apiVersion:"2026-03-01",token:process.env.SANITY_API_TOKEN,useCdn:false});
+const types=["siteSettings","homepage","notice","teacher","committeeMember","academicDepartment","classRoutine","examRoutine","examResult","admissionInfo","pageContent","calendarEvent","vacancy","galleryPhoto","galleryVideo","badriKafila","blogPost"];
+const records=await client.fetch('*[_type in $types && !(_id in path("drafts.**"))]',{types});
+mkdirSync(".cms-work",{recursive:true});writeFileSync(".cms-work/public-validation.ndjson",records.map(record=>JSON.stringify(record)).join("\n")+"\n");
+const result=spawnSync(process.execPath,["node_modules/sanity/bin/sanity","documents","validate","--file",".cms-work/public-validation.ndjson","--yes","--format","json","--level","error"],{encoding:"utf8",env:{...process.env,SANITY_AUTH_TOKEN:process.env.SANITY_API_TOKEN},maxBuffer:10*1024*1024});
+writeFileSync(".cms-work/document-validation.json",result.stdout||"");
+if(result.stderr)console.log(result.stderr.slice(-2000));
+console.log(JSON.stringify({publicDocuments:records.length,exitCode:result.status,report:".cms-work/document-validation.json"}));
+if(result.status)process.exitCode=result.status;

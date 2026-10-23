@@ -1,14 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { availableClasses, sampleExamRoutines } from "@/data/siteData";
+import { availableClasses as _fallback_availableClasses } from "@/data/siteData";
+import type { ExamRoutineDocument } from "@/sanity/lib/documents";
+import { stegaClean } from "@sanity/client/stega";
 import { GraduationCap, Search, Calendar, Clock, MapPin } from "lucide-react";
+import { useEditableData, EditableText } from "@/content/client";
 
-export default function ExamRoutineSection() {
+
+export default function ExamRoutineSection({ records = [] }: { records?: ExamRoutineDocument[] }) {
+  const availableClasses = useEditableData("copy.data.availableClasses", _fallback_availableClasses);
+
   const [selectedClass, setSelectedClass] = useState<string>("play");
   const [searched, setSearched] = useState<boolean>(false);
 
-  const examData = searched ? sampleExamRoutines[selectedClass] || [] : [];
+  const routine = records.find((item) => stegaClean(item.classId || "") === "all" || stegaClean(item.classId || "") === selectedClass || stegaClean(item.className || "").toLowerCase() === availableClasses.find((entry) => entry.id === selectedClass)?.name.toLowerCase());
+  const examData = searched ? routine?.examRows || [] : [];
 
   const handleSearch = () => {
     setSearched(true);
@@ -16,10 +23,11 @@ export default function ExamRoutineSection() {
 
   return (
     <div className="bg-white rounded border border-gray-200 shadow-xs overflow-hidden">
+      {routine?.pdfUrl && <a href={stegaClean(routine.pdfUrl)} target="_blank" rel="noreferrer" className="block p-3 text-sm font-semibold text-[#126b59] underline"><EditableText document="copy.ui.ExamRoutineSection" entry="eln59sg" fallback={"অফিসিয়াল পরীক্ষার রুটিন PDF দেখুন"} /></a>}
       {/* Table Header Bar - matching teal/deep cyan-green from screenshot */}
       <div className="bg-[#126b59] text-white px-4 py-2.5 flex items-center gap-2 font-bold text-sm sm:text-base shadow-xs">
         <GraduationCap size={18} />
-        <span>পরীক্ষা রুটিন</span>
+        <span><EditableText document="copy.ui.ExamRoutineSection" entry="e7ke44o" fallback={"পরীক্ষা রুটিন"} /></span>
       </div>
 
       <div className="p-4 sm:p-5 space-y-4">
@@ -28,9 +36,7 @@ export default function ExamRoutineSection() {
           <label
             htmlFor="exam-class-select"
             className="block text-xs font-bold text-gray-700 mb-1"
-          >
-            শ্রেণী
-          </label>
+          ><EditableText document="copy.ui.ExamRoutineSection" entry="e1n6fqv5" fallback={"শ্রেণী"} /></label>
           <select
             id="exam-class-select"
             value={selectedClass}
@@ -55,7 +61,7 @@ export default function ExamRoutineSection() {
             className="inline-flex items-center gap-1.5 bg-[#371b61] hover:bg-[#251044] text-white text-xs sm:text-sm font-bold px-5 py-2 rounded shadow-xs transition-colors cursor-pointer"
           >
             <Search size={14} />
-            <span>অনুসন্ধান</span>
+            <span><EditableText document="copy.ui.ExamRoutineSection" entry="eew35b8" fallback={"অনুসন্ধান"} /></span>
           </button>
         </div>
 
@@ -67,11 +73,11 @@ export default function ExamRoutineSection() {
                 <table className="w-full text-left border-collapse text-xs sm:text-sm">
                   <thead>
                     <tr className="bg-[#126b59] text-white font-bold">
-                      <th className="py-2.5 px-3 border border-teal-800 text-center w-14">#</th>
-                      <th className="py-2.5 px-4 border border-teal-800">তারিখ ও বার</th>
-                      <th className="py-2.5 px-4 border border-teal-800">বিষয়</th>
-                      <th className="py-2.5 px-4 border border-teal-800 text-center">সময়</th>
-                      <th className="py-2.5 px-4 border border-teal-800 text-center">কক্ষ নং</th>
+                      <th className="py-2.5 px-3 border border-teal-800 text-center w-14"><EditableText document="copy.ui.ExamRoutineSection" entry="ewm4yb8" fallback={"#"} /></th>
+                      <th className="py-2.5 px-4 border border-teal-800"><EditableText document="copy.ui.ExamRoutineSection" entry="e1ntl5hj" fallback={"তারিখ ও বার"} /></th>
+                      <th className="py-2.5 px-4 border border-teal-800"><EditableText document="copy.ui.ExamRoutineSection" entry="etp5ybb" fallback={"বিষয়"} /></th>
+                      <th className="py-2.5 px-4 border border-teal-800 text-center"><EditableText document="copy.ui.ExamRoutineSection" entry="e7exelv" fallback={"সময়"} /></th>
+                      <th className="py-2.5 px-4 border border-teal-800 text-center"><EditableText document="copy.ui.ExamRoutineSection" entry="ej7bnvh" fallback={"কক্ষ নং"} /></th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
@@ -83,7 +89,7 @@ export default function ExamRoutineSection() {
                         <td className="py-3 px-4 font-semibold text-gray-900 border border-gray-200">
                           <div className="flex items-center gap-1.5">
                             <Calendar size={13} className="text-[#8B111A] shrink-0" />
-                            <span>{item.date} ({item.day})</span>
+                            <span>{item.date}<EditableText document="copy.ui.ExamRoutineSection" entry="e73lu2t" fallback={" ("} />{item.day}<EditableText document="copy.ui.ExamRoutineSection" entry="e15ibplc" fallback={")"} /></span>
                           </div>
                         </td>
                         <td className="py-3 px-4 font-bold text-[#8B111A] border border-gray-200">
@@ -108,9 +114,7 @@ export default function ExamRoutineSection() {
               </div>
             ) : (
               <div className="py-10 text-center bg-gray-50/50">
-                <p className="text-gray-500 text-sm font-semibold">
-                  নির্বাচিত শ্রেণির পরীক্ষার রুটিন শীঘ্রই প্রকাশিত হবে।
-                </p>
+                <p className="text-gray-500 text-sm font-semibold"><EditableText document="copy.ui.ExamRoutineSection" entry="extuppm" fallback={"নির্বাচিত শ্রেণির পরীক্ষার রুটিন শীঘ্রই প্রকাশিত হবে।"} /></p>
               </div>
             )}
           </div>

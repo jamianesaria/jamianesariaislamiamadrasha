@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { siteSettings, noticeBoard, importantLinks } from "@/data/siteData";
+import { getNotices } from "@/sanity/lib/queries";
+import { siteSettings as _fallback_siteSettings, noticeBoard as _fallback_noticeBoard, importantLinks as _fallback_importantLinks } from "@/data/siteData";
 import {
   FileText,
   Video,
@@ -14,8 +15,14 @@ import {
 } from "lucide-react";
 import TimeDateWidget from "./TimeDateWidget";
 import AgeCalculatorWidget from "./AgeCalculatorWidget";
+import { getEditableData, EditableText } from "@/content/server";
 
-export default function RightSidebar() {
+
+export default async function RightSidebar() {
+  const siteSettings = await getEditableData("siteSettings", _fallback_siteSettings);
+  const noticeBoard = (await getNotices()).slice(0, _fallback_noticeBoard.length).map((notice) => ({ id: notice.id, title: notice.title, date: notice.publishDateBn, link: `/notices?id=${encodeURIComponent(String(notice.id))}` }));
+  const importantLinks = await getEditableData("copy.data.importantLinks", _fallback_importantLinks);
+
   return (
     <aside className="w-full space-y-4">
       {/* 1. Action Buttons */}
@@ -25,7 +32,7 @@ export default function RightSidebar() {
           className="w-full bg-[#1b5e20] hover:bg-[#154a19] text-white py-3 px-4 rounded font-bold text-center flex items-center justify-center gap-2 shadow-sm transition-all duration-200 transform hover:-translate-y-0.5"
         >
           <FileText size={18} />
-          <span>অনলাইন ভর্তি আবেদন</span>
+          <span><EditableText document="copy.ui.RightSidebar" entry="e1r32d45" fallback={"অনলাইন ভর্তি আবেদন"} /></span>
         </Link>
 
         <Link
@@ -33,7 +40,7 @@ export default function RightSidebar() {
           className="w-full bg-[#cc0000] hover:bg-[#a30000] text-white py-3 px-4 rounded font-bold text-center flex items-center justify-center gap-2 shadow-sm transition-all duration-200 transform hover:-translate-y-0.5"
         >
           <Video size={18} />
-          <span>অনলাইন ক্লাস</span>
+          <span><EditableText document="copy.ui.RightSidebar" entry="esovp60" fallback={"অনলাইন ক্লাস"} /></span>
         </Link>
 
         <Link
@@ -41,7 +48,7 @@ export default function RightSidebar() {
           className="w-full bg-[#20693a] hover:bg-[#18532d] text-white py-3 px-4 rounded font-bold text-center flex items-center justify-center gap-2 shadow-sm transition-all duration-200 transform hover:-translate-y-0.5"
         >
           <Download size={18} />
-          <span>Download Apps</span>
+          <span><EditableText document="copy.ui.RightSidebar" entry="e1dm6bcf" fallback={"Download Apps"} /></span>
         </Link>
       </div>
 
@@ -50,14 +57,12 @@ export default function RightSidebar() {
         <div className="bg-[#788e38] text-white px-4 py-2.5 flex items-center justify-between font-bold text-base shadow-xs">
           <div className="flex items-center gap-2">
             <Bell size={18} />
-            <span>নোটিশ বোর্ড</span>
+            <span><EditableText document="copy.ui.RightSidebar" entry="esjjyx3" fallback={"নোটিশ বোর্ড"} /></span>
           </div>
           <Link
             href="/notices"
             className="text-xs font-normal underline hover:text-amber-200"
-          >
-            সকল নোটিশ
-          </Link>
+          ><EditableText document="copy.ui.RightSidebar" entry="eo7er9z" fallback={"সকল নোটিশ"} /></Link>
         </div>
 
         <div className="p-3 divide-y divide-gray-100 max-h-[300px] overflow-y-auto">
@@ -92,15 +97,13 @@ export default function RightSidebar() {
       <div className="bg-white rounded border border-gray-200 shadow-xs overflow-hidden">
         <div className="bg-[#8fae27] text-white px-3.5 py-2 font-bold text-sm sm:text-base flex items-center gap-2 shadow-xs">
           <Layers size={16} />
-          <span>কনটেন্ট ডাউনলোড কর্নার</span>
+          <span><EditableText document="copy.ui.RightSidebar" entry="e1c7kg2p" fallback={"কনটেন্ট ডাউনলোড কর্নার"} /></span>
         </div>
         <div className="p-3">
           <Link
             href="/content-downloads"
             className="w-full bg-[#4a148c] hover:bg-[#380d6b] text-white py-2 px-3 rounded text-xs sm:text-sm font-bold text-center block transition-colors shadow-xs"
-          >
-            আরও দেখুন
-          </Link>
+          ><EditableText document="copy.ui.RightSidebar" entry="e1bl7rnt" fallback={"আরও দেখুন"} /></Link>
         </div>
       </div>
 
@@ -108,7 +111,7 @@ export default function RightSidebar() {
       <div className="bg-white rounded border border-gray-200 shadow-xs overflow-hidden">
         <div className="bg-[#8fae27] text-white px-3.5 py-2 font-bold text-sm sm:text-base flex items-center gap-2 shadow-xs">
           <LinkIcon size={16} />
-          <span>গুরুত্বপূর্ণ লিংক</span>
+          <span><EditableText document="copy.ui.RightSidebar" entry="ebxskb3" fallback={"গুরুত্বপূর্ণ লিংক"} /></span>
         </div>
         <div className="p-3 space-y-2">
           {importantLinks.map((item, idx) => (
@@ -129,7 +132,7 @@ export default function RightSidebar() {
         <div className="bg-[#8fae27] text-white px-3.5 py-2.5 font-bold text-sm sm:text-base flex items-center justify-between shadow-xs cursor-pointer hover:bg-[#7e9c20] transition-colors">
           <div className="flex items-center gap-2">
             <UserCheck size={16} />
-            <span>শিক্ষার্থীর তথ্য</span>
+            <span><EditableText document="copy.ui.RightSidebar" entry="e1a3mzcj" fallback={"শিক্ষার্থীর তথ্য"} /></span>
           </div>
           <ChevronRight size={16} />
         </div>
@@ -140,7 +143,7 @@ export default function RightSidebar() {
         <div className="bg-[#8fae27] text-white px-3.5 py-2.5 font-bold text-sm sm:text-base flex items-center justify-between shadow-xs cursor-pointer hover:bg-[#7e9c20] transition-colors">
           <div className="flex items-center gap-2">
             <HeartHandshake size={16} />
-            <span>সার্বিক সহযোগিতায়</span>
+            <span><EditableText document="copy.ui.RightSidebar" entry="e7n9ynt" fallback={"সার্বিক সহযোগিতায়"} /></span>
           </div>
           <ChevronRight size={16} />
         </div>
