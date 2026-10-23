@@ -15,9 +15,13 @@ try{
   currentRoute=route;
   const start=Date.now(); const response=await page.goto(base+route,{waitUntil:"domcontentloaded",timeout:60000});
   assert.equal(response.status(),200,route);
-  if(route==="/") { const skip=page.getByRole("button",{name:"ওয়েবসাইটে প্রবেশ করুন",exact:true}); if(await skip.isVisible())await skip.click(); }
   await page.locator("nav").first().waitFor();
   await page.waitForFunction(() => getComputedStyle(document.querySelector("nav")).position === "sticky");
+  if(route==="/") {
+   const intro=page.locator(".website-intro");
+   await intro.waitFor({state:"visible",timeout:2000}).catch(()=>{});
+   if(await intro.isVisible()) { await intro.getByRole("button").last().click(); await intro.waitFor({state:"detached"}); }
+  }
   await page.waitForTimeout(200);
   const desktopOverflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);
   await page.setViewportSize({width:390,height:844});await page.waitForTimeout(120);

@@ -38,4 +38,6 @@
 - Browser testing exposed a cached-load race in Sanity's bridge script: its async module could append to document.body before the body existed. Studio now uses the supported client-component export and loads the same bridge with Next Script afterInteractive. Website scrolling, hash handling and preview runtime are excluded from Studio. The final browser pass confirmed no recurrence.
 - Real HTTP tests passed admission, contact and Badri persistence and retry deduplication through the built Next server. Only their own private QA records were removed.
 - Windows Turbopack compilation repeatedly stalled. Development and release scripts now use the verified Webpack/PostCSS pipeline.
-- Push and custom-domain deployment verification remain the release gate. Local/API checks alone do not establish production readiness. No DNS or domain-registration changes were made.
+- Commit `90d9416` and the preceding local blog/navigation commit were pushed to main. GitHub's Vercel status reports a successful deployment, and the custom domain serves the new API implementation.
+- Live HTTP saving currently returns 503, and authenticated preview returns 500. Both passed against the same code locally. The owning Vercel project's server credentials/configuration must be checked before live submissions and preview can be accepted.
+- The saved Vercel login cannot access the owning team/project. Project access or a Production server-only Sanity token configuration and redeployment has been requested. No DNS or domain-registration changes were made.
