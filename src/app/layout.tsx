@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { Hind_Siliguri } from "next/font/google";
 import "./globals.css";
 import CustomScrollbar from "@/components/CustomScrollbar";
+import HashScrollHandler from "@/components/HashScrollHandler";
 import SanityVisualEditing from "@/components/SanityVisualEditing";
 
 const hindSiliguri = Hind_Siliguri({
@@ -40,6 +41,7 @@ export default function RootLayout({
     >
       <body className="min-h-screen bg-[#FAF7F0] font-sans antialiased text-gray-800">
         <CustomScrollbar />
+        <Suspense fallback={null}><HashScrollHandler /></Suspense>
         {children}
         <Suspense fallback={null}><SanityVisualEditing /></Suspense>
       </body>

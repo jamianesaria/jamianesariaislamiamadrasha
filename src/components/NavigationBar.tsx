@@ -15,7 +15,7 @@ export default function NavigationBar() {
 
   return (
     <nav className="w-full bg-[#053b1e] text-white sticky top-0 z-50 shadow-md border-t border-[#0a522b] border-b-2 border-[#8B111A]">
-      <div className="w-full max-w-[1440px] mx-auto px-2 sm:px-4 xl:px-5 flex items-center justify-between">
+      <div className="w-full max-w-[1440px] mx-auto pl-1 sm:pl-2 xl:pl-2 pr-2 sm:pr-4 xl:pr-3 flex items-center justify-between">
         {/* Mobile / Tablet Menu Bar (< 1280px) */}
         <div className="flex xl:hidden py-2 items-center justify-between w-full">
           <button
@@ -46,9 +46,9 @@ export default function NavigationBar() {
           </div>
         </div>
 
-        {/* Desktop Navigation Links (All 11 Proposed Items, >= 1280px) */}
-        <div className="hidden xl:flex items-center justify-between w-full">
-          <div className="flex items-center flex-1 justify-between">
+        {/* Desktop Navigation Links (Pulled to Left, >= 1280px) */}
+        <div className="hidden xl:flex items-center w-full">
+          <div className="flex items-center justify-start gap-0 xl:gap-0.5 2xl:gap-1">
             {navigationItems.map((item, idx) => {
               const hasChildren = item.children && item.children.length > 0;
               // Align dropdown to right for items near the right edge to avoid window overflow
@@ -61,7 +61,7 @@ export default function NavigationBar() {
                 >
                   <Link
                     href={item.href}
-                    className="px-1.5 2xl:px-2.5 py-2.5 inline-flex items-center gap-0.5 xl:gap-1 text-[12px] 2xl:text-[13.5px] font-semibold text-white hover:bg-[#8B111A] transition-colors whitespace-nowrap"
+                    className="px-1.5 2xl:px-2 py-2.5 inline-flex items-center gap-0.5 xl:gap-1 text-[12px] 2xl:text-[13px] font-semibold text-white hover:bg-[#8B111A] transition-colors whitespace-nowrap"
                   >
                     <span>
                       {item.shortLabel ? (
@@ -103,8 +103,8 @@ export default function NavigationBar() {
             })}
           </div>
 
-          {/* Right Side Apply Now Button (Fully Visible, Never Hidden) */}
-          <div className="shrink-0 pl-2 xl:pl-3 pr-1">
+          {/* Right Side Apply Now Button (Fully Visible, Pushed Right) */}
+          <div className="ml-auto shrink-0 pl-2 xl:pl-3 pr-0.5">
             <Link
               href={siteSettings.applyUrl}
               className="bg-[#8B111A] hover:bg-[#a81b26] text-white text-xs sm:text-[13px] font-bold px-3.5 py-1.5 rounded shadow-sm inline-flex items-center gap-1.5 whitespace-nowrap border border-[#b31d28] transition-transform hover:scale-105"

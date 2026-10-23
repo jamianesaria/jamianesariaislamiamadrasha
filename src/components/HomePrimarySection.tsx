@@ -3,7 +3,7 @@ import Link from "next/link";
 import HeroVideo from "./HeroVideo";
 import HomeNoticeTabs from "./HomeNoticeTabs";
 import HomeGalleryFilter from "./HomeGalleryFilter";
-import { homePageContent, siteSettings } from "@/data/siteData";
+import { homePageContent, siteSettings, sampleBlogPosts } from "@/data/siteData";
 import {
   ArrowRight,
   Phone,
@@ -21,6 +21,8 @@ import {
   Bell,
   BookOpen,
   CheckCircle2,
+  User,
+  Calendar,
 } from "lucide-react";
 
 interface HomePrimarySectionProps {
@@ -28,6 +30,7 @@ interface HomePrimarySectionProps {
   initialSettings?: typeof siteSettings;
   initialNotices?: any[];
   initialDepartments?: any[];
+  initialBlogPosts?: any[];
 }
 
 export default function HomePrimarySection({
@@ -35,9 +38,11 @@ export default function HomePrimarySection({
   initialSettings,
   initialNotices,
   initialDepartments,
+  initialBlogPosts,
 }: HomePrimarySectionProps = {}) {
   const content = (initialData || homePageContent) as typeof homePageContent;
   const currentSettings = (initialSettings || siteSettings) as typeof siteSettings;
+  const blogPosts = initialBlogPosts && initialBlogPosts.length > 0 ? initialBlogPosts : sampleBlogPosts;
 
   const {
     hero,
@@ -1065,7 +1070,135 @@ export default function HomePrimarySection({
       </section>
 
       {/* =====================================================================
-          ১১। ভর্তি আহ্বান & ১২। যোগাযোগ (Admission & Contact Desk)
+          ১১। মাদরাসা ব্লগ ও সমকালীন প্রবন্ধ (Blog Section & Dummy Posts)
+      ===================================================================== */}
+      <section
+        id="blog"
+        className="py-10 sm:py-14 bg-gradient-to-b from-[#FAF7F0] via-white to-[#FAF7F0] border-b border-[#e6decb] scroll-mt-14"
+      >
+        <div className="max-w-7xl mx-auto px-3 sm:px-6">
+          {/* Institutional Section Header */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-4 mb-7 border-b-2 border-[#016332]">
+            <div>
+              <div className="flex items-center gap-2.5">
+                <span className="w-2 h-7 bg-[#8B111A] rounded-xs inline-block" />
+                <h2 className="text-xl sm:text-2xl md:text-[26px] font-bold text-gray-900">
+                  মাদরাসা ব্লগ ও সমকালীন প্রবন্ধ
+                </h2>
+              </div>
+              <p className="text-xs sm:text-sm text-gray-600 mt-1 pl-4">
+                দ্বীনি চিন্তা, শিক্ষা, তারবিয়াত ও স্বাস্থ্য সচেতনতা বিষয়ক নিয়মিত জ্ঞানগর্ভ লেখা
+              </p>
+            </div>
+            <Link
+              href="/blog"
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#8B111A] hover:text-white bg-[#8B111A]/8 hover:bg-[#8B111A] border border-[#8B111A]/25 px-3.5 py-2 rounded-md transition-all self-start sm:self-auto group"
+            >
+              <span>সকল ব্লগ দেখুন</span>
+              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+          </div>
+
+          {/* 3 Featured Blog Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {blogPosts.slice(0, 3).map((post: any) => (
+              <article
+                key={post.id}
+                className="bg-white rounded-xl border border-gray-200/90 hover:border-[#016332] overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
+              >
+                <div>
+                  {/* Thumbnail with Category & Read Time Badges */}
+                  <div className="relative aspect-16/10 w-full bg-gray-100 overflow-hidden">
+                    <Image
+                      src={post.thumbnail}
+                      alt={post.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                    <div className="absolute top-3 left-3">
+                      <span className="text-[11px] font-bold bg-[#8B111A] text-white px-2.5 py-1 rounded shadow-xs border border-white/20">
+                        {post.category}
+                      </span>
+                    </div>
+                    {post.readTime && (
+                      <div className="absolute top-3 right-3">
+                        <span className="text-[10.5px] font-medium bg-black/60 backdrop-blur-xs text-white px-2 py-0.5 rounded shadow-xs">
+                          {post.readTime}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Body Content */}
+                  <div className="p-4 sm:p-5">
+                    {/* Meta Row: Date & Author */}
+                    <div className="flex items-center gap-3 text-xs text-gray-500 mb-2.5">
+                      <span className="flex items-center gap-1 font-medium text-emerald-800">
+                        <User size={13} />
+                        <span>{post.author}</span>
+                      </span>
+                      <span>•</span>
+                      <span className="flex items-center gap-1">
+                        <Calendar size={13} />
+                        <span>{post.date}</span>
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-base sm:text-lg font-bold text-gray-900 group-hover:text-[#016332] transition-colors leading-snug line-clamp-2">
+                      <Link href={`/blog#post-${post.id}`} className="hover:underline">
+                        {post.title}
+                      </Link>
+                    </h3>
+
+                    {/* Excerpt */}
+                    <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 mt-2 leading-relaxed">
+                      {post.excerpt}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Card Footer Link */}
+                <div className="px-4 sm:px-5 pb-4 pt-2 border-t border-gray-100 flex items-center justify-between">
+                  <Link
+                    href={`/blog#post-${post.id}`}
+                    className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-bold text-[#8B111A] hover:text-[#016332] transition-colors"
+                  >
+                    <span>সম্পূর্ণ পড়ুন</span>
+                    <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                  <span className="text-[11px] text-gray-400 font-medium">
+                    {post.likesCount ? `👍 ${post.likesCount}` : ""}
+                  </span>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          {/* Quick Explore Strip */}
+          <div className="mt-8 bg-emerald-50/60 border border-emerald-200/60 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div className="flex items-center gap-2.5">
+              <span className="w-8 h-8 rounded-full bg-[#016332] text-white flex items-center justify-center shrink-0 text-sm font-bold shadow-xs">
+                ✍️
+              </span>
+              <p className="text-xs sm:text-sm text-gray-700">
+                শিক্ষক, শিক্ষার্থী ও অভিভাবকদের জন্য নিয়মিত জ্ঞানগর্ভ প্রবন্ধ ও ইসলামি জীবনধারার সঠিক নির্দেশনা প্রকাশিত হয়।
+              </p>
+            </div>
+            <Link
+              href="/blog"
+              className="shrink-0 bg-[#016332] hover:bg-[#024a24] text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors shadow-xs"
+            >
+              সকল ব্লগ পাতা খুলুন
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          ১২। ভর্তি আহ্বান & ১২। যোগাযোগ (Admission & Contact Desk)
       ===================================================================== */}
       <section className="max-w-7xl mx-auto px-3 sm:px-6 py-8 sm:py-10 space-y-8">
         {/* ১১। ভর্তি আহ্বান */}
@@ -1184,6 +1317,28 @@ export default function HomePrimarySection({
                       className="font-bold text-[#016332] text-sm sm:text-base hover:underline break-all"
                     >
                       {contact.emailValue}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="p-4 flex items-start gap-3.5 bg-white">
+                  <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#1877F2] flex items-center justify-center shrink-0 mt-0.5">
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <span className="block font-bold text-gray-600 text-xs">
+                      অফিশিয়াল ফেসবুক পেজ
+                    </span>
+                    <a
+                      href={currentSettings.facebookUrl || "https://www.facebook.com/jamianesaria/"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-bold text-[#1877F2] text-sm sm:text-base hover:underline inline-flex items-center gap-1 mt-0.5"
+                    >
+                      <span>facebook.com/jamianesaria</span>
+                      <ArrowRight size={13} />
                     </a>
                   </div>
                 </div>

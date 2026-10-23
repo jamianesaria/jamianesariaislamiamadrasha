@@ -14,6 +14,7 @@ import { contactMessageType } from "./contactMessage";
 import { galleryPhotoType } from "./galleryPhoto";
 import { galleryVideoType } from "./galleryVideo";
 import { badriKafilaType } from "./badriKafila";
+import { blogPostType } from "./blogPost";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -32,6 +33,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     galleryPhotoType,
     galleryVideoType,
     badriKafilaType,
+    blogPostType,
   ],
 };
-

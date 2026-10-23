@@ -27,6 +27,8 @@
     max-width: 100vw;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
   }
 
   /* Remove default browser scrollbar on PC / Chromium / WebKit */

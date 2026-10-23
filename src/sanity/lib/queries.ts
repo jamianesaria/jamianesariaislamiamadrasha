@@ -7,6 +7,7 @@ import {
   homePageContent as fallbackHome,
   noticesData as fallbackNotices,
   committeeAndFacultyData,
+  sampleBlogPosts as fallbackBlogPosts,
 } from "@/data/siteData";
 
 /**
@@ -574,4 +575,46 @@ export async function getGalleryVideos() {
     console.warn("Using fallback gallery videos:", err);
     return [];
   }
+}
+// 14. Blog Posts Query (Projected)
+export const blogPostsQuery = groq`*[_type == "blogPost"] | order(publishedAt desc, _createdAt desc) {
+  _id,
+  title,
+  "slug": slug.current,
+  category,
+  author,
+  date,
+  readTime,
+  "thumbnail": coalesce(thumbnail.asset->url, thumbnailUrl),
+  excerpt,
+  content,
+  likesCount,
+  commentsCount
+}`;
+
+export async function getBlogPosts() {
+  "use cache";
+  try {
+    const options = await getSanityFetchOptions();
+    const data = await client.fetch(blogPostsQuery, {}, options);
+    if (Array.isArray(data) && data.length > 0) {
+      return data.map((post: any, idx: number) => ({
+        id: idx + 1,
+        slug: post.slug || `post-${idx + 1}`,
+        title: post.title,
+        thumbnail: post.thumbnail || fallbackBlogPosts[idx % fallbackBlogPosts.length]?.thumbnail || "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&q=80&w=600",
+        date: post.date || "২০২৪",
+        author: post.author || "মাওলানা আব্দুল্লাহ আল-মামুন",
+        readTime: post.readTime || "৪ মিনিট পাঠ",
+        likesCount: post.likesCount ?? 0,
+        commentsCount: post.commentsCount ?? 0,
+        category: post.category || "দ্বীনি শিক্ষা",
+        excerpt: post.excerpt || "",
+        content: post.content || "",
+      }));
+    }
+  } catch (err) {
+    console.warn("Using fallback blog posts:", err);
+  }
+  return fallbackBlogPosts;
 }

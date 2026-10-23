@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { committeeAndFacultyData, siteSettings } from "@/data/siteData";
@@ -61,6 +61,44 @@ export default function FacultyAndTeachersSection({
       setCopiedId(null);
     }, 2000);
   };
+
+  useEffect(() => {
+    const syncFromHash = () => {
+      if (typeof window === "undefined") return;
+      const rawHash = window.location.hash.replace(/^#/, "");
+      if (!rawHash) return;
+
+      if (rawHash === "bukhari") {
+        setActiveCategory("bukhari");
+        const el = document.getElementById("bukhari");
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (rawHash === "kitab") {
+        setActiveCategory("kitab");
+        const el = document.getElementById("teachers-grid");
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (rawHash === "hifz") {
+        setActiveCategory("hifz");
+        const el = document.getElementById("teachers-grid");
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (rawHash === "maktab") {
+        setActiveCategory("maktab");
+        const el = document.getElementById("teachers-grid");
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (rawHash === "officers" || rawHash === "other") {
+        setActiveCategory("other");
+        const el = document.getElementById("teachers-grid");
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (rawHash === "staff") {
+        setActiveCategory("staff");
+        const el = document.getElementById("teachers-grid");
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    };
+
+    syncFromHash();
+    window.addEventListener("hashchange", syncFromHash);
+    return () => window.removeEventListener("hashchange", syncFromHash);
+  }, []);
 
   // Build unified teacher and staff list
   const allTeachersList = useMemo<TeacherItem[]>(() => {
@@ -401,6 +439,13 @@ export default function FacultyAndTeachersSection({
           </div>
         </section>
       )}
+
+      {/* Hidden Anchor targets for direct URL hash linking */}
+      <div id="kitab" className="scroll-mt-24" />
+      <div id="hifz" className="scroll-mt-24" />
+      <div id="maktab" className="scroll-mt-24" />
+      <div id="officers" className="scroll-mt-24" />
+      <div id="staff" className="scroll-mt-24" />
 
       {/* ===================================================================
           4. Teachers Grid - Every Card has their photo image

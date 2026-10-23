@@ -11,10 +11,10 @@ export const navigationItems: NavItem[] = [
     label: "জামিয়া পরিচিতি",
     href: "/about",
     children: [
-      { label: "জামিয়ার পরিচয় ও ইতিহাস", href: "/about#identity" },
+      { label: "জামিয়ার পরিচয় ও ইতিহাস", href: "/about/history" },
       { label: "প্রতিষ্ঠাতা ও জমিদাতাদের অবদান", href: "/about#founders" },
       { label: "লক্ষ্য, উদ্দেশ্য ও শিক্ষাদর্শন", href: "/about#mission" },
-      { label: "মাদরাসার বৈশিষ্ট্যসমূহ", href: "/#features" },
+      { label: "মাদরাসার বৈশিষ্ট্যসমূহ", href: "/about#features" },
       { label: "নিবন্ধন পরিচিতি (বোর্ড ও সরকারি)", href: "/about#registration" },
       { label: "ভৌত অবকাঠামো ও ছাত্রাবাস প্রকল্প", href: "/about/infrastructure" },
     ],
@@ -130,7 +130,8 @@ export const navigationItems: NavItem[] = [
       { label: "কিতাব বিভাগ ও দারস", href: "/gallery?category=kitab" },
     ],
   },
-  { label: "যোগাযোগ", href: "/#contact" },
+  { label: "ব্লগ", href: "/blog" },
+  { label: "যোগাযোগ", href: "/contact" },
 ];
 
 export const siteSettings = {
@@ -154,7 +155,7 @@ export const siteSettings = {
   appDownloadUrl: "/download-app",
   phone: "01716296379",
   email: "jamianesaria@gmail.com",
-  facebookUrl: "https://facebook.com",
+  facebookUrl: "https://www.facebook.com/jamianesaria/",
   youtubeUrl: "https://youtube.com",
   mapQuery: "মরকুন, তিস্তাগেট, টঙ্গী, গাজীপুর",
 };

@@ -108,38 +108,54 @@ export default function AdmissionInfoSection({
   const [showFormModal, setShowFormModal] = useState<boolean>(false);
   const [copiedNumber, setCopiedNumber] = useState<string | null>(null);
 
-  // Sync tab with URL hash if present
+  // Sync tab with URL hash if present and scroll smoothly
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.toLowerCase();
-      if (hash.includes("fee") || hash.includes("cost") || hash.includes("khoroch")) {
-        setActiveTab("fees");
+      if (!hash) return;
+      let matchedTab: TabKey | null = null;
+      if (hash.includes("fee") || hash.includes("cost") || hash.includes("khoroch") || hash.includes("calculator")) {
+        matchedTab = "fees";
       } else if (
         hash.includes("dept") ||
         hash.includes("department") ||
-        hash.includes("bibhag")
+        hash.includes("bibhag") ||
+        hash.includes("age") ||
+        hash.includes("checker")
       ) {
-        setActiveTab("departments");
+        matchedTab = "departments";
       } else if (
         hash.includes("process") ||
         hash.includes("step") ||
         hash.includes("exam")
       ) {
-        setActiveTab("process");
+        matchedTab = "process";
       } else if (
         hash.includes("doc") ||
         hash.includes("orphan") ||
-        hash.includes("etim")
+        hash.includes("etim") ||
+        hash.includes("checklist")
       ) {
-        setActiveTab("documents");
+        matchedTab = "documents";
       } else if (
         hash.includes("contact") ||
         hash.includes("phone") ||
         hash.includes("help")
       ) {
-        setActiveTab("contact");
+        matchedTab = "contact";
       } else if (hash.includes("all") || hash.includes("full")) {
-        setActiveTab("full");
+        matchedTab = "full";
+      }
+
+      if (matchedTab) {
+        setActiveTab(matchedTab);
+        setTimeout(() => {
+          const rawId = window.location.hash.replace(/^#/, "");
+          const el = document.getElementById(rawId) || document.getElementById("admission-content-area");
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }, 60);
       }
     };
 
@@ -582,6 +598,8 @@ export default function AdmissionInfoSection({
         ================================================================= */}
         {activeTab === "departments" && (
           <div className="space-y-8 animate-in fade-in duration-200">
+            <div id="departments" className="scroll-mt-24" />
+            <div id="age-checker" className="scroll-mt-24" />
             {/* Header */}
             <div className="border-b-2 border-gray-200 pb-4">
               <span className="text-xs font-black text-[#014d26] bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">
@@ -910,6 +928,7 @@ export default function AdmissionInfoSection({
         ================================================================= */}
         {activeTab === "documents" && (
           <div className="space-y-8 animate-in fade-in duration-200">
+            <div id="document-checklist" className="scroll-mt-24" />
             {/* Header */}
             <div className="border-b-2 border-gray-200 pb-4">
               <span className="text-xs font-black text-[#014d26] bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">
@@ -1055,6 +1074,7 @@ export default function AdmissionInfoSection({
         ================================================================= */}
         {activeTab === "fees" && (
           <div className="space-y-8 animate-in fade-in duration-200">
+            <div id="fee-calculator" className="scroll-mt-24" />
             {/* Header */}
             <div className="border-b-2 border-gray-200 pb-4">
               <span className="text-xs font-black text-[#014d26] bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">

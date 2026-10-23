@@ -9,14 +9,16 @@ import {
   getNotices,
   getSiteSettings,
   getAcademicDepartments,
+  getBlogPosts,
 } from "@/sanity/lib/queries";
 
 export default async function Home() {
-  const [homeData, notices, siteData, departments] = await Promise.all([
+  const [homeData, notices, siteData, departments, blogPosts] = await Promise.all([
     getHomepageContent(),
     getNotices(),
     getSiteSettings(),
     getAcademicDepartments({ homepageOnly: true }),
+    getBlogPosts(),
   ]);
 
   return (
@@ -38,6 +40,7 @@ export default async function Home() {
           initialSettings={siteData}
           initialNotices={notices}
           initialDepartments={departments}
+          initialBlogPosts={blogPosts}
         />
       </main>
 

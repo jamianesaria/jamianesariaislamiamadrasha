@@ -101,6 +101,9 @@ export const structure: StructureResolver = (S) =>
             .title("৩১৩ বদরি কাফেলা প্রকল্প বিবরণ")
         ),
 
-      // 12. Contact Messages
+      // 12. Blog & Articles
+      S.documentTypeListItem("blogPost").title("মাদরাসা ব্লগ ও প্রবন্ধ (Blog Posts)"),
+
+      // 13. Contact Messages
       S.documentTypeListItem("contactMessage").title("যোগাযোগ ইনবক্স (Inquiries Inbox)"),
     ]);

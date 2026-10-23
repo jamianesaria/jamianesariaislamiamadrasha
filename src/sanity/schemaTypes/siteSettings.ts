@@ -94,6 +94,7 @@ export const siteSettingsType = defineType({
       name: "facebookUrl",
       title: "ফেসবুক পেজ লিংক",
       type: "url",
+      initialValue: "https://www.facebook.com/jamianesaria/",
     }),
     defineField({
       name: "youtubeUrl",

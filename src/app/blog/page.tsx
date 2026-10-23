@@ -4,32 +4,39 @@ import NavigationBar from "@/components/NavigationBar";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
 import Footer from "@/components/Footer";
 import BlogSection from "@/components/BlogSection";
+import { getSiteSettings, getNewsTicker, getBlogPosts } from "@/sanity/lib/queries";
 
 export const metadata: Metadata = {
-  title: "Blog | জামিয়া নেছারিয়া ইসলামিয়া টঙ্গী",
-  description: "জামিয়া নেছারিয়া ইসলামিয়া টঙ্গীর অফিসিয়াল ব্লগ - শিক্ষা, অভিভাবকত্ব, স্বাস্থ্য, দ্বীনি প্রবন্ধ ও সচেতনতামূলক নিয়মিত লেখা।",
+  title: "মাদরাসা ব্লগ, সাময়িকী ও সমকালীন প্রবন্ধ | জামিয়া নেছারিয়া ইসলামিয়া টঙ্গী",
+  description:
+    "জামিয়া নেছারিয়া ইসলামিয়া টঙ্গীর অফিসিয়াল ব্লগ ও জ্ঞান মঞ্জিল - কুরআন-সুন্নাহর আলো, সমকালীন ইসলামি দর্শন, তারবিয়াত, অভিভাবকত্ব ও সুন্নাহসম্মত আদর্শ জীবনধারার নিয়মিত কলাম ও গবেষণামূলক প্রবন্ধ।",
 };
 
-export default function BlogPage() {
-  return (
-    <div className="min-h-screen bg-[#F0F2F5] flex flex-col">
-      {/* 1. Top Identity Banner */}
-      <HeaderBanner />
+export default async function BlogPage() {
+  const [siteData, newsTicker, blogPosts] = await Promise.all([
+    getSiteSettings(),
+    getNewsTicker(),
+    getBlogPosts(),
+  ]);
 
-      {/* 2. Main Navigation Bar */}
+  return (
+    <div className="min-h-screen bg-[#FAF7F0] flex flex-col">
+      {/* ১। শীর্ষ ব্যানার */}
+      <HeaderBanner initialSettings={siteData} />
+
+      {/* ২। প্রধান নেভিগেশন বার */}
       <NavigationBar />
 
-      {/* 3. Breaking News / Notice Ticker Bar */}
-      <BreakingNewsBar />
+      {/* ৩। জরুরি ঘোষণা ও নোটিশ টিকার */}
+      <BreakingNewsBar newsItems={newsTicker} />
 
-      {/* 4. Main Blog Content Area */}
-      <main className="max-w-7xl mx-auto px-3 sm:px-4 py-6 w-full flex-1">
-        <BlogSection />
+      {/* ৪। প্রধান ব্লগ ও সাময়িকী পাতা */}
+      <main className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 w-full flex-1">
+        <BlogSection initialPosts={blogPosts} />
       </main>
 
-      {/* 5. Footer */}
-      <Footer />
+      {/* ৫। ফুটার */}
+      <Footer initialSettings={siteData} />
     </div>
   );
 }
-
