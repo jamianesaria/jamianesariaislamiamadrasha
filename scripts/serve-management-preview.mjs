@@ -3,7 +3,7 @@
 import { createServer } from "vite";
 import { createClient } from "@sanity/client";
 import env from "@next/env";
-import { randomUUID } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
 import { resolve } from "node:path";
 
 env.loadEnvConfig(process.cwd());
@@ -11,7 +11,11 @@ const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "3829zb8h";
 const token = process.env.SANITY_API_TOKEN;
 if (!token) throw new Error("Configured server credentials required for QA.");
 const client = createClient({ projectId, dataset: "submissions", apiVersion: "2026-03-01", token, useCdn: false });
-const ownId = randomUUID();
+const ownId = "incoming." + randomBytes(32).toString("hex");
+const publicClient = client.withConfig({ dataset: "production" });
+const publicOwnId = randomUUID();
+await publicClient.create({ _id: publicOwnId, _type: "notice", title: "Delete browser QA publication", category: "general", publishDate: new Date().toISOString().slice(0,10) });
+await publicClient.create({ _id: "drafts." + publicOwnId, _type: "notice", title: "Delete browser QA publication", category: "general", publishDate: new Date().toISOString().slice(0,10) });
 await client.create({ _id: ownId, _type: "incomingSubmission", kind: "contact", reference: "QA-BROWSER-" + ownId.slice(0, 6), receivedAt: new Date().toISOString(), status: "new", notes: "", fields: { name: "Browser QA", email: "qa@example.invalid", subject: "Management browser test", message: "Temporary record created only for this browser check." } });
 const virtual = (name) => "\0management-qa:" + name;
 const server = await createServer({
@@ -27,7 +31,7 @@ const server = await createServer({
   }, configureServer(vite) {
     vite.middlewares.use(async (request, response, next) => {
       if (request.url === "/qa/cleanup") {
-        await client.delete(ownId); response.end("QA record removed"); return;
+        await client.delete(ownId); await publicClient.delete("drafts." + publicOwnId); await publicClient.delete(publicOwnId); response.end("QA records removed"); return;
       }
       if (request.url?.startsWith("/sanity/")) {
         const path = request.url.slice("/sanity".length);
@@ -38,7 +42,8 @@ const server = await createServer({
           body = Buffer.concat(chunks);
           if (path.includes("/mutate/")) {
             const mutations = JSON.parse(body.toString()).mutations;
-            if (!Array.isArray(mutations) || mutations.some((mutation) => mutation.patch?.id !== ownId)) { response.writeHead(403); response.end(); return; }
+            const allowedIds = path.includes("/mutate/submissions") ? [ownId] : [publicOwnId, "drafts." + publicOwnId];
+            if (!Array.isArray(mutations) || mutations.some((mutation) => !allowedIds.includes(mutation.patch?.id || mutation.delete?.id))) { response.writeHead(403); response.end(); return; }
           }
         }
         const abort = new AbortController();
@@ -62,6 +67,6 @@ const server = await createServer({
 });
 await server.listen();
 console.log("Actual management UI QA: http://127.0.0.1:3030 (Studio-context adapter; only its own QA record may be changed)");
-const cleanup = async () => { await client.delete(ownId); await server.close(); process.exitCode = 0; };
+const cleanup = async () => { await client.delete(ownId); await publicClient.delete("drafts." + publicOwnId); await publicClient.delete(publicOwnId); await server.close(); process.exitCode = 0; };
 process.on("SIGINT", cleanup);
 process.on("SIGTERM", cleanup);

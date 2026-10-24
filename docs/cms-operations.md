@@ -4,9 +4,11 @@ The existing local branch, including `5f80685` (blog, URL wiring and hash naviga
 
 ## Storage and credentials
 
-`production` contains public website content. `submissions` is a separate verified private dataset in the same Sanity project. The admission, contact and Badri APIs write only to this private dataset. They validate input, origin, request identifiers, payload sizes and photo signatures, enforce a request limit and deduplicate retries. Applicant photos are stored inline in private records rather than public image assets. A failed or unconfigured save returns an error and keeps the form input.
+`production` contains public website content. `submissions` is a separate container for authenticated-only records. For the owner's Free-plan requirement, privacy uses Sanity's **fixed document-path access rules**, independently of paid private-dataset ACL: every submission ID is `incoming.<64 hexadecimal characters>`. Sanity requires authentication for dot-containing IDs, including in a public dataset. Never replace these IDs with root IDs, copy these records into public content, or upload applicant photographs as public assets. See [Sanity's fixed access rules](https://www.sanity.io/docs/content-lake/ids).
 
-Copy `.env.example` into local configuration and configure the same server variables in the owning Vercel project. A server read token may be supplied separately. The submission write credential must also be able to verify the dataset's private visibility. No token may use a `NEXT_PUBLIC_` name. The dashboard uses Sanity's authenticated session, never the server API token. Native Sanity project roles control access and publishing; no separate password system or custom staff roles have been invented.
+The admission, contact and Badri APIs write only to this protected namespace in the separate container. They validate input, origin, request identifiers, payload sizes and photo signatures, apply a best-effort per-IP request limit and deduplicate retries. Photos are inline in the protected record. Before saving, the server verifies the dataset exists and contains no unexpected business records or public assets; an unsafe configuration fails closed. A failed or unconfigured save returns an error and keeps the form input. Dataset-level private visibility is optional extra protection, not a Free-plan dependency.
+
+Copy `.env.example` into local configuration and configure the same server variables in the owning Vercel project. A server read token may be supplied separately. The submission write credential must also be able to verify dataset metadata and the protected-namespace invariant. No token may use a `NEXT_PUBLIC_` name. The dashboard uses Sanity's authenticated session, never the server API token. Sanity project roles control access and publishing. Free roles offer limited separation of duties; invite only trusted staff who may read private submissions.
 
 Authenticated Studio origins include localhost:3000, the QA origin localhost:3020, the existing Vercel URL and https://nesariamadrasa.com. DNS and domain registration were not modified.
 
@@ -23,6 +25,10 @@ Native public records remain in their existing schemas. Existing code-based gall
 - `npm run build`, `npx tsc --noEmit`, `npm run lint`.
 - `node scripts/validate-public-content.mjs`: validates actual published public records against the Studio schema.
 - `node scripts/check-management.mjs`: private persistence, anonymous isolation, retries, conflicts, validation and truthful failure.
+- `node scripts/check-management-deletion.mjs`: real deletion of synthetic published/draft pairs across 13 record types, stale-update protection, reference integrity and private-submission deletion.
+- `node scripts/check-submission-privacy.mjs`: verifies anonymous API/CDN queries, direct lookup, reference dereference and mutation denial for protected paths in an already-public dataset; audits existing submission IDs without logging their fields. `--configure-free` switches the submissions container to public only after the privacy checks and namespace audit pass. Deploy the current handler before running this option.
+- `node scripts/check-cms-error-boundary.mjs`: invalid read credentials produce safe fallback pages without echoing credentials into server logs or browser HTML.
+- `node scripts/check-visual-pages.mjs --drafts --modals --shard 0/2` (and `1/2`): every inventoried view's actual overlay focus messages, source paths, representative controls/media, draft isolation and phone layout. Run shards concurrently, but do not run other tests that edit the same copy documents at the same time.
 - `node scripts/check-submission-http.mjs`: actual Next HTTP submission saving and retry deduplication; supports `QA_BASE_URL` for deployment checks and cleans only its own private records.
 - `node scripts/check-publishing.mjs`: actual dashboard query, draft/published filtering, archive/restore, PDF upload/replacement/download, profile image and routine reordering.
 - `node scripts/check-visual-content.mjs`: punctuation, keyed repeated fields, image replacement, numeric zero, source maps and draft isolation.
@@ -32,7 +38,13 @@ Native public records remain in their existing schemas. Existing code-based gall
 
 The Windows Turbopack compiler repeatedly stalled. Both dev and production commands now use the verified Webpack path with Tailwind's supported PostCSS adapter. Production checks must include a computed-style assertion; a successful alternate-bundler compilation alone did not prove that Tailwind utilities were emitted.
 
-The dependency audit reports upstream advisories in the existing Sanity/CLI dependency graph. Its suggested remediation includes major downgrades. No forced downgrade or untested override was applied. The direct dependency tree is consistent and React's patch version satisfies the installed editor's peer requirement.
+The 24 October dependency audit found three high-severity transitive dependency issues. Scoped compatible overrides update `js-yaml`, `smol-toml` and `undici`, retaining the installed Sanity/Next major versions. The follow-up production audit reports **0 critical, 0 high and 8 moderate** package advisories, centered on upstream `uuid`/`typeid-js` dependencies. Do not run `npm audit fix --force`: the suggested resolution downgrades major integration packages. Review upstream fixes regularly. Existing optional TypeScript peer warnings in Sanity CLI workflow tooling remain; the application's strict TypeScript/build checks are separate.
+
+## Deletion and retention
+
+Publication rows provide **মুছে ফেলুন** for notices, routines, results, galleries, teachers, committee members, departments, events, vacancies and blog posts. The inbox detail drawer provides the same action for admission/contact/Badri submissions. The dialog names the record and requires a checkbox plus a second confirmation. Cancelling changes nothing. Public deletion removes both existing draft and published versions in one transaction. A changed revision or a strong reference blocks deletion; refresh and resolve the conflict rather than retrying blindly. The signed-in user's permissions apply to the mutation.
+
+Core website settings/copy singletons remain protected against accidental deletion; their content stays editable. Public lists respect successful empty results. Website caches may take about a minute to reflect deletion. Attached public assets are retained, since other records or URLs may use them. Deleting a record frees current document storage, not bandwidth/API quota already spent, and is not a promise of immediate purge from vendor backups/history. Review retention regularly and remove only records the office is permitted to discard. See `security-and-capacity.md` for current limits and operational risks.
 
 ## Release gate
 

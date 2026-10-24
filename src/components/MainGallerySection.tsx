@@ -26,7 +26,7 @@ import {
   Share2,
   Check,
 } from "lucide-react";
-import { EditableImage as Image, useEditableData, EditableText, useGalleryRecords } from "@/content/client";
+import { EditableImage as Image, useEditableData, EditableText, useGalleryRecords, useFieldAttribute } from "@/content/client";
 import { fieldSource } from "@/content/model";
 
 
@@ -34,6 +34,7 @@ type MediaTab = "photos" | "videos" | "all";
 type CategoryFilter = "all" | "campus" | "hifz" | "kitab" | "classroom" | "events" | "quran" | "waz" | "madrasa";
 
 function GalleryContent() {
+  const attribute = useFieldAttribute();
   const fallbackPhotos = useEditableData("copy.data.sampleGalleryPhotos", _fallback_sampleGalleryPhotos);
   const fallbackVideos = useEditableData("copy.data.sampleGalleryVideos", _fallback_sampleGalleryVideos);
   const galleryRecords = useGalleryRecords();
@@ -287,7 +288,7 @@ function GalleryContent() {
       ===================================================================== */}
       {activeTab !== "photos" && activeCategory === "all" && !searchQuery && (
         <div className="relative rounded-3xl overflow-hidden bg-black shadow-xl group border-2 border-stone-800">
-          <div className="relative aspect-[21/9] sm:aspect-[21/8] min-h-[220px] sm:min-h-[340px] w-full">
+          <div data-sanity={attribute({ _id: "copy.ui.MainGallerySection", _type: "pageContent" }, 'entries[_key=="eithl6p"].image')} className="relative aspect-[21/9] sm:aspect-[21/8] min-h-[220px] sm:min-h-[340px] w-full">
             <Image document="copy.ui.MainGallerySection" entry="eithl6p"
               src="/drone_poster.jpg"
               alt="জামিয়া নেছারিয়া ক্যাম্পাস ও ড্রোন শট"
@@ -350,6 +351,7 @@ function GalleryContent() {
           {filteredPhotos.map((photo) => (
             <div
               key={`photo-${photo.id}`}
+              data-sanity={attribute(photo, "imageUrl")}
               onClick={() => openLightbox(photo.id)}
               className="group relative rounded-2xl overflow-hidden bg-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer aspect-[4/3] border border-gray-200/80"
             >
@@ -413,6 +415,7 @@ function GalleryContent() {
           {filteredVideos.map((video) => (
             <div
               key={`video-${video.id}`}
+              data-sanity={attribute(video, "thumbnail")}
               onClick={() => setActiveVideo(video)}
               className="group relative rounded-2xl overflow-hidden bg-black shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer aspect-[16/10] border-2 border-red-500/30"
             >

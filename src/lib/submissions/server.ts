@@ -14,7 +14,11 @@ async function privateClient(): Promise<SanityClient> {
   const client = createClient({ projectId, apiVersion, dataset: privateDataset, token, useCdn: false, perspective: "published" });
   if (Date.now() > privacyVerifiedUntil) {
     const datasets = await client.datasets.list();
-    if (!datasets.some((entry) => entry.name === privateDataset && entry.aclMode === "private")) throw new SubmissionError("আবেদন গ্রহণের ব্যবস্থা সাময়িকভাবে বন্ধ। অনুগ্রহ করে অফিসে যোগাযোগ করুন।", 503);
+    // Sanity's fixed access rules require authentication for IDs containing a dot,
+    // including in Free public datasets. Never create root IDs or public assets here.
+    // https://www.sanity.io/docs/content-lake/ids#access-control
+    const unsafe = await client.fetch<number>('count(*[!(_type in ["system.group", "system.retention"]) && (_type != "incomingSubmission" || !(_id in path("incoming.*")) || length(_id) != 73)])', {}, { perspective: "raw" });
+    if (!datasets.some((entry) => entry.name === privateDataset) || unsafe !== 0) throw new SubmissionError("আবেদন গ্রহণের ব্যবস্থা সাময়িকভাবে বন্ধ। অনুগ্রহ করে অফিসে যোগাযোগ করুন।", 503);
     privacyVerifiedUntil = Date.now() + 60_000;
   }
   return client;
@@ -38,6 +42,7 @@ export async function receiveSubmission(request: NextRequest, kind: SubmissionKi
     const digest = (input: string) => createHmac("sha256", secret).update(input).digest("hex");
     // This operational record uses a request-derived ID solely for atomic retry deduplication.
     const id = `incoming.${digest(`${kind}:${key}`)}`;
+    if (!/^incoming\.[a-f0-9]{64}$/.test(id)) throw new SubmissionError("আবেদন সংরক্ষণের ব্যবস্থা যাচাই করা যায়নি।", 503);
     const existing = await client.getDocument<{ reference: string }>(id);
     if (existing) return NextResponse.json({ success: true, applicationId: existing.reference, reference: existing.reference }, { headers: { "Cache-Control": "no-store" } });
     const fingerprint = digest(request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local");

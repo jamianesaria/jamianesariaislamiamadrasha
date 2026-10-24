@@ -1,4 +1,5 @@
 
+import { stegaClean } from "@sanity/client/stega";
 import Link from "next/link";
 import type { BlogPostItem, NoticeFullItem } from "@/data/siteData";
 import type { AcademicDepartment } from "@/sanity/lib/departments";
@@ -78,7 +79,7 @@ export default async function HomePrimarySection({
 
   // Build dynamic academic department list with Sanity images and fallback
   const departmentList =
-    initialDepartments && initialDepartments.length > 0
+    initialDepartments !== undefined
       ? initialDepartments.map((d, idx) => {
           const fallback = departments.items[idx] || departments.items[0];
           return {
@@ -822,7 +823,7 @@ export default async function HomePrimarySection({
                 <div className="mt-3 pt-3 border-t border-gray-200/90 flex flex-wrap items-center justify-between text-xs text-gray-700 gap-1">
                   <span className="font-semibold text-gray-900"><EditableText document="copy.ui.HomePrimarySection" entry="elepabj" fallback={"অনুদান ও তথ্য হটলাইন:"} /></span>
                   <a
-                    href={`tel:${contact.phoneValue}`}
+                    href={`tel:${stegaClean(contact.phoneValue)}`}
                     className="font-bold text-[#8B111A] bg-white border border-[#8B111A]/25 px-2.5 py-1 rounded-md hover:bg-[#8B111A] hover:text-white transition-colors flex items-center gap-1"
                   >
                     <Phone size={12} />
@@ -909,7 +910,7 @@ export default async function HomePrimarySection({
                   </p>
                   <div className="pt-2">
                     <a
-                      href={`tel:${contact.phoneValue}`}
+                      href={`tel:${stegaClean(contact.phoneValue)}`}
                       className="inline-flex items-center justify-center gap-1.5 w-full bg-[#FAF7F0] border border-[#D9822B]/40 hover:border-[#8B111A] hover:bg-[#8B111A] hover:text-white rounded-md text-xs font-bold text-gray-800 py-2 transition-colors"
                     >
                       <Phone size={12} />
@@ -1009,7 +1010,7 @@ export default async function HomePrimarySection({
                   </Link>
 
                   <a
-                    href={`tel:${contact.phoneValue}`}
+                    href={`tel:${stegaClean(contact.phoneValue)}`}
                     className="inline-flex items-center gap-1.5 bg-white border border-gray-300 hover:border-[#016332] text-gray-800 text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-md transition-colors shadow-2xs"
                   >
                     <Phone size={13} className="text-[#016332]" />
@@ -1180,7 +1181,7 @@ export default async function HomePrimarySection({
               </p>
               <div className="pt-2 flex flex-wrap gap-3">
                 <a
-                  href={`tel:${contact.phoneValue}`}
+                  href={`tel:${stegaClean(contact.phoneValue)}`}
                   className="inline-flex items-center gap-1.5 bg-[#8B111A] hover:bg-[#6e0b13] text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-md border border-amber-300/40 transition-all shadow-xs"
                 >
                   <Phone size={14} />
@@ -1251,7 +1252,7 @@ export default async function HomePrimarySection({
                       {contact.phoneLabel}
                     </span>
                     <a
-                      href={`tel:${contact.phoneValue}`}
+                      href={`tel:${stegaClean(contact.phoneValue)}`}
                       className="font-bold text-[#8B111A] text-base sm:text-lg hover:underline"
                     >
                       {contact.phoneValue}
@@ -1268,7 +1269,7 @@ export default async function HomePrimarySection({
                       {contact.emailLabel}
                     </span>
                     <a
-                      href={`mailto:${contact.emailValue}`}
+                      href={`mailto:${stegaClean(contact.emailValue)}`}
                       className="font-bold text-[#016332] text-sm sm:text-base hover:underline break-all"
                     >
                       {contact.emailValue}

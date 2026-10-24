@@ -1,4 +1,5 @@
 
+import { stegaClean } from "@sanity/client/stega";
 import Link from "next/link";
 import type { PublicSettings, HomepageContent } from "@/content/public-types";
 import { siteSettings as _fallback_defaultSettings, homePageContent as _fallback_defaultHome } from "@/data/siteData";
@@ -100,14 +101,14 @@ export default async function Footer({ initialSettings, initialData }: FooterPro
               </p>
               <p>
                 <span className="font-semibold text-amber-200">{contact.phoneLabel || "মোবাইল"}<EditableText document="copy.ui.Footer" entry="e18lzrji" fallback={":"} /></span>{" "}
-                <a href={`tel:${settings.phone || contact.phoneValue}`} className="hover:text-amber-300 font-semibold">
+                <a href={`tel:${stegaClean(settings.phone || contact.phoneValue)}`} className="hover:text-amber-300 font-semibold">
                   {settings.phone || contact.phoneValue}
                 </a>
               </p>
               <p>
                 <span className="font-semibold text-amber-200">{contact.emailLabel || "ইমেইল"}<EditableText document="copy.ui.Footer" entry="emaj4p4" fallback={":"} /></span>{" "}
                 <a
-                  href={`mailto:${settings.email || contact.emailValue}`}
+                  href={`mailto:${stegaClean(settings.email || contact.emailValue)}`}
                   className="hover:text-amber-300 break-all"
                 >
                   {settings.email || contact.emailValue}

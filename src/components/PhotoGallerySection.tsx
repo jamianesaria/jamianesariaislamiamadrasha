@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { sampleGalleryPhotos as _fallback_sampleGalleryPhotos, GalleryPhotoItem } from "@/data/siteData";
 import { Image as ImageIcon, ZoomIn, X, ChevronLeft, ChevronRight, Calendar, Download } from "lucide-react";
-import { EditableImage as Image, useEditableData, EditableText, useGalleryRecords } from "@/content/client";
+import { EditableImage as Image, useEditableData, EditableText, useGalleryRecords, useFieldAttribute } from "@/content/client";
 import { fieldSource } from "@/content/model";
 
 
@@ -17,6 +17,7 @@ const categories = [
 ];
 
 export default function PhotoGallerySection() {
+  const attribute = useFieldAttribute();
   const fallbackPhotos = useEditableData("copy.data.sampleGalleryPhotos", _fallback_sampleGalleryPhotos);
   const sampleGalleryPhotos = useGalleryRecords()?.photos ?? fallbackPhotos;
 
@@ -98,7 +99,7 @@ export default function PhotoGallerySection() {
                 className="group relative bg-gray-50 rounded-lg overflow-hidden border border-gray-200 hover:shadow-md transition-all cursor-pointer flex flex-col"
               >
                 {/* Photo Thumbnail */}
-                <div className="relative aspect-4/3 w-full bg-gray-200 overflow-hidden">
+                <div data-sanity={attribute(photo, "imageUrl")} className="relative aspect-4/3 w-full bg-gray-200 overflow-hidden">
                   <Image document="copy.ui.PhotoGallerySection" entry="e123315m" source={fieldSource(photo, "imageUrl")}
                     src={photo.imageUrl}
                     alt={photo.title}

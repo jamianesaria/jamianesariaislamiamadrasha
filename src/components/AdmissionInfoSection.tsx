@@ -1348,7 +1348,7 @@ export default function AdmissionInfoSection({
                     <div className="space-y-1">
                       <div className="text-xs font-bold text-gray-500"><EditableText document="copy.ui.AdmissionInfoSection" entry="ed878up" fallback={"মোবাইল নম্বর:"} /></div>
                       <a
-                        href={`tel:${person.rawPhone}`}
+                        href={`tel:${stegaClean(person.rawPhone)}`}
                         className="text-lg font-black text-[#014d26] hover:underline block"
                       >
                         {person.phone}
@@ -1357,7 +1357,7 @@ export default function AdmissionInfoSection({
 
                     <div className="pt-2 flex items-center gap-2">
                       <a
-                        href={`tel:${person.rawPhone}`}
+                        href={`tel:${stegaClean(person.rawPhone)}`}
                         className="flex-1 text-center bg-[#014d26] hover:bg-[#023e1f] text-white text-xs font-black py-2 rounded-lg transition-colors"
                       ><EditableText document="copy.ui.AdmissionInfoSection" entry="e1fp5e51" fallback={"কল করুন"} /></a>
                       <button

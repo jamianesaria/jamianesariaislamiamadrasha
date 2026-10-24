@@ -955,7 +955,7 @@ function NoticeBoardContent({ initialNotices }: { initialNotices?: NoticeFullIte
 
           <div className="flex flex-wrap items-center justify-center gap-3">
             <a
-              href={`tel:${siteSettings.phone}`}
+              href={`tel:${stegaClean(siteSettings.phone)}`}
               className="inline-flex items-center gap-2 bg-[#8B111A] hover:bg-[#a81b26] text-white text-xs sm:text-sm font-bold px-5 py-2.5 rounded-xl shadow-md transition-colors border border-amber-400/40"
             >
               <Phone size={15} />

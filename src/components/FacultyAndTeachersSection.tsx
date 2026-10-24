@@ -56,6 +56,18 @@ export default function FacultyAndTeachersSection({
 }: FacultyAndTeachersSectionProps = {}) {
   const committeeAndFacultyData = useEditableData("copy.data.committeeAndFacultyData", _fallback_committeeAndFacultyData);
   const siteSettings = useEditableData("siteSettings", _fallback_siteSettings);
+  const listCopy = useEditableData("copy.ui.FacultyAndTeachersSection", {
+    titles: {
+      all: "শিক্ষক মণ্ডলী ও কর্মকর্তা তালিকা",
+      bukhari: "বুখারীর বিশেষ দরস প্রদানকারী উলামা",
+      kitab: "মুহাদ্দিস ও কিতাব বিভাগের শিক্ষকবৃন্দ",
+      hifz: "হিফজ ও নাজেরা বিভাগের শিক্ষকবৃন্দ",
+      maktab: "মক্তব বিভাগের শিক্ষকবৃন্দ",
+      other: "অন্যান্য শিক্ষক ও কর্মকর্তা",
+      staff: "জামিয়ার স্টাফবৃন্দ",
+    },
+    subtitles: { all: "সকল বিভাগের সম্মানিত শিক্ষক ও কর্মী", filtered: "বিভাগভিত্তিক সদস্যবৃন্দ" },
+  }, ["local", "listCopy"]);
 
   const [activeCategory, setActiveCategory] = useState<TeacherCategory>("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -464,22 +476,10 @@ export default function FacultyAndTeachersSection({
             <GraduationCap size={22} className="text-[#ffd86b]" />
             <div>
               <h2 className="text-base sm:text-lg font-bold">
-                {activeCategory === "all"
-                  ? "শিক্ষক মণ্ডলী ও কর্মকর্তা তালিকা"
-                  : activeCategory === "bukhari"
-                  ? "বুখারীর বিশেষ দরস প্রদানকারী উলামা"
-                  : activeCategory === "kitab"
-                  ? "মুহাদ্দিস ও কিতাব বিভাগের শিক্ষকবৃন্দ"
-                  : activeCategory === "hifz"
-                  ? "হিফজ ও নাজেরা বিভাগের শিক্ষকবৃন্দ"
-                  : activeCategory === "maktab"
-                  ? "মক্তব বিভাগের শিক্ষকবৃন্দ"
-                  : activeCategory === "other"
-                  ? "অন্যান্য শিক্ষক ও কর্মকর্তা"
-                  : "জামিয়ার স্টাফবৃন্দ"}
+                {listCopy.titles[activeCategory]}
               </h2>
               <span className="text-xs text-amber-200 block">
-                {activeCategory === "all" ? "সকল বিভাগের সম্মানিত শিক্ষক ও কর্মী" : "বিভাগভিত্তিক সদস্যবৃন্দ"}
+                {activeCategory === "all" ? listCopy.subtitles.all : listCopy.subtitles.filtered}
               </span>
             </div>
           </div>
@@ -557,7 +557,7 @@ export default function FacultyAndTeachersSection({
                     {teacher.mobile ? (
                       <div className="flex items-center gap-1.5 flex-1 min-w-0">
                         <a
-                          href={`tel:${teacher.mobile}`}
+                          href={`tel:${stegaClean(teacher.mobile)}`}
                           className="inline-flex items-center gap-1 text-xs font-bold text-[#8B111A] hover:underline truncate"
                           title="কল করুন"
                         >
@@ -618,7 +618,7 @@ export default function FacultyAndTeachersSection({
           </div>
 
           <a
-            href={`tel:${siteSettings.phone}`}
+            href={`tel:${stegaClean(siteSettings.phone)}`}
             className="inline-flex items-center gap-1.5 bg-[#8B111A] hover:bg-[#6e0b13] text-white font-bold px-4 py-2 rounded-lg text-xs transition-colors shadow-xs self-start sm:self-auto"
           >
             <Phone size={13} />
@@ -690,7 +690,7 @@ export default function FacultyAndTeachersSection({
                       <Phone size={15} className="text-[#016332] shrink-0" />
                       <span className="font-semibold text-emerald-950"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="ei7od8f" fallback={"মোবাইল:"} /></span>
                       <a
-                        href={`tel:${selectedTeacher.mobile}`}
+                        href={`tel:${stegaClean(selectedTeacher.mobile)}`}
                         className="font-bold text-[#016332] hover:underline"
                       >
                         {selectedTeacher.mobile}
@@ -717,7 +717,7 @@ export default function FacultyAndTeachersSection({
               <div className="pt-2 flex items-center justify-end gap-2 border-t border-gray-100">
                 {selectedTeacher.mobile && (
                   <a
-                    href={`tel:${selectedTeacher.mobile}`}
+                    href={`tel:${stegaClean(selectedTeacher.mobile)}`}
                     className="inline-flex items-center gap-1.5 bg-[#016332] hover:bg-[#014222] text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors cursor-pointer"
                   >
                     <Phone size={13} />

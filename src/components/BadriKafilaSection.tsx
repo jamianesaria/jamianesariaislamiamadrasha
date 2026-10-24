@@ -1,5 +1,6 @@
 "use client";
 
+import { stegaClean } from "@sanity/client/stega";
 import { useState } from "react";
 import { useSubmission } from "@/lib/submissions/useSubmission";
 import Link from "next/link";
@@ -750,7 +751,7 @@ export default function BadriKafilaSection() {
 
               <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
                 <a
-                  href={`tel:${siteSettings.phone}`}
+                  href={`tel:${stegaClean(siteSettings.phone)}`}
                   className="inline-flex items-center gap-1.5 bg-[#8B111A] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm"
                 >
                   <Phone size={14} />

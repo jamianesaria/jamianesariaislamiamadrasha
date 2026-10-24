@@ -19896,6 +19896,78 @@
         "label": "বন্ধ করুন",
         "source": "text:32920",
         "text": "বন্ধ করুন"
+      },
+      {
+        "_key": "e11t91hp",
+        "source": "local.listCopy.titles.all",
+        "kind": "text",
+        "text": "শিক্ষক মণ্ডলী ও কর্মকর্তা তালিকা",
+        "label": "শিক্ষক মণ্ডলী ও কর্মকর্তা তালিকা (Heading)",
+        "_type": "contentEntry"
+      },
+      {
+        "_key": "eiktoxa",
+        "source": "local.listCopy.titles.bukhari",
+        "kind": "text",
+        "text": "বুখারীর বিশেষ দরস প্রদানকারী উলামা",
+        "label": "বুখারীর বিশেষ দরস প্রদানকারী উলামা (Heading)",
+        "_type": "contentEntry"
+      },
+      {
+        "_key": "eudbek1",
+        "source": "local.listCopy.titles.kitab",
+        "kind": "text",
+        "text": "মুহাদ্দিস ও কিতাব বিভাগের শিক্ষকবৃন্দ",
+        "label": "মুহাদ্দিস ও কিতাব বিভাগের শিক্ষকবৃন্দ (Heading)",
+        "_type": "contentEntry"
+      },
+      {
+        "_key": "e1pnkvi5",
+        "source": "local.listCopy.titles.hifz",
+        "kind": "text",
+        "text": "হিফজ ও নাজেরা বিভাগের শিক্ষকবৃন্দ",
+        "label": "হিফজ ও নাজেরা বিভাগের শিক্ষকবৃন্দ (Heading)",
+        "_type": "contentEntry"
+      },
+      {
+        "_key": "ejazafk",
+        "source": "local.listCopy.titles.maktab",
+        "kind": "text",
+        "text": "মক্তব বিভাগের শিক্ষকবৃন্দ",
+        "label": "মক্তব বিভাগের শিক্ষকবৃন্দ (Heading)",
+        "_type": "contentEntry"
+      },
+      {
+        "_key": "erbgkgs",
+        "source": "local.listCopy.titles.other",
+        "kind": "text",
+        "text": "অন্যান্য শিক্ষক ও কর্মকর্তা",
+        "label": "অন্যান্য শিক্ষক ও কর্মকর্তা (Heading)",
+        "_type": "contentEntry"
+      },
+      {
+        "_key": "e85xj1g",
+        "source": "local.listCopy.titles.staff",
+        "kind": "text",
+        "text": "জামিয়ার স্টাফবৃন্দ",
+        "label": "জামিয়ার স্টাফবৃন্দ (Heading)",
+        "_type": "contentEntry"
+      },
+      {
+        "_key": "e1ecdq8p",
+        "source": "local.listCopy.subtitles.all",
+        "kind": "text",
+        "text": "সকল বিভাগের সম্মানিত শিক্ষক ও কর্মী",
+        "label": "সকল বিভাগের সম্মানিত শিক্ষক ও কর্মী (Introduction)",
+        "_type": "contentEntry"
+      },
+      {
+        "_key": "e1fq6yy5",
+        "source": "local.listCopy.subtitles.filtered",
+        "kind": "text",
+        "text": "বিভাগভিত্তিক সদস্যবৃন্দ",
+        "label": "বিভাগভিত্তিক সদস্যবৃন্দ (Introduction)",
+        "_type": "contentEntry"
       }
     ],
     "route": "/teachers",

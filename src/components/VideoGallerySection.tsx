@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { sampleGalleryVideos as _fallback_sampleGalleryVideos, GalleryVideoItem } from "@/data/siteData";
 import { Video as VideoIcon, Play, X, Calendar, Clock, User, ExternalLink } from "lucide-react";
-import { EditableImage as Image, useEditableData, EditableText, useGalleryRecords } from "@/content/client";
+import { EditableImage as Image, useEditableData, EditableText, useGalleryRecords, useFieldAttribute } from "@/content/client";
 import { fieldSource } from "@/content/model";
 
 
@@ -17,6 +17,7 @@ const videoCategories = [
 ];
 
 export default function VideoGallerySection() {
+  const attribute = useFieldAttribute();
   const fallbackVideos = useEditableData("copy.data.sampleGalleryVideos", _fallback_sampleGalleryVideos);
   const sampleGalleryVideos = useGalleryRecords()?.videos ?? fallbackVideos;
 
@@ -74,7 +75,7 @@ export default function VideoGallerySection() {
                 onClick={() => setActiveVideo(video)}
               >
                 {/* Video Thumbnail with Play Button Overlay */}
-                <div className="relative aspect-video w-full bg-black overflow-hidden">
+                <div data-sanity={attribute(video, "thumbnail")} className="relative aspect-video w-full bg-black overflow-hidden">
                   <Image document="copy.ui.VideoGallerySection" entry="etb7tl8" source={fieldSource(video, "thumbnail")}
                     src={video.thumbnail}
                     alt={video.title}

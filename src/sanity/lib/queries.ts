@@ -1,4 +1,5 @@
 import { groq } from "next-sanity";
+import { unstable_rethrow } from "next/navigation";
 import { fetchSiteQuery } from "./fetch";
 import { getEditableData } from "@/content/server";
 import type { AdmissionContent } from "@/content/public-types";
@@ -84,7 +85,8 @@ export async function getSiteSettings() {
       };
     }
   } catch (err) {
-    console.warn("Using fallback site settings:", err);
+    unstable_rethrow(err);
+    console.warn("Using fallback site settings: Sanity is unavailable.");
   }
   return fallbackSettings;
 }
@@ -170,7 +172,8 @@ export async function getHomepageContent() {
       };
     }
   } catch (err) {
-    console.warn("Using fallback homepage content:", err);
+    unstable_rethrow(err);
+    console.warn("Using fallback homepage content: Sanity is unavailable.");
   }
   return { ...fallbackHome, newsTicker: [fallbackHome.hero.slogan] };
 }
@@ -191,7 +194,8 @@ export async function getNewsTicker(): Promise<string[]> {
       return [data.heroSubheadline];
     }
   } catch (err) {
-    console.warn("Using fallback news ticker:", err);
+    unstable_rethrow(err);
+    console.warn("Using fallback news ticker: Sanity is unavailable.");
   }
   return fallbackHome.hero?.slogan
     ? [fallbackHome.hero.slogan]
@@ -268,7 +272,8 @@ export async function getNotices() {
       });
     }
   } catch (err) {
-    console.warn("Using fallback notices:", err);
+    unstable_rethrow(err);
+    console.warn("Using fallback notices: Sanity is unavailable.");
   }
   return fallbackNotices;
 }
@@ -309,7 +314,8 @@ export async function getTeachers() {
       }));
     }
   } catch (err) {
-    console.warn("Using fallback teachers:", err);
+    unstable_rethrow(err);
+    console.warn("Using fallback teachers: Sanity is unavailable.");
   }
   return [];
 }
@@ -346,7 +352,8 @@ export async function getCommitteeMembers() {
       }));
     }
   } catch (err) {
-    console.warn("Using fallback committee:", err);
+    unstable_rethrow(err);
+    console.warn("Using fallback committee: Sanity is unavailable.");
   }
   return committeeAndFacultyData.managingCommittee.members;
 }
@@ -376,7 +383,8 @@ export async function getAcademicDepartments({ homepageOnly = false }: { homepag
       return mapAcademicDepartments(data);
     }
   } catch (err) {
-    console.warn("Using fallback departments:", err);
+    unstable_rethrow(err);
+    console.warn("Using fallback departments: Sanity is unavailable.");
   }
   return [];
 }
@@ -412,7 +420,8 @@ export async function getAdmissionInfo() {
       return data;
     }
   } catch (err) {
-    console.warn("Using fallback admission info:", err);
+    unstable_rethrow(err);
+    console.warn("Using fallback admission info: Sanity is unavailable.");
   }
   return null;
 }
@@ -438,7 +447,8 @@ export async function getBadriKafila() {
       return data;
     }
   } catch (err) {
-    console.warn("Using fallback badri kafila:", err);
+    unstable_rethrow(err);
+    console.warn("Using fallback badri kafila: Sanity is unavailable.");
   }
   return null;
 }
@@ -460,7 +470,8 @@ export async function getClassRoutines() {
     const data = await fetchSiteQuery<ClassRoutineDocument[]>(classRoutinesQuery, {});
     return data || [];
   } catch (err) {
-    console.warn("Using fallback class routines:", err);
+    unstable_rethrow(err);
+    console.warn("Using fallback class routines: Sanity is unavailable.");
     return [];
   }
 }
@@ -483,7 +494,8 @@ export async function getExamRoutines() {
     const data = await fetchSiteQuery<ExamRoutineDocument[]>(examRoutinesQuery, {});
     return data || [];
   } catch (err) {
-    console.warn("Using fallback exam routines:", err);
+    unstable_rethrow(err);
+    console.warn("Using fallback exam routines: Sanity is unavailable.");
     return [];
   }
 }
@@ -506,7 +518,8 @@ export async function getExamResults() {
     const data = await fetchSiteQuery<ResultDocument[]>(examResultsQuery, {});
     return data || [];
   } catch (err) {
-    console.warn("Using fallback exam results:", err);
+    unstable_rethrow(err);
+    console.warn("Using fallback exam results: Sanity is unavailable.");
     return [];
   }
 }
@@ -526,7 +539,8 @@ export async function getGalleryPhotos() {
     const data = await fetchSiteQuery<PhotoDocument[]>(galleryPhotosQuery, {});
     return data || [];
   } catch (err) {
-    console.warn("Using fallback gallery photos:", err);
+    unstable_rethrow(err);
+    console.warn("Using fallback gallery photos: Sanity is unavailable.");
     return [];
   }
 }
@@ -549,7 +563,8 @@ export async function getGalleryVideos() {
     const data = await fetchSiteQuery<VideoDocument[]>(galleryVideosQuery, {});
     return data || [];
   } catch (err) {
-    console.warn("Using fallback gallery videos:", err);
+    unstable_rethrow(err);
+    console.warn("Using fallback gallery videos: Sanity is unavailable.");
     return [];
   }
 }
@@ -592,7 +607,8 @@ export async function getBlogPosts() {
       }));
     }
   } catch (err) {
-    console.warn("Using fallback blog posts:", err);
+    unstable_rethrow(err);
+    console.warn("Using fallback blog posts: Sanity is unavailable.");
   }
   return fallbackBlogPosts;
 }

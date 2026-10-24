@@ -43,8 +43,9 @@ async function send(kind, body, key = randomUUID(), extraHeaders = {}) {
 }
 try {
   const datasets = await publicClient.datasets.list();
-  assert.equal(datasets.find((item) => item.name === privateDataset)?.aclMode, "private");
-  console.log("Private dataset visibility verified");
+  assert.ok(datasets.some((item) => item.name === privateDataset));
+  assert.equal(await privateClient.fetch('count(*[!(_type in ["system.group", "system.retention"]) && (_type != "incomingSubmission" || !(_id in path("incoming.*")) || length(_id) != 73)])', {}, { perspective: "raw" }), 0);
+  console.log("Authenticated submission namespace verified independently of paid dataset visibility");
   const admission = { studentName: "CMS QA " + randomUUID(), fatherName: "QA Guardian", fatherMobile: "01700000000", admissionClass: "QA class", motherProfession: "QA", presentVillage: "QA", admissionYear: "2026" };
   const key = randomUUID();
   const first = await send("admission", admission, key);
@@ -52,6 +53,7 @@ try {
   const retry = await send("admission", admission, key);
   assert.equal(retry.result.reference, first.result.reference);
   const record = await privateClient.fetch('*[_type=="incomingSubmission" && reference==$reference][0]', { reference: first.result.reference });
+  assert.match(record._id, /^incoming\.[a-f0-9]{64}$/);
   let anonymousRecord = null;
   try { anonymousRecord = await anonymous.withConfig({ dataset: privateDataset }).fetch('*[_id==$id][0]', { id: record._id }); }
   catch (error) { assert.ok([401, 403].includes(error.statusCode)); }

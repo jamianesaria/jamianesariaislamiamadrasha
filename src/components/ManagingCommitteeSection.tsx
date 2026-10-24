@@ -1,5 +1,6 @@
 "use client";
 
+import { stegaClean } from "@sanity/client/stega";
 import { useState } from "react";
 import type { PublicMember, PublicSettings } from "@/content/public-types";
 
@@ -266,7 +267,7 @@ export default function ManagingCommitteeSection({
                 <div className="pt-3 border-t border-gray-100 flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5 flex-1 min-w-0">
                     <a
-                      href={`tel:${member.mobile}`}
+                      href={`tel:${stegaClean(member.mobile)}`}
                       className="inline-flex items-center gap-1 text-xs font-bold text-[#8B111A] hover:underline truncate"
                       title="কল করুন"
                     >
@@ -326,7 +327,7 @@ export default function ManagingCommitteeSection({
           </div>
 
           <a
-            href={`tel:${siteSettings.phone}`}
+            href={`tel:${stegaClean(siteSettings.phone)}`}
             className="inline-flex items-center gap-1.5 bg-[#8B111A] hover:bg-[#6e0b13] text-white font-bold px-4 py-2 rounded-lg text-xs transition-colors shadow-xs self-start sm:self-auto"
           >
             <Phone size={13} />
@@ -380,7 +381,7 @@ export default function ManagingCommitteeSection({
                     <Phone size={15} className="text-[#016332] shrink-0" />
                     <span className="font-semibold text-emerald-950"><EditableText document="copy.ui.ManagingCommitteeSection" entry="e1xeo5el" fallback={"মোবাইল:"} /></span>
                     <a
-                      href={`tel:${selectedMember.mobile}`}
+                      href={`tel:${stegaClean(selectedMember.mobile)}`}
                       className="font-bold text-[#016332] hover:underline"
                     >
                       {selectedMember.mobile}
@@ -398,7 +399,7 @@ export default function ManagingCommitteeSection({
 
               <div className="pt-2 flex items-center justify-end gap-2 border-t border-gray-100">
                 <a
-                  href={`tel:${selectedMember.mobile}`}
+                  href={`tel:${stegaClean(selectedMember.mobile)}`}
                   className="inline-flex items-center gap-1.5 bg-[#016332] hover:bg-[#014222] text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors cursor-pointer"
                 >
                   <Phone size={13} />

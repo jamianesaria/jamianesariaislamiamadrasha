@@ -1,5 +1,6 @@
 "use client";
 
+import { stegaClean } from "@sanity/client/stega";
 import { useState } from "react";
 import Link from "next/link";
 import { navigationItems as _fallback_navigationItems, siteSettings as _fallback_siteSettings } from "@/data/navigationData";
@@ -35,7 +36,7 @@ export default function NavigationBar() {
 
           <div className="flex items-center gap-2">
             <a
-              href={`tel:${siteSettings.phone}`}
+              href={`tel:${stegaClean(siteSettings.phone)}`}
               className="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-amber-200 hover:text-white px-2.5 py-1 bg-[#084d28] border border-[#0c6636] rounded"
             >
               <Phone size={12} className="text-amber-300" />

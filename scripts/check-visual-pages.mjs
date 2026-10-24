@@ -19,7 +19,7 @@ const client=createClient({projectId:process.env.NEXT_PUBLIC_SANITY_PROJECT_ID||
 const coverage=JSON.parse(readFileSync('src/content/coverage.json','utf8'));
 const only=process.argv.indexOf('--route');
 let routes=only>=0?[process.argv[only+1]]:Object.entries(coverage).filter(([,i])=>!i.redirect).map(([r])=>r);
-const shardFlag=process.argv.indexOf('--shard');let reportFile='.cms-work/visual-pages/report.json';
+const shardFlag=process.argv.indexOf('--shard');let reportFile=process.env.QA_REPORT_FILE||'.cms-work/visual-pages/report.json';
 if(shardFlag>=0){const [index,count]=process.argv[shardFlag+1].split('/').map(Number);assert.ok(Number.isInteger(index)&&Number.isInteger(count)&&index>=0&&count>0&&index<count);const aliases={'/about/history':'/about','/faculty':'/teachers','/profile/managing-committee':'/committee','/results/admission':'/results/academic'};routes=routes.filter(route=>[...(aliases[route]||route)].reduce((sum,c)=>sum+c.charCodeAt(0),0)%count===index);reportFile=`.cms-work/visual-pages/report-${index}-of-${count}.json`;}
 const mutate=process.argv.includes('--drafts');
 const modals=process.argv.includes('--modals');
@@ -56,7 +56,8 @@ async function inspect(frame){
   const text=[],attributes=[];const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let node,index=0;
   while((node=walker.nextNode())){const el=node.parentElement;if(!el||el.closest('script,style,svg,sanity-visual-editing'))continue;const rect=el.getBoundingClientRect();if(!rect.width||!rect.height)continue;const id=el.getAttribute('data-visual-qa-node')||String(index++);el.setAttribute('data-visual-qa-node',id);text.push({text:node.textContent,tag:el.tagName,qa:id,main:!!el.closest('main,article'),heading:!!el.closest('h1,h2,h3,h4,h5,h6'),paragraph:!!el.closest('p'),clipped:!!el.closest('.truncate,[class*="line-clamp"]'),interactive:!!el.closest('a,button'),annotated:!!el.closest('[data-sanity]'),image:false});}
   for(const el of document.querySelectorAll('[data-sanity]')){if(!el.hasAttribute('data-visual-qa-node'))el.setAttribute('data-visual-qa-node',String(index++));attributes.push({data:el.getAttribute('data-sanity'),tag:el.tagName,qa:el.getAttribute('data-visual-qa-node'),main:!!el.closest('main,article'),image:el.tagName==='IMG',src:el.getAttribute('src')});}
-  return{text,attributes};
+  const links=[...document.querySelectorAll('[href],[src],[poster]')].flatMap(el=>['href','src','poster'].filter(name=>el.hasAttribute(name)).map(name=>({name,value:el.getAttribute(name)})));
+  return{text,attributes,links};
  });
  const sources=[];
  for(const item of raw.text){let start=0;for(const match of item.text.matchAll(new RegExp(VERCEL_STEGA_REGEX.source,'gu'))){for(const encoded of vercelStegaDecodeAll(match[0])||[]){const node=decodeSanityNodeData(encoded);if(node?.id&&node.path)sources.push({...item,node,rawText:item.text,segmentStart:start,segmentEnd:match.index,text:vercelStegaSplit(item.text.slice(start,match.index)).cleaned});}start=match.index+match[0].length;}}
@@ -67,7 +68,7 @@ async function inspect(frame){
   const parts=studioPath.fromString(source.node.path);const parent=doc&&parts.length>1?valueAt(doc,studioPath.toString(parts.slice(0,-1))):doc;
   if(!doc||!parent||(!source.image&&source.text&&value===undefined))broken.push({id,path:source.node.path,reason:!doc?'missing document':!parent?'missing source item':'missing source field',tag:source.tag});
  }
- return {sources,broken,unmappedHeadings:raw.text.filter(t=>t.main&&t.heading&&!t.annotated&&!vercelStegaDecodeAll(t.text)?.length&&t.text.trim().length>5).map(t=>t.text.trim()).filter((v,i,a)=>a.indexOf(v)===i)};
+ return {sources,broken,unsafeLinks:raw.links.filter(item=>new RegExp(VERCEL_STEGA_REGEX.source,'u').test(item.value)).map(item=>({name:item.name,value:vercelStegaSplit(item.value).cleaned})),unmappedHeadings:raw.text.filter(t=>t.main&&t.heading&&!t.annotated&&!vercelStegaDecodeAll(t.text)?.length&&t.text.trim().length>5).map(t=>t.text.trim()).filter((v,i,a)=>a.indexOf(v)===i)};
 }
 async function clickField(hostPage,frame,source){
  await hostPage.mouse.move(1437,997);await frame.waitForTimeout(200);
@@ -109,7 +110,8 @@ try{
    const intro=frame.locator('.website-intro');if(await intro.isVisible()){await intro.getByRole('button').last().click({force:true});await intro.waitFor({state:'detached'});}
    const scan=await inspect(frame);
    report.renderedTextSources=scan.sources.filter(s=>s.text).length;report.imageSources=scan.sources.filter(s=>s.image).length;report.brokenSources=scan.broken;report.unmappedHeadings=scan.unmappedHeadings;
-   if(scanOnly){report.status=scan.broken.length?'mapping gaps':'scanned';console.log(JSON.stringify(report));continue;}
+   report.unsafeLinks=scan.unsafeLinks;
+   if(scanOnly){report.status=scan.broken.length||scan.unsafeLinks.length||scan.unmappedHeadings.length?'mapping gaps':'scanned';console.log(JSON.stringify(report));continue;}
    await page.waitForFunction(()=>window.__statuses.includes('connected'),null,{timeout:15000});
    const candidates=scan.sources.filter(s=>s.text&&s.main&&!shared.test(s.node.id)&&s.text.trim().length>5);
    const selected=candidates.find(s=>s.node.id.startsWith('copy.ui.')&&s.tag!=='OPTION')||candidates[0];
@@ -119,6 +121,7 @@ try{
    const button=candidates.find(s=>s.interactive&&s.tag!=='OPTION');if(button){try{report.buttonClick=await clickField(page,frame,button);}catch(e){report.buttonClickError=e.message.split('\n')[0];}}
    const repeated=candidates.find(s=>!['pageContent','siteSettings','homepage'].includes(documents.get(s.node.id)?._type));if(repeated){try{report.recordClick=await clickField(page,frame,repeated);}catch(e){report.recordClickError=e.message.split('\n')[0];}}
    const headline=scan.sources.find(s=>s.text&&s.main&&s.heading);if(headline){try{report.headlineClick=await clickField(page,frame,headline);}catch(e){report.headlineClickError=e.message.split('\n')[0];}}
+   if(['/teachers','/faculty'].includes(route)){const listHeading=scan.sources.find(s=>s.text&&s.heading&&s.node.path==='entries[_key=="e11t91hp"].text');assert.ok(listHeading,'Teacher list heading needs its own CMS field');report.listHeadingClick=await clickField(page,frame,listHeading);}
    const image=scan.sources.find(s=>s.image&&s.qa&&s.main)||scan.sources.find(s=>s.image&&s.qa);if(image){try{report.imageClick=await clickField(page,frame,image);}catch(e){report.imageClickError=e.message.split('\n')[0];}}
    if(mutate&&selected.node.id.startsWith('copy.')&&selected.node.path.endsWith('.text')){
     const id=selected.node.id.replace(/^drafts\./,'');const draftId='drafts.'+id;
@@ -157,13 +160,13 @@ try{
    const phoneScan=await inspect(frame);const phoneText=phoneScan.sources.find(s=>s.main&&s.text&&s.node.id===selected.node.id&&normalize(s.node.path)===normalize(selected.node.path));assert.ok(phoneText,'Selected field remains present on phone');
    report.phoneTextClick=await clickField(page,frame,phoneText);
    await page.setViewportSize({width:1440,height:1000});
-   report.status=scan.broken.length?'mapping gaps':report.imageClickError||report.headlineClickError||report.buttonClickError||report.recordClickError?'failed':'passed';
+   report.status=scan.broken.length||scan.unsafeLinks.length||scan.unmappedHeadings.length?'mapping gaps':report.imageClickError||report.headlineClickError||report.buttonClickError||report.recordClickError?'failed':'passed';
   }catch(e){report.status='failed';report.errors.push(e.message.split('\n')[0]);if(e.actual!==undefined)report.actual=e.actual;if(e.expected!==undefined)report.expected=e.expected;report.host=await page.evaluate(()=>({statuses:window.__statuses,messages:window.__messages?.slice(-8)}));const debugFrame=page.frames().find(f=>f!==page.mainFrame());if(debugFrame){report.overlayState=await debugFrame.evaluate(()=>({root:!!document.querySelector('sanity-visual-editing'),overlayNodes:[...document.querySelectorAll('*')].filter(el=>el.tagName.toLowerCase().includes('sanity')).map(el=>el.tagName),scripts:document.scripts.length}));await page.screenshot({path:'.cms-work/visual-pages/failure.png'});writeFileSync('.cms-work/visual-pages/frame.html',await debugFrame.content());}}
-  writeFileSync(reportFile,JSON.stringify({reports,errors,scope:'Actual live overlays, official Comlink test host; personal Studio login not exercised'},null,2));
+  writeFileSync(reportFile,JSON.stringify({base,checkedAt:new Date().toISOString(),reports,errors,scope:'Actual live overlays, official Comlink test host; personal Studio login not exercised'},null,2));
   console.log(JSON.stringify(report));
  }
- await context.request.get(base+'/api/draft-mode/disable');
- writeFileSync(reportFile,JSON.stringify({reports,errors,scope:'Actual live overlays, official Comlink test host; personal Studio login not exercised'},null,2));
+ const disabled=await context.request.get(base+'/api/draft-mode/disable',{maxRedirects:0});assert.ok([200,302,303,307].includes(disabled.status()),'Preview exit must clear its cookie');
+ writeFileSync(reportFile,JSON.stringify({base,checkedAt:new Date().toISOString(),reports,errors,scope:'Actual live overlays, official Comlink test host; personal Studio login not exercised'},null,2));
  console.log(JSON.stringify({routes:reports.length,passed:reports.filter(r=>r.status==='passed').length,browserErrors:errors}));
  if(reports.some(r=>r.status!=='passed'&&!(scanOnly&&r.status==='scanned'))||errors.length)process.exitCode=1;
 }finally{

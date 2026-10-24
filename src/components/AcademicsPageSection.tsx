@@ -1,4 +1,5 @@
 
+import { stegaClean } from "@sanity/client/stega";
 import Link from "next/link";
 import type { AcademicDepartment } from "@/sanity/lib/departments";
 import { academicsPageData as _fallback_academicsPageData, siteSettings as _fallback_siteSettings } from "@/data/siteData";
@@ -159,7 +160,7 @@ export default async function AcademicsPageSection({ initialDepartments }: Acade
                 <ArrowRight size={13} />
               </Link>
               <a
-                href={`tel:${siteSettings.phone}`}
+                href={`tel:${stegaClean(siteSettings.phone)}`}
                 className="w-full inline-flex items-center justify-center gap-1.5 bg-white text-[#016332] hover:bg-amber-50 text-xs font-bold py-2 px-3 rounded-md transition-colors"
               >
                 <Phone size={12} />

@@ -1,4 +1,5 @@
 
+import { stegaClean } from "@sanity/client/stega";
 import Link from "next/link";
 import { aboutPageData as _fallback_aboutPageData, siteSettings as _fallback_siteSettings } from "@/data/siteData";
 import {
@@ -553,7 +554,7 @@ export default async function AboutJamiaSection() {
                   {header.title}<EditableText document="copy.ui.AboutJamiaSection" entry="e1ad7szi" fallback={" — "} />{header.established}
                 </span>
                 <a
-                  href={`tel:${siteSettings.phone}`}
+                  href={`tel:${stegaClean(siteSettings.phone)}`}
                   className="inline-flex items-center gap-1.5 font-bold text-amber-300 hover:underline"
                 >
                   <Phone size={13} />

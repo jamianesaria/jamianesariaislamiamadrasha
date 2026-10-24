@@ -1,5 +1,6 @@
 "use client";
 
+import { stegaClean } from "@sanity/client/stega";
 import { useState } from "react";
 
 import Link from "next/link";
@@ -165,7 +166,7 @@ export default function OrphanageSection() {
               </button>
 
               <a
-                href={`tel:${contact.mobile}`}
+                href={`tel:${stegaClean(contact.mobile)}`}
                 className="w-full inline-flex items-center justify-center gap-2 px-3 py-2.5 bg-[#016332] hover:bg-[#014724] text-white rounded-lg text-xs font-bold transition-colors shadow-xs"
               >
                 <Phone size={14} />
@@ -352,7 +353,7 @@ export default function OrphanageSection() {
                   <div className="bg-white p-3 rounded-lg border border-gray-200">
                     <span className="text-gray-500 block font-medium"><EditableText document="copy.ui.OrphanageSection" entry="e1weprxa" fallback={"মোবাইল:"} /></span>
                     <a
-                      href={`tel:${hostelConstruction.contactDetails.phone}`}
+                      href={`tel:${stegaClean(hostelConstruction.contactDetails.phone)}`}
                       className="font-bold text-[#8B111A] hover:underline flex items-center gap-1 mt-0.5"
                     >
                       <Phone size={12} />
@@ -362,7 +363,7 @@ export default function OrphanageSection() {
                   <div className="bg-white p-3 rounded-lg border border-gray-200">
                     <span className="text-gray-500 block font-medium"><EditableText document="copy.ui.OrphanageSection" entry="e4dmdak" fallback={"ই-মেইল:"} /></span>
                     <a
-                      href={`mailto:${hostelConstruction.contactDetails.email}`}
+                      href={`mailto:${stegaClean(hostelConstruction.contactDetails.email)}`}
                       className="font-bold text-[#016332] hover:underline flex items-center gap-1 mt-0.5"
                     >
                       <Mail size={12} />
@@ -631,7 +632,7 @@ export default function OrphanageSection() {
                     </p>
                   </div>
                   <a
-                    href={`tel:${paymentMethods.bkash.number}`}
+                    href={`tel:${stegaClean(paymentMethods.bkash.number)}`}
                     className="text-xs text-gray-700 hover:text-pink-600 font-semibold flex items-center gap-1 bg-pink-50 px-2.5 py-1.5 rounded-md border border-pink-200"
                   >
                     <Phone size={12} />
@@ -791,7 +792,7 @@ export default function OrphanageSection() {
                 <div className="p-4 rounded-xl border border-gray-200 bg-[#FAF7F0] space-y-1">
                   <span className="text-xs text-gray-500 font-semibold block"><EditableText document="copy.ui.OrphanageSection" entry="e1rr4naj" fallback={"১. মোবাইল নম্বর:"} /></span>
                   <a
-                    href={`tel:${contact.mobile}`}
+                    href={`tel:${stegaClean(contact.mobile)}`}
                     className="text-sm font-bold text-[#8B111A] hover:underline flex items-center gap-1.5"
                   >
                     <Phone size={14} />
@@ -802,7 +803,7 @@ export default function OrphanageSection() {
                 <div className="p-4 rounded-xl border border-gray-200 bg-[#FAF7F0] space-y-1">
                   <span className="text-xs text-gray-500 font-semibold block"><EditableText document="copy.ui.OrphanageSection" entry="e1d4ufkj" fallback={"২. অফিসিয়াল ই-মেইল:"} /></span>
                   <a
-                    href={`mailto:${contact.email}`}
+                    href={`mailto:${stegaClean(contact.email)}`}
                     className="text-sm font-bold text-[#016332] hover:underline flex items-center gap-1.5"
                   >
                     <Mail size={14} />
@@ -850,7 +851,7 @@ export default function OrphanageSection() {
 
               <div className="flex flex-wrap gap-2.5">
                 <a
-                  href={`tel:${contact.mobile}`}
+                  href={`tel:${stegaClean(contact.mobile)}`}
                   className="inline-flex items-center gap-1.5 bg-[#8B111A] hover:bg-[#6e0b13] text-white font-bold px-4 py-2 rounded-lg text-xs transition-colors shadow-xs"
                 >
                   <Phone size={13} />
