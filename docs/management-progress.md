@@ -1,5 +1,19 @@
 # Management implementation progress
 
+## 24 October 2026 update
+
+Release `2de644f` deployed successfully to the custom domain. Added confirmed deletion to publication lists and private inbox details; real transactions passed for 13 public record types and authenticated submissions. Draft/published versions delete together. Changed revisions, anonymous access and strong references are protected; unrelated user documents/assets were not deleted. Desktop and phone management browser checks passed cancellation, checkbox confirmation and actual persisted removal.
+
+The owner's Free-plan requirement supersedes the earlier reliance on paid private datasets. Both dataset containers are now public-compatible; **submission documents remain authenticated-only** under Sanity's fixed dotted-ID access rules. All existing business records in the submissions container were audited for the required protected namespace, with no public assets. Anonymous API/CDN, exact-ID and reference tests passed; live admission/contact/Badri HTTP saves and retry deduplication passed after the ACL change. No billing subscription was changed. See `security-and-capacity.md` and the updated operations guide.
+
+The new build/strict TypeScript checks passed for all 41 generated routes. Root lint passed with 0 errors and 51 existing warnings. Schema validation passed for 179 public documents. The credential scan checked 418 source/public artifacts with no configured server credential found, and controlled CMS failure tests confirmed that raw SDK credentials do not enter logs or browser HTML. Targeted compatible dependency patches removed the three high-severity findings; 8 moderate upstream package advisories remain.
+
+The live public browser pass verified all 26 views at desktop/phone widths, no horizontal overflow and no React runtime errors. Native Studio sign-in loaded, and invalid preview access returned 401. Full live visual editing verification is recorded separately in `visual-editing-verification.md`; personal Studio sign-in/role testing remains explicitly outside the automated test identity.
+
+The completed live visual audit passed 26/26 views, 26 private draft checks, 26 phone/text clicks, 26 image clicks, 20 punctuation checks, 22 button checks and 14 native-record clicks. All three open-modal refresh checks passed. The 4,607 text and 255 image annotations inspected across views had no broken source paths, unsafe links or unmapped visible headings. Four actual browser redirects also passed. The final live response scan checked 158 responses with no production server credential. Post-test inventory remains 179 business content documents and 1 protected incoming submission, no page-copy drafts, no assets and zero anonymously readable submissions. An expired preview secret from this audit's earlier failed run was removed; staff content was preserved.
+
+## Earlier implementation record
+
 23 October 2026. The latest local blog, URL wiring and navigation commit (`5f80685`) is preserved in the release branch.
 
 ## Verified foundations

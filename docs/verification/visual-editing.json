@@ -1,0 +1,941 @@
+{
+  "site": "https://nesariamadrasa.com",
+  "codeCommit": "2de644f",
+  "checkedAt": "2026-10-24T07:33:13.948Z",
+  "scope": "Actual live overlays, official Comlink test host; personal Studio login not exercised",
+  "summary": {
+    "views": 26,
+    "passed": 26,
+    "privateDraftChecks": 26,
+    "phoneClicks": 26,
+    "imageClicks": 26,
+    "punctuationClicks": 20,
+    "buttonClicks": 22,
+    "nativeRecordClicks": 14,
+    "modalRefreshes": 3,
+    "textAnnotations": 4607,
+    "imageAnnotations": 255,
+    "brokenSources": 0,
+    "unsafeLinks": 0,
+    "unmappedVisibleHeadings": 0,
+    "browserErrors": 0
+  },
+  "reports": [
+    {
+      "route": "/",
+      "errors": [],
+      "renderedTextSources": 362,
+      "imageSources": 19,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.HomePrimarySection",
+        "path": "entries[_key==\"eei2jgx\"].text"
+      },
+      "punctuationClick": {
+        "id": "homepage",
+        "path": "heroSubheadline"
+      },
+      "buttonClick": {
+        "id": "copy.data.homePageContent",
+        "path": "entries[_key==\"eabjl9s\"].text"
+      },
+      "recordClick": {
+        "id": "134d8f8a-2dd8-4f38-bdc0-1a22bf23b0a3",
+        "path": "summary"
+      },
+      "headlineClick": {
+        "id": "homepage",
+        "path": "heroHeadline"
+      },
+      "imageClick": {
+        "id": "siteSettings",
+        "path": "logo"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.HomePrimarySection",
+        "path": "entries[_key==\"eei2jgx\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/about",
+      "errors": [],
+      "renderedTextSources": 217,
+      "imageSources": 3,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.AboutJamiaSection",
+        "path": "entries[_key==\"e1f5kqrb\"].text"
+      },
+      "punctuationClick": {
+        "id": "copy.data.aboutPageData",
+        "path": "entries[_key==\"e11jlqaq\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.AboutJamiaSection",
+        "path": "entries[_key==\"e1431uxj\"].text"
+      },
+      "headlineClick": {
+        "id": "copy.data.aboutPageData",
+        "path": "entries[_key==\"e180jy2k\"].text"
+      },
+      "imageClick": {
+        "id": "siteSettings",
+        "path": "logo"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.AboutJamiaSection",
+        "path": "entries[_key==\"e1f5kqrb\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/about/history",
+      "errors": [],
+      "renderedTextSources": 217,
+      "imageSources": 3,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.AboutJamiaSection",
+        "path": "entries[_key==\"e1f5kqrb\"].text"
+      },
+      "punctuationClick": {
+        "id": "copy.data.aboutPageData",
+        "path": "entries[_key==\"e11jlqaq\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.AboutJamiaSection",
+        "path": "entries[_key==\"e1431uxj\"].text"
+      },
+      "headlineClick": {
+        "id": "copy.data.aboutPageData",
+        "path": "entries[_key==\"e180jy2k\"].text"
+      },
+      "imageClick": {
+        "id": "siteSettings",
+        "path": "logo"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.AboutJamiaSection",
+        "path": "entries[_key==\"e1f5kqrb\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/about/infrastructure",
+      "errors": [],
+      "renderedTextSources": 81,
+      "imageSources": 3,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.PhysicalInfrastructureSection",
+        "path": "entries[_key==\"e1cxnx7j\"].text"
+      },
+      "punctuationClick": {
+        "id": "copy.data.physicalInfrastructureData",
+        "path": "entries[_key==\"e64qzxr\"].text"
+      },
+      "headlineClick": {
+        "id": "siteSettings",
+        "path": "title"
+      },
+      "imageClick": {
+        "id": "siteSettings",
+        "path": "logo"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.PhysicalInfrastructureSection",
+        "path": "entries[_key==\"e1cxnx7j\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/about/vacancy",
+      "errors": [],
+      "renderedTextSources": 80,
+      "imageSources": 3,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.VacancyNoticeTable",
+        "path": "entries[_key==\"eruyt4b\"].text"
+      },
+      "punctuationClick": {
+        "id": "siteSettings",
+        "path": "addressFull"
+      },
+      "buttonClick": {
+        "id": "copy.ui.VacancyNoticeTable",
+        "path": "entries[_key==\"eqiretf\"].text"
+      },
+      "recordClick": {
+        "id": "2N7Ah1QEiHDTNvncxElVv7",
+        "path": "title"
+      },
+      "headlineClick": {
+        "id": "siteSettings",
+        "path": "title"
+      },
+      "imageClick": {
+        "id": "siteSettings",
+        "path": "logo"
+      },
+      "draftEdit": "Rendered privately",
+      "modalPhase": "Waiting for open modal refresh",
+      "modalDraftRefresh": "Open modal updated without closing",
+      "phoneTextClick": {
+        "id": "copy.ui.VacancyNoticeTable",
+        "path": "entries[_key==\"eruyt4b\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/academics",
+      "errors": [],
+      "renderedTextSources": 311,
+      "imageSources": 3,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.AcademicsPageSection",
+        "path": "entries[_key==\"ewuvzo\"].text"
+      },
+      "punctuationClick": {
+        "id": "copy.data.academicsPageData",
+        "path": "entries[_key==\"eszq59s\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.AcademicsPageSection",
+        "path": "entries[_key==\"e1k1qppm\"].text"
+      },
+      "headlineClick": {
+        "id": "copy.data.academicsPageData",
+        "path": "entries[_key==\"e12alhub\"].text"
+      },
+      "imageClick": {
+        "id": "siteSettings",
+        "path": "logo"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.AcademicsPageSection",
+        "path": "entries[_key==\"ewuvzo\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/admission",
+      "errors": [],
+      "renderedTextSources": 129,
+      "imageSources": 2,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.AdmissionInfoSection",
+        "path": "entries[_key==\"e1h6fv5j\"].text"
+      },
+      "punctuationClick": {
+        "id": "copy.data.officialAdmissionData",
+        "path": "entries[_key==\"e1qubp22\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.AdmissionInfoSection",
+        "path": "entries[_key==\"exf519t\"].text"
+      },
+      "recordClick": {
+        "id": "admissionInfo",
+        "path": "sessionName"
+      },
+      "headlineClick": {
+        "id": "copy.ui.AdmissionInfoSection",
+        "path": "entries[_key==\"ef4ngba\"].text"
+      },
+      "imageClick": {
+        "id": "siteSettings",
+        "path": "headerBanner"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.AdmissionInfoSection",
+        "path": "entries[_key==\"e1h6fv5j\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/apply",
+      "errors": [],
+      "renderedTextSources": 133,
+      "imageSources": 2,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.ApplyOnlineForm",
+        "path": "entries[_key==\"e11j42up\"].text"
+      },
+      "punctuationClick": {
+        "id": "copy.ui.ApplyOnlineForm",
+        "path": "entries[_key==\"e1w92cvz\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.ApplyOnlineForm",
+        "path": "entries[_key==\"e159y87w\"].text"
+      },
+      "headlineClick": {
+        "id": "copy.ui.ApplyOnlineForm",
+        "path": "entries[_key==\"e19cij18\"].text"
+      },
+      "imageClick": {
+        "id": "siteSettings",
+        "path": "headerBanner"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.ApplyOnlineForm",
+        "path": "entries[_key==\"e11j42up\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/badri-kafila",
+      "errors": [],
+      "renderedTextSources": 541,
+      "imageSources": 2,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.BadriKafilaSection",
+        "path": "entries[_key==\"e1os3r05\"].text"
+      },
+      "punctuationClick": {
+        "id": "copy.ui.BadriKafilaSection",
+        "path": "entries[_key==\"en5q0wz\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.BadriKafilaSection",
+        "path": "entries[_key==\"e1os3r05\"].text"
+      },
+      "headlineClick": {
+        "id": "copy.ui.BadriKafilaSection",
+        "path": "entries[_key==\"e10597vt\"].text"
+      },
+      "imageClick": {
+        "id": "siteSettings",
+        "path": "headerBanner"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.BadriKafilaSection",
+        "path": "entries[_key==\"e1os3r05\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/blog",
+      "errors": [],
+      "renderedTextSources": 140,
+      "imageSources": 8,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.BlogSection",
+        "path": "entries[_key==\"e196gy13\"].text"
+      },
+      "punctuationClick": {
+        "id": "copy.ui.BlogSection",
+        "path": "entries[_key==\"es6vfln\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.BlogSection",
+        "path": "entries[_key==\"el13m62\"].text"
+      },
+      "recordClick": {
+        "id": "4xbAOMR0lsMCgUAzcJHZQ3",
+        "path": "category"
+      },
+      "headlineClick": {
+        "id": "copy.ui.BlogSection",
+        "path": "entries[_key==\"e1k5g3tn\"].text"
+      },
+      "imageClick": {
+        "id": "4xbAOMR0lsMCgUAzcJHZQ3",
+        "path": "thumbnail"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.BlogSection",
+        "path": "entries[_key==\"e196gy13\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/committee",
+      "errors": [],
+      "renderedTextSources": 233,
+      "imageSources": 34,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.ManagingCommitteeSection",
+        "path": "entries[_key==\"ef96tqr\"].text"
+      },
+      "punctuationClick": {
+        "id": "copy.data.committeeAndFacultyData",
+        "path": "entries[_key==\"e1w5i8xg\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.ManagingCommitteeSection",
+        "path": "entries[_key==\"e7pi4wg\"].text"
+      },
+      "recordClick": {
+        "id": "committee-member-11",
+        "path": "name"
+      },
+      "headlineClick": {
+        "id": "copy.ui.ManagingCommitteeSection",
+        "path": "entries[_key==\"e9lxa3\"].text"
+      },
+      "imageClick": {
+        "id": "committee-member-11",
+        "path": "photo"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.ManagingCommitteeSection",
+        "path": "entries[_key==\"ef96tqr\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/contact",
+      "errors": [],
+      "renderedTextSources": 87,
+      "imageSources": 2,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.ContactSection",
+        "path": "entries[_key==\"e1jai5nk\"].text"
+      },
+      "punctuationClick": {
+        "id": "copy.ui.ContactSection",
+        "path": "entries[_key==\"e17ynnby\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.ContactSection",
+        "path": "entries[_key==\"e161to9\"].text"
+      },
+      "headlineClick": {
+        "id": "copy.ui.ContactSection",
+        "path": "entries[_key==\"e1jai5nk\"].text"
+      },
+      "imageClick": {
+        "id": "siteSettings",
+        "path": "headerBanner"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.ContactSection",
+        "path": "entries[_key==\"e1jai5nk\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/exam-routine",
+      "errors": [],
+      "renderedTextSources": 66,
+      "imageSources": 2,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.ExamRoutineSection",
+        "path": "entries[_key==\"e7ke44o\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.ExamRoutineSection",
+        "path": "entries[_key==\"eew35b8\"].text"
+      },
+      "imageClick": {
+        "id": "siteSettings",
+        "path": "headerBanner"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.ExamRoutineSection",
+        "path": "entries[_key==\"e7ke44o\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/faculty",
+      "errors": [],
+      "renderedTextSources": 357,
+      "imageSources": 41,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.FacultyAndTeachersSection",
+        "path": "entries[_key==\"eq9ud6c\"].text"
+      },
+      "punctuationClick": {
+        "id": "copy.ui.FacultyAndTeachersSection",
+        "path": "entries[_key==\"e186by0p\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.FacultyAndTeachersSection",
+        "path": "entries[_key==\"e1jdbae6\"].text"
+      },
+      "recordClick": {
+        "id": "teacher-1",
+        "path": "name"
+      },
+      "headlineClick": {
+        "id": "copy.ui.FacultyAndTeachersSection",
+        "path": "entries[_key==\"e1e4ykg7\"].text"
+      },
+      "listHeadingClick": {
+        "id": "copy.ui.FacultyAndTeachersSection",
+        "path": "entries[_key==\"e11t91hp\"].text"
+      },
+      "imageClick": {
+        "id": "teacher-1",
+        "path": "photo"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.FacultyAndTeachersSection",
+        "path": "entries[_key==\"eq9ud6c\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/functions/class-routine",
+      "errors": [],
+      "renderedTextSources": 67,
+      "imageSources": 2,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.ClassRoutineSection",
+        "path": "entries[_key==\"ek89u7f\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.ClassRoutineSection",
+        "path": "entries[_key==\"ek89u7f\"].text"
+      },
+      "imageClick": {
+        "id": "siteSettings",
+        "path": "headerBanner"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.ClassRoutineSection",
+        "path": "entries[_key==\"ek89u7f\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/functions/event-list",
+      "errors": [],
+      "renderedTextSources": 85,
+      "imageSources": 6,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.EventListTable",
+        "path": "entries[_key==\"e1lk195y\"].text"
+      },
+      "recordClick": {
+        "id": "77JD6XO0u9nNFMbUA5FaTJ",
+        "path": "title"
+      },
+      "imageClick": {
+        "id": "77JD6XO0u9nNFMbUA5FaTJ",
+        "path": "image"
+      },
+      "draftEdit": "Rendered privately",
+      "modalPhase": "Waiting for open modal refresh",
+      "modalDraftRefresh": "Open modal updated without closing",
+      "phoneTextClick": {
+        "id": "copy.ui.EventListTable",
+        "path": "entries[_key==\"e1lk195y\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/functions/holiday",
+      "errors": [],
+      "renderedTextSources": 80,
+      "imageSources": 2,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.HolidayListTable",
+        "path": "entries[_key==\"e1mnznxu\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.HolidayListTable",
+        "path": "entries[_key==\"ey4m1wl\"].text"
+      },
+      "recordClick": {
+        "id": "IOo3Vp8rsgaGPLw3h9yklZ",
+        "path": "title"
+      },
+      "imageClick": {
+        "id": "siteSettings",
+        "path": "headerBanner"
+      },
+      "draftEdit": "Rendered privately",
+      "modalPhase": "Waiting for open modal refresh",
+      "modalDraftRefresh": "Open modal updated without closing",
+      "phoneTextClick": {
+        "id": "copy.ui.HolidayListTable",
+        "path": "entries[_key==\"e1mnznxu\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/gallery",
+      "errors": [],
+      "renderedTextSources": 89,
+      "imageSources": 12,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.MainGallerySection",
+        "path": "entries[_key==\"e1yl7i7k\"].text"
+      },
+      "punctuationClick": {
+        "id": "copy.ui.MainGallerySection",
+        "path": "entries[_key==\"e1eyoaoc\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.MainGallerySection",
+        "path": "entries[_key==\"eopm6ol\"].text"
+      },
+      "recordClick": {
+        "id": "77JD6XO0u9nNFMbUA5FbYP",
+        "path": "title"
+      },
+      "headlineClick": {
+        "id": "copy.ui.MainGallerySection",
+        "path": "entries[_key==\"e1eu7nqm\"].text"
+      },
+      "imageClick": {
+        "id": "77JD6XO0u9nNFMbUA5FbYP",
+        "path": "image"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.MainGallerySection",
+        "path": "entries[_key==\"e1yl7i7k\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/gallery/photo",
+      "errors": [],
+      "renderedTextSources": 106,
+      "imageSources": 12,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.PhotoGallerySection",
+        "path": "entries[_key==\"eglqq37\"].text"
+      },
+      "recordClick": {
+        "id": "77JD6XO0u9nNFMbUA5FbYP",
+        "path": "title"
+      },
+      "headlineClick": {
+        "id": "77JD6XO0u9nNFMbUA5FbYP",
+        "path": "title"
+      },
+      "imageClick": {
+        "id": "77JD6XO0u9nNFMbUA5FbYP",
+        "path": "image"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.PhotoGallerySection",
+        "path": "entries[_key==\"eglqq37\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/gallery/video",
+      "errors": [],
+      "renderedTextSources": 101,
+      "imageSources": 9,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.VideoGallerySection",
+        "path": "entries[_key==\"eyn3zo5\"].text"
+      },
+      "recordClick": {
+        "id": "77JD6XO0u9nNFMbUA5FcUT",
+        "path": "title"
+      },
+      "headlineClick": {
+        "id": "77JD6XO0u9nNFMbUA5FcUT",
+        "path": "title"
+      },
+      "imageClick": {
+        "id": "77JD6XO0u9nNFMbUA5FcUT",
+        "path": "thumbnail"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.VideoGallerySection",
+        "path": "entries[_key==\"eyn3zo5\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/notices",
+      "errors": [],
+      "renderedTextSources": 176,
+      "imageSources": 2,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.NoticeBoardSection",
+        "path": "entries[_key==\"ebxjr5b\"].text"
+      },
+      "punctuationClick": {
+        "id": "copy.ui.NoticeBoardSection",
+        "path": "entries[_key==\"e1rj8t9q\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.NoticeBoardSection",
+        "path": "entries[_key==\"esdum18\"].text"
+      },
+      "recordClick": {
+        "id": "134d8f8a-2dd8-4f38-bdc0-1a22bf23b0a3",
+        "path": "memo"
+      },
+      "headlineClick": {
+        "id": "copy.ui.NoticeBoardSection",
+        "path": "entries[_key==\"e1cv6689\"].text"
+      },
+      "imageClick": {
+        "id": "siteSettings",
+        "path": "headerBanner"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.NoticeBoardSection",
+        "path": "entries[_key==\"ebxjr5b\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/orphanage",
+      "errors": [],
+      "renderedTextSources": 217,
+      "imageSources": 4,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.OrphanageSection",
+        "path": "entries[_key==\"e17vdoic\"].text"
+      },
+      "punctuationClick": {
+        "id": "copy.data.orphanagePageData",
+        "path": "entries[_key==\"e1v1iqam\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.data.orphanagePageData",
+        "path": "entries[_key==\"e1ptj1sf\"].text"
+      },
+      "headlineClick": {
+        "id": "copy.data.orphanagePageData",
+        "path": "entries[_key==\"e180jy2k\"].text"
+      },
+      "imageClick": {
+        "id": "copy.ui.OrphanageSection",
+        "path": "entries[_key==\"e187pmzj\"].image"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.OrphanageSection",
+        "path": "entries[_key==\"e17vdoic\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/profile/managing-committee",
+      "errors": [],
+      "renderedTextSources": 233,
+      "imageSources": 34,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.ManagingCommitteeSection",
+        "path": "entries[_key==\"ef96tqr\"].text"
+      },
+      "punctuationClick": {
+        "id": "copy.data.committeeAndFacultyData",
+        "path": "entries[_key==\"e1w5i8xg\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.ManagingCommitteeSection",
+        "path": "entries[_key==\"e7pi4wg\"].text"
+      },
+      "recordClick": {
+        "id": "committee-member-11",
+        "path": "name"
+      },
+      "headlineClick": {
+        "id": "copy.ui.ManagingCommitteeSection",
+        "path": "entries[_key==\"e9lxa3\"].text"
+      },
+      "imageClick": {
+        "id": "committee-member-11",
+        "path": "photo"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.ManagingCommitteeSection",
+        "path": "entries[_key==\"ef96tqr\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/results/academic",
+      "errors": [],
+      "renderedTextSources": 71,
+      "imageSources": 2,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.PublicResultsSection",
+        "path": "entries[_key==\"e8iq4bh\"].text"
+      },
+      "punctuationClick": {
+        "id": "copy.ui.PublicResultsSection",
+        "path": "entries[_key==\"esvs9u0\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.PublicResultsSection",
+        "path": "entries[_key==\"evpw8hi\"].text"
+      },
+      "imageClick": {
+        "id": "siteSettings",
+        "path": "headerBanner"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.PublicResultsSection",
+        "path": "entries[_key==\"e8iq4bh\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/results/admission",
+      "errors": [],
+      "renderedTextSources": 71,
+      "imageSources": 2,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.PublicResultsSection",
+        "path": "entries[_key==\"e1mas90j\"].text"
+      },
+      "punctuationClick": {
+        "id": "copy.ui.PublicResultsSection",
+        "path": "entries[_key==\"esvs9u0\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.PublicResultsSection",
+        "path": "entries[_key==\"evpw8hi\"].text"
+      },
+      "imageClick": {
+        "id": "siteSettings",
+        "path": "headerBanner"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.PublicResultsSection",
+        "path": "entries[_key==\"e1mas90j\"].text"
+      },
+      "status": "passed"
+    },
+    {
+      "route": "/teachers",
+      "errors": [],
+      "renderedTextSources": 357,
+      "imageSources": 41,
+      "brokenSources": [],
+      "unmappedHeadings": [],
+      "unsafeLinks": [],
+      "textClick": {
+        "id": "copy.ui.FacultyAndTeachersSection",
+        "path": "entries[_key==\"eq9ud6c\"].text"
+      },
+      "punctuationClick": {
+        "id": "copy.ui.FacultyAndTeachersSection",
+        "path": "entries[_key==\"e186by0p\"].text"
+      },
+      "buttonClick": {
+        "id": "copy.ui.FacultyAndTeachersSection",
+        "path": "entries[_key==\"e1jdbae6\"].text"
+      },
+      "recordClick": {
+        "id": "teacher-1",
+        "path": "name"
+      },
+      "headlineClick": {
+        "id": "copy.ui.FacultyAndTeachersSection",
+        "path": "entries[_key==\"e1e4ykg7\"].text"
+      },
+      "listHeadingClick": {
+        "id": "copy.ui.FacultyAndTeachersSection",
+        "path": "entries[_key==\"e11t91hp\"].text"
+      },
+      "imageClick": {
+        "id": "teacher-1",
+        "path": "photo"
+      },
+      "draftEdit": "Rendered privately",
+      "phoneTextClick": {
+        "id": "copy.ui.FacultyAndTeachersSection",
+        "path": "entries[_key==\"eq9ud6c\"].text"
+      },
+      "status": "passed"
+    }
+  ]
+}
