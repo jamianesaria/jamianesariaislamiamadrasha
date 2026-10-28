@@ -1,4 +1,5 @@
 import type { StructureResolver } from "sanity/structure";
+import { pageSeoDocumentId, seoRoutes } from "../data/seoData";
 
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -15,6 +16,12 @@ export const structure: StructureResolver = (S) =>
             .documentId("siteSettings")
             .title("প্রতিষ্ঠান পরিচিতি ও যোগাযোগ সেটিংস")
         ),
+
+      S.listItem().id("pageSeo").title("সার্চ ও ব্রেডক্রাম্ব (Page SEO & Breadcrumbs)").child(
+        S.list().id("seoPages").title("পাতার সার্চ সেটিংস (Page SEO)").items(
+          Object.entries(seoRoutes).map(([route, page]) => S.listItem().id(pageSeoDocumentId(route)).title(`${page.label} (${route})`).child(S.document().schemaType("pageSeo").documentId(pageSeoDocumentId(route))))
+        )
+      ),
 
       // 2. Singleton: Homepage Content
       S.listItem()

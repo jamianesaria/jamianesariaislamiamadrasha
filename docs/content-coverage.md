@@ -5,7 +5,7 @@ Generated from actual route imports. Mapping coverage is distinct from authentic
 | Route | Connected documents | Editing context |
 |---|---:|---|
 | /313-badri-kafila | 0 | Redirect |
-| /about/history | 9 | Connected |
+| /about/history | 0 | Redirect |
 | /about/infrastructure | 9 | Connected |
 | /about | 9 | Connected |
 | /about/vacancy | 9 | Connected |
@@ -14,10 +14,11 @@ Generated from actual route imports. Mapping coverage is distinct from authentic
 | /apply | 9 | Connected |
 | /badri-kafila | 8 | Connected |
 | /blog | 9 | Connected |
+| /blog/[slug] | 7 | Connected |
 | /committee | 9 | Connected |
 | /contact | 8 | Connected |
 | /exam-routine | 9 | Connected |
-| /faculty | 9 | Connected |
+| /faculty | 0 | Redirect |
 | /functions/class-routine | 9 | Connected |
 | /functions/event-list | 9 | Connected |
 | /functions/holiday | 9 | Connected |
@@ -28,7 +29,7 @@ Generated from actual route imports. Mapping coverage is distinct from authentic
 | /notices | 9 | Connected |
 | /orphanage | 9 | Connected |
 | / | 11 | Connected |
-| /profile/managing-committee | 9 | Connected |
+| /profile/managing-committee | 0 | Redirect |
 | /profile | 0 | Redirect |
 | /results/academic | 8 | Connected |
 | /results/admission | 8 | Connected |

@@ -1,6 +1,7 @@
 
 import { stegaClean } from "@sanity/client/stega";
 import Link from "next/link";
+import { blogPath } from "@/data/seoData";
 import type { BlogPostItem, NoticeFullItem } from "@/data/siteData";
 import type { AcademicDepartment } from "@/sanity/lib/departments";
 import HeroVideo from "./HeroVideo";
@@ -1113,7 +1114,7 @@ export default async function HomePrimarySection({
 
                     {/* Title */}
                     <h3 className="text-base sm:text-lg font-bold text-gray-900 group-hover:text-[#016332] transition-colors leading-snug line-clamp-2">
-                      <Link href={`/blog#post-${post.id}`} className="hover:underline">
+                      <Link href={blogPath(stegaClean(post.slug))} className="hover:underline">
                         {post.title}
                       </Link>
                     </h3>
@@ -1128,7 +1129,7 @@ export default async function HomePrimarySection({
                 {/* Card Footer Link */}
                 <div className="px-4 sm:px-5 pb-4 pt-2 border-t border-gray-100 flex items-center justify-between">
                   <Link
-                    href={`/blog#post-${post.id}`}
+                    href={blogPath(stegaClean(post.slug))}
                     className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-bold text-[#8B111A] hover:text-[#016332] transition-colors"
                   >
                     <span><EditableText document="copy.ui.HomePrimarySection" entry="e1ndf4r1" fallback={"সম্পূর্ণ পড়ুন"} /></span>

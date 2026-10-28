@@ -5,6 +5,10 @@ export const blogPostType = defineType({
   title: "ব্লগ ও সমকালীন প্রবন্ধ (Blog Posts)",
   type: "document",
   fields: [
+    defineField({ name: "seoTitle", title: "সার্চের শিরোনাম (Search title)", type: "string" }),
+    defineField({ name: "seoDescription", title: "সার্চের পরিচিতি (Search description)", type: "text", rows: 3 }),
+    defineField({ name: "seoImage", title: "শেয়ার করার ছবি (Sharing image)", type: "image", options: { hotspot: true } }),
+    defineField({ name: "noIndex", title: "সার্চে দেখাবেন না (Hide from search)", type: "boolean", initialValue: false }),
     defineField({ name: "migrationKey", title: "স্থানান্তর পরিচিতি", type: "string", hidden: true, readOnly: true }),
     defineField({ name: "legacyId", title: "আগের লিংকের পরিচিতি", type: "number", hidden: true, readOnly: true }),
     defineField({

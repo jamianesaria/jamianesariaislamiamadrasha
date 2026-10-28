@@ -10,6 +10,7 @@ import { examRoutineType } from "./examRoutine";
 import { examResultType } from "./examResult";
 import { admissionInfoType } from "./admissionInfo";
 import { pageContentType } from "./pageContent";
+import { pageSeoType } from "./pageSeo";
 import { calendarEventType } from "./calendarEvent";
 import { vacancyType } from "./vacancy";
 import { galleryPhotoType } from "./galleryPhoto";
@@ -30,6 +31,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     examResultType,
     admissionInfoType,
     pageContentType,
+    pageSeoType,
     calendarEventType,
     vacancyType,
     galleryPhotoType,

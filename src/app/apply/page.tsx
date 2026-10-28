@@ -1,3 +1,4 @@
+import PageSeo from "@/components/PageSeo";
 import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
@@ -25,6 +26,7 @@ function ApplyPage() {
 
       {/* 4. Main Online Registration Form Content Area */}
       <main className="max-w-5xl mx-auto px-3 sm:px-4 py-6 w-full flex-1">
+        <PageSeo route="/apply" />
         <ApplyOnlineForm />
       </main>
 

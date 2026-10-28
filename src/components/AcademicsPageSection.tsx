@@ -96,8 +96,9 @@ export default async function AcademicsPageSection({ initialDepartments }: Acade
                 {header.pageTitle}
               </span>
               <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#016332] tracking-tight">
-                {header.institutionName}
+                {header.pageTitle}
               </h1>
+              <p className="font-semibold text-gray-700">{header.institutionName}</p>
 
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 text-xs sm:text-sm text-gray-700 font-semibold">
                 <span className="inline-flex items-center gap-1.5 bg-amber-50 border border-[#D9822B]/40 text-[#8B111A] px-3 py-1 rounded-full">

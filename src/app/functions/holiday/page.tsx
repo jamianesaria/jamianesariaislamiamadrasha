@@ -1,3 +1,4 @@
+import PageSeo from "@/components/PageSeo";
 import { stegaClean } from "@sanity/client/stega";
 import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
@@ -27,6 +28,7 @@ async function HolidayPage() {
 
       {/* 4. Main Holiday List Content Area */}
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-6 w-full flex-1">
+        <PageSeo route="/functions/holiday" />
         <HolidayListTable records={records} />
       </main>
 

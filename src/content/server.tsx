@@ -9,6 +9,8 @@ import { CopyProvider } from "./client";
 import { annotation, fieldSource, entryFor, imageProps, mappedData, type CopyImageProps, type CopyState } from "./model";
 import routeCoverage from "./coverage.json";
 import componentRoutes from "./component-routes.json";
+import { pageMetadata } from "@/lib/seo";
+import { seoRoutes } from "@/data/seoData";
 
 export const getCopyState = cache(async (): Promise<CopyState> => {
   try {
@@ -45,9 +47,9 @@ export function editableRoute(route: string, Page: () => ReactNode | Promise<Rea
 export function editableMetadata(route: string, fallback: Metadata) {
   return async (): Promise<Metadata> => {
     const state = await getCopyState();
-    const primary = Object.entries(componentRoutes).find(([, path]) => path === route)?.[0];
+    const primary = seoRoutes[route]?.document || Object.entries(componentRoutes).find(([, path]) => path === route)?.[0];
     const fallbackDocument = (routeCoverage as Record<string, { documents: string[] }>)[route]?.documents.find((id) => id.startsWith("copy.ui.") && !/^copy\.ui\.(NavigationBar|HeaderBanner|Footer|BreakingNewsBar)$/.test(id));
     const page = (primary ? state.documents[`copy.ui.${primary}`] : undefined) || (fallbackDocument ? state.documents[fallbackDocument] : undefined);
-    return { ...fallback, ...(page?.seoTitle ? { title: stegaClean(page.seoTitle) } : {}), ...(page?.seoDescription ? { description: stegaClean(page.seoDescription) } : {}) };
+    return pageMetadata(route, fallback, page, state.preview);
   };
 }

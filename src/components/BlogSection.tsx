@@ -4,6 +4,8 @@ import { useState, useEffect, useMemo } from "react";
 import { stegaClean } from "@sanity/client/stega";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { blogPath } from "@/data/seoData";
 import { sampleBlogPosts as _fallback_sampleBlogPosts, BlogPostItem } from "@/data/siteData";
 import {
   FileText,
@@ -24,7 +26,6 @@ import {
   LayoutGrid,
   ListFilter,
   SlidersHorizontal,
-  ChevronRight,
   Send,
   Phone,
   ZoomIn,
@@ -43,6 +44,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
   const sampleBlogPosts = useEditableData("copy.data.sampleBlogPosts", _fallback_sampleBlogPosts);
 
   const posts = initialPosts ?? sampleBlogPosts;
+  const router = useRouter();
 
   const [selectedPostRecord, setSelectedPost] = useState<BlogPostItem | null>(null);
   const [likes, setLikes] = useState<Record<string, number>>({});
@@ -60,12 +62,12 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
     const openHash = () => {
       const match = window.location.hash.match(/^#post-(.+)$/);
       const found = match ? posts.find((post) => String(post.id) === decodeURIComponent(match[1])) : undefined;
-      if (found) setSelectedPost(found);
+      if (found) router.replace(blogPath(stegaClean(found.slug)));
     };
     const frame = requestAnimationFrame(openHash);
     window.addEventListener("hashchange", openHash);
     return () => { cancelAnimationFrame(frame); window.removeEventListener("hashchange", openHash); };
-  }, [posts]);
+  }, [posts, router]);
 
   // Categories list with distinct counts
   const categories = useMemo(() => {
@@ -122,7 +124,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
     if (e) e.stopPropagation();
     if (typeof window !== "undefined") {
       const url = post
-        ? `${window.location.origin}/blog#post-${post.id}`
+        ? `${window.location.origin}${blogPath(stegaClean(post.slug))}`
         : window.location.href;
       if (navigator.clipboard) {
         navigator.clipboard.writeText(url);
@@ -146,8 +148,6 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
         <div className="relative z-10 max-w-4xl space-y-4">
           {/* Breadcrumb & Badge */}
           <div className="flex flex-wrap items-center gap-2.5 text-xs text-emerald-200">
-            <Link href="/" className="hover:text-amber-300 transition-colors"><EditableText document="copy.ui.BlogSection" entry="etpcj70" fallback={"হোম"} /></Link>
-            <ChevronRight size={13} className="text-emerald-400" />
             <span className="text-amber-300 font-semibold"><EditableText document="copy.ui.BlogSection" entry="e196gy13" fallback={"মাদরাসা ব্লগ ও সাময়িকী"} /></span>
             <span className="bg-[#8B111A] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-amber-300/30 ml-2"><EditableText document="copy.ui.BlogSection" entry="ebg0lua" fallback={"জ্ঞান মঞ্জিল"} /></span>
           </div>
@@ -316,7 +316,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
 
               {/* Title */}
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900 group-hover:text-[#016332] transition-colors leading-snug">
-                {spotlightPost.title}
+                <Link href={blogPath(stegaClean(spotlightPost.slug))} onClick={(event) => event.stopPropagation()}>{spotlightPost.title}</Link>
               </h2>
 
               {/* Excerpt */}
@@ -327,13 +327,14 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
 
             {/* Bottom Actions */}
             <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
-              <button
-                type="button"
+              <Link
+                href={blogPath(stegaClean(spotlightPost.slug))}
+                onClick={(event) => event.stopPropagation()}
                 className="bg-[#016332] hover:bg-[#8B111A] text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl transition-all inline-flex items-center gap-2 shadow-xs group-hover:shadow-md cursor-pointer"
               >
                 <span><EditableText document="copy.ui.BlogSection" entry="el13m62" fallback={"সম্পূর্ণ প্রবন্ধ পড়ুন"} /></span>
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-              </button>
+              </Link>
 
               <div className="flex items-center gap-2">
                 <button
@@ -447,7 +448,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
 
                         {/* Title */}
                         <h3 className="font-bold text-gray-900 group-hover:text-[#016332] transition-colors text-base leading-snug line-clamp-2">
-                          {post.title}
+                          <Link href={blogPath(stegaClean(post.slug))} onClick={(event) => event.stopPropagation()}>{post.title}</Link>
                         </h3>
 
                         {/* Excerpt */}
@@ -537,7 +538,7 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
                         </div>
 
                         <h3 className="font-bold text-gray-900 group-hover:text-[#016332] transition-colors text-base sm:text-lg leading-snug">
-                          {post.title}
+                          <Link href={blogPath(stegaClean(post.slug))} onClick={(event) => event.stopPropagation()}>{post.title}</Link>
                         </h3>
 
                         <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 leading-relaxed">
@@ -746,9 +747,9 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
 
               {/* Title & Metadata */}
               <div className="space-y-3">
-                <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-900 leading-snug">
-                  {selectedPost.title}
-                </h1>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-900 leading-snug">
+                  <Link href={blogPath(stegaClean(selectedPost.slug))}>{selectedPost.title}</Link>
+                </h2>
 
                 <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 pb-3 border-b border-gray-100">
                   <span className="flex items-center gap-1 font-semibold text-emerald-800">

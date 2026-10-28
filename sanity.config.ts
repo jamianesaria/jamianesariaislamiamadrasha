@@ -9,8 +9,9 @@ import { dataset, projectId } from "./src/sanity/env";
 import { schema } from "./src/sanity/schemaTypes";
 import { structure } from "./src/sanity/structure";
 import coverage from "./src/content/coverage.json";
+import { blogPath } from "./src/data/seoData";
 
-const singletons = new Set(["homepage", "siteSettings", "badriKafila", "pageContent"]);
+const singletons = new Set(["homepage", "siteSettings", "badriKafila", "pageContent", "pageSeo"]);
 
 export default defineConfig({
   basePath: "/studio",
@@ -48,7 +49,8 @@ export default defineConfig({
           galleryVideo: defineLocations({ locations: [{ title: "ভিডিও গ্যালারি", href: "/gallery/video" }] }),
           calendarEvent: defineLocations({ locations: [{ title: "অনুষ্ঠান ও ছুটি", href: "/functions/event-list" }, { title: "ছুটির তালিকা", href: "/functions/holiday" }] }),
           vacancy: defineLocations({ locations: [{ title: "নিয়োগ বিজ্ঞপ্তি", href: "/about/vacancy" }] }),
-          blogPost: defineLocations({ locations: [{ title: "ব্লগ", href: "/blog" }] }),
+          blogPost: defineLocations({ select: { title: "title", slug: "slug.current" }, resolve: (document) => ({ locations: [...(document?.slug ? [{ title: document.title || "প্রবন্ধ", href: blogPath(document.slug) }] : []), { title: "ব্লগ", href: "/blog" }] }) }),
+          pageSeo: defineLocations({ select: { route: "route", title: "seoTitle" }, resolve: (document) => ({ locations: [{ title: document?.title || "পাতার SEO (Page SEO)", href: document?.route || "/" }] }) }),
           homepage: defineLocations({
             locations: [{ title: "হোমপেজ (Homepage)", href: "/" }],
           }),
@@ -71,7 +73,7 @@ export default defineConfig({
             locations: [{ title: "ভর্তি তথ্য (Admissions)", href: "/admission" }],
           }),
           badriKafila: defineLocations({
-            locations: [{ title: "৩১৩ বদরি কাফেলা (Badri Kafela)", href: "/313-badri-kafila" }],
+            locations: [{ title: "৩১৩ বদরি কাফেলা (Badri Kafela)", href: "/badri-kafila" }],
           }),
         },
         mainDocuments: defineDocuments([
@@ -120,7 +122,7 @@ export default defineConfig({
             type: "galleryVideo",
           },
           {
-            route: "/313-badri-kafila",
+            route: "/badri-kafila",
             type: "badriKafila",
           },
         ]),

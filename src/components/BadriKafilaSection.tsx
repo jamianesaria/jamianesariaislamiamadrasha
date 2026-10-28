@@ -3,8 +3,7 @@
 import { stegaClean } from "@sanity/client/stega";
 import { useState } from "react";
 import { useSubmission } from "@/lib/submissions/useSubmission";
-import Link from "next/link";
-import { siteSettings as _fallback_siteSettings } from "@/data/navigationData";
+import { siteSettings as _fallback_siteSettings } from "@/data/siteData";
 import {
   Shield,
   HeartHandshake,
@@ -19,7 +18,6 @@ import {
   Send,
   Download,
   Flame,
-  ChevronRight,
   Clock,
   Building,
   UserCheck,
@@ -111,8 +109,6 @@ export default function BadriKafilaSection() {
           {/* Top Identity Ribbon */}
           <div className="flex flex-wrap items-center justify-center sm:justify-between gap-3 text-xs">
             <div className="flex items-center gap-2 text-amber-200">
-              <Link href="/" className="hover:text-white transition-colors"><EditableText document="copy.ui.BadriKafilaSection" entry="e1os3r05" fallback={"হোমপেজ"} /></Link>
-              <ChevronRight size={12} />
               <span className="text-white font-bold"><EditableText document="copy.ui.BadriKafilaSection" entry="ed9jn9t" fallback={"৩১৩ জন বদরি কাফেলা"} /></span>
             </div>
 
@@ -975,12 +971,12 @@ export default function BadriKafilaSection() {
 
               <div className="text-center pt-2">
                 <a
-                  href="/download/badri-kafila-form.pdf"
-                  download
+                  href={stegaClean(siteSettings.badriFormUrl || "/contact")}
+                  download={siteSettings.badriFormUrl ? true : undefined}
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-[#016332] hover:underline"
                 >
                   <Download size={13} />
-                  <span><EditableText document="copy.ui.BadriKafilaSection" entry="ezxr8ur" fallback={"কাগজের অফিশিয়াল ফরম ডাউনলোড করুন (PDF)"} /></span>
+                  <span>{siteSettings.badriFormUrl ? <EditableText document="copy.ui.BadriKafilaSection" entry="ezxr8ur" fallback={"কাগজের অফিশিয়াল ফরম ডাউনলোড করুন (PDF)"} /> : siteSettings.badriFormContactLabel}</span>
                 </a>
               </div>
             </form>

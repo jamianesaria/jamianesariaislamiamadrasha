@@ -5,6 +5,14 @@ export const siteSettingsType = defineType({
   title: "প্রতিষ্ঠান সেটিংস ও পরিচিতি (Global Site Settings)",
   type: "document",
   fields: [
+    defineField({ name: "seoSiteName", title: "সার্চে প্রতিষ্ঠানের সংক্ষিপ্ত নাম (Search site name)", type: "string" }),
+    defineField({ name: "googleSiteVerification", title: "গুগল সার্চ কনসোল যাচাইকরণ (Google Search Console verification)", type: "string", description: "Google-এর দেওয়া content কোডটি দিন, পুরো meta tag নয়। (Use the verification content value, not the full meta tag.)" }),
+    defineField({ name: "seoDescription", title: "সাইটের সার্চ পরিচিতি (Site search description)", type: "text", rows: 3 }),
+    defineField({ name: "seoImage", title: "সাইট শেয়ারের ছবি (Default sharing image)", type: "image", options: { hotspot: true } }),
+    defineField({ name: "breadcrumbHomeLabel", title: "ব্রেডক্রাম্বে হোমের নাম (Breadcrumb home label)", type: "string" }),
+    defineField({ name: "breadcrumbNavLabel", title: "ব্রেডক্রাম্বের সহায়ক নাম (Breadcrumb accessible label)", type: "string" }),
+    defineField({ name: "badriFormUrl", title: "বদরি কাফেলার কাগজের ফরম (Badri paper form URL)", type: "url", validation: (rule) => rule.uri({ allowRelative: true, scheme: ["https"] }), description: "আসল PDF প্রস্তুত হলে লিংক দিন। খালি থাকলে অফিসে যোগাযোগের লিংক দেখাবে। (Leave empty to direct visitors to the office.)" }),
+    defineField({ name: "badriFormContactLabel", title: "কাগজের ফরমের যোগাযোগ বাটন (Paper form contact label)", type: "string" }),
     ...[
       ["footerSlogan", "ফুটারের পরিচিতি"], ["establishedFull", "সম্পূর্ণ প্রতিষ্ঠাকাল"],
       ["applyUrl", "আবেদন ফরমের লিংক"], ["onlineClassUrl", "অনলাইন ক্লাসের লিংক"], ["appDownloadUrl", "অ্যাপ ডাউনলোডের লিংক"],

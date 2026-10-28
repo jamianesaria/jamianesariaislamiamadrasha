@@ -278,10 +278,6 @@ function NoticeBoardContent({ initialNotices }: { initialNotices?: NoticeFullIte
           {/* Top Breadcrumb & Live Bell */}
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-xs text-amber-300">
-              <Link href="/" className="hover:underline flex items-center gap-1">
-                <span><EditableText document="copy.ui.NoticeBoardSection" entry="esdum18" fallback={"হোমপেজ"} /></span>
-              </Link>
-              <ChevronRight size={12} />
               <span className="text-white font-semibold"><EditableText document="copy.ui.NoticeBoardSection" entry="e1vlwzc" fallback={"বিজ্ঞপ্তি প্রাচীর ও মহাফেজখানা"} /></span>
             </div>
 

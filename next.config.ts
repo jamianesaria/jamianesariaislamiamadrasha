@@ -23,6 +23,8 @@ const IMMUTABLE_PUBLIC_ASSETS = [
 ];
 
 const nextConfig: NextConfig = {
+  // Resolve metadata before headers, including a missing article's 404, for every client.
+  htmlLimitedBots: /.*/,
   experimental: {
     agentFeedback: true,
     optimizePackageImports: ["lucide-react", "@sanity/icons", "@sanity/ui"],
@@ -30,8 +32,11 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   reactCompiler: true,
+  async redirects() {
+    return [{ source: "/:path*", has: [{ type: "host" as const, value: "www.nesariamadrasa.com" }], destination: "https://nesariamadrasa.com/:path*", permanent: true }];
+  },
   async headers() {
-    return IMMUTABLE_PUBLIC_ASSETS.map((source) => ({
+    return [{ source: "/api/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] }, ...IMMUTABLE_PUBLIC_ASSETS.map((source) => ({
       source,
       headers: [
         {
@@ -39,7 +44,7 @@ const nextConfig: NextConfig = {
           value: "public, max-age=31536000, immutable",
         },
       ],
-    }));
+    }))];
   },
   images: {
     formats: ["image/avif", "image/webp"],

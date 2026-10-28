@@ -11,7 +11,7 @@ export const navigationItems: NavItem[] = [
     label: "জামিয়া পরিচিতি",
     href: "/about",
     children: [
-      { label: "জামিয়ার পরিচয় ও ইতিহাস", href: "/about/history" },
+      { label: "জামিয়ার পরিচয় ও ইতিহাস", href: "/about" },
       { label: "প্রতিষ্ঠাতা ও জমিদাতাদের অবদান", href: "/about#founders" },
       { label: "লক্ষ্য, উদ্দেশ্য ও শিক্ষাদর্শন", href: "/about#mission" },
       { label: "মাদরাসার বৈশিষ্ট্যসমূহ", href: "/about#features" },

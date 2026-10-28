@@ -1,3 +1,4 @@
+import PageSeo from "@/components/PageSeo";
 import HeaderBanner from "@/components/HeaderBanner";
 import { editableRoute, editableMetadata } from "@/content/server";
 import NavigationBar from "@/components/NavigationBar";
@@ -38,6 +39,7 @@ async function Home() {
 
       {/* ২ থেকে ১২ নং সেকশন */}
       <main className="w-full flex-1">
+        <PageSeo route="/" />
         <HomePrimarySection
           initialData={homeData}
           initialSettings={siteData}

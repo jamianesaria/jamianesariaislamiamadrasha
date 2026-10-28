@@ -4,6 +4,7 @@ import { Hind_Siliguri } from "next/font/google";
 import "./globals.css";
 import WebsiteRuntime from "@/components/WebsiteRuntime";
 import SanityVisualEditing from "@/components/SanityVisualEditing";
+import { seoDefaults, SITE_URL, seoRoutes } from "@/data/seoData";
 
 const hindSiliguri = Hind_Siliguri({
   weight: ["300", "400", "500", "600", "700"],
@@ -13,18 +14,11 @@ const hindSiliguri = Hind_Siliguri({
 });
 
 export const metadata: Metadata = {
-  title:
-    "জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা | Jamia Nesaria Islamia Madrasha & Orphanage",
-  description:
-    "কুরআন-সুন্নাহর আলোকে দ্বীনি শিক্ষা, নৈতিকতা ও আদর্শ মানুষ গড়ার প্রত্যয়ে। মরকুন, (তিস্তাগেট- আনোয়ার সিল্ক মিলস সংলগ্ন) টঙ্গী, গাজীপুর, বাংলাদেশ। প্রতিষ্ঠাকাল: ১৯৬৯ খ্রিষ্টাব্দ।",
-  icons: {
-    icon: [
-      { url: "/icon.png", sizes: "64x64", type: "image/png" },
-      { url: "/favicon.ico", sizes: "64x64", type: "image/x-icon" },
-    ],
-    shortcut: "/favicon.ico",
-    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
-  },
+  metadataBase: new URL(SITE_URL),
+  title: seoRoutes["/"].label,
+  description: seoDefaults.description,
+  applicationName: seoDefaults.siteName,
+  // Next's file conventions supply favicon.ico, icon.png and apple-icon.png.
 };
 
 export default function RootLayout({

@@ -1,5 +1,5 @@
-import TeachersPage, { generateMetadata } from "@/app/teachers/page";
+import { permanentRedirect } from "next/navigation";
 
-export { generateMetadata };
-export default TeachersPage;
-
+export default function RedirectPage() {
+  permanentRedirect("/teachers");
+}

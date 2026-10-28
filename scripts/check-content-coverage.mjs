@@ -27,7 +27,7 @@ for (const page of files(resolve("src/app")).filter((file) => file.endsWith("pag
   }
   visit(page);
   const source = readFileSync(page, "utf8");
-  inventory[route] = { clientDocuments: [...clients].sort(), documents: [...documents].sort(), components: [...components].sort(), redirect: source.includes("redirect("), context: /editableRoute\(|<EditablePage|import .*Page.*from/.test(source) };
+  inventory[route] = { clientDocuments: [...clients].sort(), documents: [...documents].sort(), components: [...components].sort(), redirect: /\b(?:permanentRedirect|redirect)\(/.test(source), context: /editableRoute\(|<EditablePage|import .*Page.*from/.test(source) };
 }
 writeFileSync("src/content/coverage.json", JSON.stringify(inventory, null, 2)+"\n");
 writeFileSync("docs/content-coverage.md", "# Public content inventory\n\nGenerated from actual route imports. Mapping coverage is distinct from authenticated click-through acceptance testing. Technical controls, private form input, and decorative marks are excluded.\n\n| Route | Connected documents | Editing context |\n|---|---:|---|\n" + Object.entries(inventory).map(([route, item]) => `| ${route} | ${item.documents.length} | ${item.redirect ? "Redirect" : item.context ? "Connected" : "Review required"} |`).join("\n") + "\n\nNative records remain in their original Sanity types: notices, departments, teachers, committee, admissions, routines, results, calendars, vacancies and media. Page copy uses keyed fields; clicking punctuation selects its containing text field.\n");

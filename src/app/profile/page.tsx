@@ -1,6 +1,5 @@
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 
-export default function ProfileIndexPage() {
-  redirect("/profile/managing-committee");
+export default function RedirectPage() {
+  permanentRedirect("/committee");
 }
-

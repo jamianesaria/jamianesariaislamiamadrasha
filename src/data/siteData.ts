@@ -14,7 +14,7 @@ export const navigationItems: NavItem[] = [
     label: "জামিয়া পরিচিতি",
     href: "/about",
     children: [
-      { label: "জামিয়ার পরিচয় ও ইতিহাস", href: "/about/history" },
+      { label: "জামিয়ার পরিচয় ও ইতিহাস", href: "/about" },
       { label: "প্রতিষ্ঠাতা ও জমিদাতাদের অবদান", href: "/about#founders" },
       { label: "লক্ষ্য, উদ্দেশ্য ও শিক্ষাদর্শন", href: "/about#mission" },
       { label: "মাদরাসার বৈশিষ্ট্যসমূহ", href: "/about#features" },
@@ -137,6 +137,13 @@ export const navigationItems: NavItem[] = [
 ];
 
 export const siteSettings = {
+  seoSiteName: "জামিয়া নেছারিয়া ইসলামিয়া",
+  seoDescription: "টঙ্গী, গাজীপুরের জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা। মক্তব, হিফজ, কিতাব ও মাদানি নেসাব বিভাগের শিক্ষা, ভর্তি তথ্য, নোটিশ ও যোগাযোগ।",
+  seoImageUrl: "/social-share.png",
+  breadcrumbHomeLabel: "হোম",
+  breadcrumbNavLabel: "পাতার অবস্থান (Breadcrumb)",
+  badriFormUrl: "",
+  badriFormContactLabel: "কাগজের ফরম পেতে অফিসে যোগাযোগ করুন",
   nameBn: "জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা",
   nameAr: "الجامعة النثارية الإسلامية تنغي غازي بور بنغلاديش",
   nameEn: "JAMIA NESARIA ISLAMIA MADRASHA & ORPHANAGE",
@@ -634,7 +641,7 @@ export const infoCardsData = [
     links: [
       { label: "ভর্তির নীতি", href: "/admission-policy" },
       { label: "ইভেন্ট সিডিউল", href: "/events" },
-      { label: "Notice", href: "/functions/notices" },
+      { label: "Notice", href: "/notices" },
       { label: "যোগাযোগ", href: "/contact" },
     ],
   },
@@ -2005,6 +2012,12 @@ export const sampleGalleryVideos: GalleryVideoItem[] = [
 
 // Blog Posts Data for /blog (Sanity CMS schema ready)
 export interface BlogPostItem {
+  publishedAt?: string;
+  updatedAt?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoImageUrl?: string;
+  noIndex?: boolean;
   id: string | number;
   slug: string;
   title: string;

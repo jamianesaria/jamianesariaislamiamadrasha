@@ -1,3 +1,4 @@
+import PageSeo from "@/components/PageSeo";
 import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
@@ -26,6 +27,7 @@ async function AdmissionResultPage() {
 
       {/* 4. Main Admission Result Content Area */}
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-6 w-full flex-1">
+        <PageSeo route="/results/admission" />
         <PublicResultsSection records={records} admission />
       </main>
 
