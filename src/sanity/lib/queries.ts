@@ -6,6 +6,7 @@ import type { AdmissionContent } from "@/content/public-types";
 import { stegaClean } from "@sanity/client/stega";
 import { paragraphs, type SettingsDocument, type HomepageDocument, type NoticeDocument, type TeacherDocument, type CommitteeDocument, type BlogDocument, type ClassRoutineDocument, type ExamRoutineDocument, type ResultDocument, type PhotoDocument, type VideoDocument, type CalendarDocument, type VacancyDocument } from "./documents";
 import { mapAcademicDepartments, type AcademicDepartmentRecord } from "./departments";
+import { normalizePageLinks } from "@/data/seoData";
 import {
   siteSettings as fallbackSettings,
   homePageContent as fallbackHomeSource,
@@ -111,6 +112,7 @@ export async function getSiteSettings() {
 export const homepageQuery = groq`*[_type == "homepage"][0]{
   _id,
   _type,
+  quickAccess{enabled,title,links[]{_key,label,href}},
   introVideo{enabled, videoUrl, mobileVideoUrl, posterUrl, mobilePosterUrl, title, skipLabel, playLabel, loadingLabel},
   heroVideoUrl,
   "heroPosterUrl":coalesce(heroPoster.asset->url,heroPosterUrl),
@@ -133,10 +135,15 @@ export async function getHomepageContent() {
   const fallbackHome = await getEditableData("copy.data.homePageContent", fallbackHomeSource);
   try {
     const data = await fetchSiteQuery<HomepageDocument | null>(homepageQuery, {});
-    if (data && (data.heroHeadline || data.heroBadge || data.introVideo || data.heroVideoUrl || data.heroPosterUrl)) {
+    if (data && (data.heroHeadline || data.heroBadge || data.introVideo || data.heroVideoUrl || data.heroPosterUrl || data.quickAccess)) {
       return {
         ...fallbackHome,
         ...data,
+        quickAccess: {
+          enabled: data.quickAccess?.enabled ?? fallbackHome.quickAccess.enabled,
+          title: data.quickAccess?.title || fallbackHome.quickAccess.title,
+          links: normalizePageLinks(data.quickAccess?.links, fallbackHome.quickAccess.links, "/"),
+        },
         introVideo: {
           enabled: data.introVideo?.enabled ?? fallbackHome.introVideo.enabled,
           videoUrl: data.introVideo?.videoUrl && data.introVideo.videoUrl !== "/Student_opening_doors_to_light_20261021201917.mp4"

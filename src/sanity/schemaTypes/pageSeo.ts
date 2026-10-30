@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
 import { seoRoutes } from "../../data/seoData";
 
 export const pageSeoType = defineType({
@@ -13,7 +13,9 @@ export const pageSeoType = defineType({
     defineField({ name: "seoTitle", title: "সার্চের শিরোনাম (Search title)", type: "string", description: "খালি রাখলে পাতার নাম ও প্রতিষ্ঠানের নাম ব্যবহার হবে। (Leave empty for the automatic title.)" }),
     defineField({ name: "seoDescription", title: "সার্চের পরিচিতি (Search description)", type: "text", rows: 3 }),
     defineField({ name: "breadcrumbLabel", title: "ব্রেডক্রাম্বের নাম (Breadcrumb label)", type: "string" }),
-    defineField({ name: "pageHeading", title: "প্রধান শিরোনাম (Page heading)", type: "string", description: "সাধারণ তথ্য ও তালিকার পাতার প্রধান শিরোনাম। (Main heading on information and list pages.)" }),
+    defineField({ name: "pageHeading", title: "প্রধান শিরোনাম (Page heading)", type: "string", description: "জামিয়া পরিচিতি এবং সাধারণ তথ্য ও তালিকার পাতার প্রধান শিরোনাম। (Main heading on About, information and list pages.)" }),
+    defineField({ name: "relatedLinksTitle", title: "সম্পর্কিত পাতার শিরোনাম (Related pages heading)", type: "string" }),
+    defineField({ name: "relatedLinks", title: "সম্পর্কিত গুরুত্বপূর্ণ পাতা (Related important pages)", type: "array", of: [defineArrayMember({ type: "publicPageLink" })], validation: (rule) => rule.max(6).custom((links, context) => !links?.some((link) => (link as { href?: string }).href === context.document?.route) || "একই পাতায় আবার লিংক দেবেন না। (Choose a different destination page.)") }),
     defineField({ name: "backToBlogLabel", title: "ব্লগে ফেরার লিংক (Back to blog label)", type: "string", hidden: ({ document }) => document?.route !== "/blog" }),
     defineField({ name: "articleAuthorLabel", title: "লেখকের পরিচয় (Author label)", type: "string", hidden: ({ document }) => document?.route !== "/blog" }),
     defineField({ name: "articleDateLabel", title: "প্রকাশের তারিখের পরিচয় (Publication date label)", type: "string", hidden: ({ document }) => document?.route !== "/blog" }),

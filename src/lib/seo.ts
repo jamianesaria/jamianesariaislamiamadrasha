@@ -4,16 +4,18 @@ import type { Metadata } from "next";
 import { stegaClean } from "@sanity/client/stega";
 import { unstable_rethrow } from "next/navigation";
 import { fetchSiteQuery } from "@/sanity/lib/fetch";
-import { absoluteUrl, seoDefaults, seoRoutes, SITE_URL } from "@/data/seoData";
+import { absoluteUrl, seoDefaults, seoRoutes, SITE_URL, type PageLink } from "@/data/seoData";
 
 export interface PageSeoRecord {
+  _id?: string; _type?: string;
   route: string; seoTitle?: string; seoDescription?: string; breadcrumbLabel?: string;
   pageHeading?: string; seoImageUrl?: string; noIndex?: boolean; _updatedAt?: string;
   backToBlogLabel?: string; articleAuthorLabel?: string; articleDateLabel?: string;
+  relatedLinksTitle?: string; relatedLinks?: PageLink[];
 }
 export const getPageSeoRecords = cache(async (): Promise<PageSeoRecord[]> => {
   try {
-    return await fetchSiteQuery<PageSeoRecord[]>('*[_type == "pageSeo" && !defined(archivedAt)]{route,seoTitle,seoDescription,breadcrumbLabel,pageHeading,noIndex,backToBlogLabel,articleAuthorLabel,articleDateLabel,_updatedAt,"seoImageUrl":seoImage.asset->url}') || [];
+    return await fetchSiteQuery<PageSeoRecord[]>('*[_type == "pageSeo" && !defined(archivedAt)]{_id,_type,route,seoTitle,seoDescription,breadcrumbLabel,pageHeading,noIndex,backToBlogLabel,articleAuthorLabel,articleDateLabel,relatedLinksTitle,relatedLinks[]{_key,label,href},_updatedAt,"seoImageUrl":seoImage.asset->url}') || [];
   } catch (error) { unstable_rethrow(error); return []; }
 });
 export const getSeoSettings = cache(async () => {

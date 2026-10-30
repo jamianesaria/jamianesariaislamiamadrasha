@@ -17,7 +17,7 @@ export const structure: StructureResolver = (S) =>
             .title("প্রতিষ্ঠান পরিচিতি ও যোগাযোগ সেটিংস")
         ),
 
-      S.listItem().id("pageSeo").title("সার্চ ও ব্রেডক্রাম্ব (Page SEO & Breadcrumbs)").child(
+      S.listItem().id("pageSeo").title("সার্চ, ব্রেডক্রাম্ব ও লিংক (SEO, Breadcrumbs & Links)").child(
         S.list().id("seoPages").title("পাতার সার্চ সেটিংস (Page SEO)").items(
           Object.entries(seoRoutes).map(([route, page]) => S.listItem().id(pageSeoDocumentId(route)).title(`${page.label} (${route})`).child(S.document().schemaType("pageSeo").documentId(pageSeoDocumentId(route))))
         )
@@ -26,7 +26,7 @@ export const structure: StructureResolver = (S) =>
       // 2. Singleton: Homepage Content
       S.listItem()
         .id("homepage")
-        .title("হোমপেজ ও ভিডিও (Homepage & Videos)")
+        .title("হোমপেজ, ভিডিও ও দ্রুত লিংক (Homepage, Videos & Quick Links)")
         .child(
           S.document()
             .schemaType("homepage")

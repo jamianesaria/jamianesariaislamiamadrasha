@@ -1,3 +1,5 @@
+import { stegaClean } from "@sanity/client/stega";
+
 // Public routes only. Student records, submissions, API handlers and Studio never belong here.
 export const SITE_URL = "https://nesariamadrasa.com";
 export const seoDefaults = {
@@ -39,3 +41,50 @@ export function absoluteUrl(path: string): string { return new URL(path, SITE_UR
 export function blogPath(slug: string): string { return `/blog/${encodeURIComponent(slug)}`; }
 export function pageSeoDocumentId(route: string): string { return `seo-page-${route === "/" ? "home" : route.slice(1).replaceAll("/", "-")}`; }
 export function jsonLd(value: unknown): string { return JSON.stringify(value).replace(/</g, "\\u003c"); }
+
+export interface PageLink { _key: string; label: string; href: string }
+export const primaryPageLinks: PageLink[] = [
+  { _key: "admission", label: "ভর্তি তথ্য", href: "/admission" },
+  { _key: "academics", label: "শিক্ষা বিভাগ", href: "/academics" },
+  { _key: "teachers", label: "শিক্ষকবৃন্দ", href: "/teachers" },
+  { _key: "about", label: "জামিয়া পরিচিতি", href: "/about" },
+  { _key: "notices", label: "নোটিশ ও বিজ্ঞপ্তি", href: "/notices" },
+  { _key: "contact", label: "যোগাযোগ", href: "/contact" },
+];
+export const defaultQuickAccess = {
+  enabled: true,
+  title: "জামিয়ার গুরুত্বপূর্ণ তথ্য",
+  links: primaryPageLinks,
+};
+export const relatedLinksTitle = "আরও প্রয়োজনীয় তথ্য";
+export const relatedPageRoutes: Record<string, string[]> = {
+  "/about": ["/academics", "/teachers", "/admission", "/contact"],
+  "/admission": ["/academics", "/teachers", "/apply", "/contact"],
+  "/academics": ["/admission", "/teachers", "/contact"],
+  "/teachers": ["/academics", "/admission", "/contact"],
+  "/notices": ["/admission", "/exam-routine", "/contact"],
+  "/contact": ["/admission", "/academics", "/about"],
+};
+export function defaultRelatedLinks(route: string): PageLink[] {
+  return (relatedPageRoutes[route] || []).map((href) => ({
+    _key: href.slice(1).replaceAll("/", "-"), href,
+    label: primaryPageLinks.find((link) => link.href === href)?.label || seoRoutes[href].label,
+  }));
+}
+
+// Public navigation must never accept external, private, fragment, or filtered URLs.
+// A deliberately empty CMS list stays empty; missing data uses the shared defaults.
+export function normalizePageLinks(value: unknown, fallback: readonly PageLink[], currentRoute?: string): PageLink[] {
+  const source: unknown[] = Array.isArray(value) ? value : [...fallback];
+  const seen = new Set<string>();
+  return source.flatMap((item): PageLink[] => {
+    if (!item || typeof item !== "object") return [];
+    const entry = item as Partial<PageLink>;
+    const href = typeof entry.href === "string" ? stegaClean(entry.href).trim() : "";
+    if (!Object.hasOwn(seoRoutes, href) || href === currentRoute || seen.has(href)) return [];
+    seen.add(href);
+    const label = typeof entry.label === "string" && stegaClean(entry.label).trim() ? entry.label : primaryPageLinks.find((link) => link.href === href)?.label || seoRoutes[href].label;
+    const key = typeof entry._key === "string" && /^[a-zA-Z0-9_-]+$/.test(entry._key) ? entry._key : href.slice(1).replaceAll("/", "-") || "home";
+    return [{ _key: key, href, label }];
+  });
+}

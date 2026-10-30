@@ -7,6 +7,7 @@ import type { AcademicDepartment } from "@/sanity/lib/departments";
 import HeroVideo from "./HeroVideo";
 import HomeNoticeTabs from "./HomeNoticeTabs";
 import HomeGalleryFilter from "./HomeGalleryFilter";
+import HomeQuickAccess from "./HomeQuickAccess";
 import { homePageContent as _fallback_homePageContent, siteSettings as _fallback_siteSettings, sampleBlogPosts as _fallback_sampleBlogPosts } from "@/data/siteData";
 import {
   ArrowRight,
@@ -121,6 +122,8 @@ export default async function HomePrimarySection({
           </div>
         </div>
       </section>
+
+      <HomeQuickAccess content={content.quickAccess} />
 
       {/* =====================================================================
           MAIN INSTITUTIONAL PORTAL HUB (2-Column Editorial & Admin Layout)

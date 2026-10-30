@@ -1,3 +1,5 @@
+import { defaultQuickAccess } from "./seoData";
+
 // Sanity-ready initial mock data structure
 // Once Sanity CMS is hooked up, these can be replaced directly by groq queries!
 
@@ -176,6 +178,7 @@ export const breakingNews = [
 ];
 
 export const homePageContent = {
+  quickAccess: defaultQuickAccess,
   introVideo: {
     enabled: true,
     videoUrl: "/intro-desktop-v2.mp4",

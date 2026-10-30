@@ -62,7 +62,8 @@
       "src/components/Footer.tsx",
       "src/components/HeaderBanner.tsx",
       "src/components/NavigationBar.tsx",
-      "src/components/PageSeo.tsx"
+      "src/components/PageSeo.tsx",
+      "src/components/RelatedPageLinks.tsx"
     ],
     "redirect": false,
     "context": true
@@ -118,7 +119,8 @@
       "src/components/Footer.tsx",
       "src/components/HeaderBanner.tsx",
       "src/components/NavigationBar.tsx",
-      "src/components/PageSeo.tsx"
+      "src/components/PageSeo.tsx",
+      "src/components/RelatedPageLinks.tsx"
     ],
     "redirect": false,
     "context": true
@@ -147,7 +149,8 @@
       "src/components/Footer.tsx",
       "src/components/HeaderBanner.tsx",
       "src/components/NavigationBar.tsx",
-      "src/components/PageSeo.tsx"
+      "src/components/PageSeo.tsx",
+      "src/components/RelatedPageLinks.tsx"
     ],
     "redirect": false,
     "context": true
@@ -312,7 +315,8 @@
       "src/components/Footer.tsx",
       "src/components/HeaderBanner.tsx",
       "src/components/NavigationBar.tsx",
-      "src/components/PageSeo.tsx"
+      "src/components/PageSeo.tsx",
+      "src/components/RelatedPageLinks.tsx"
     ],
     "redirect": false,
     "context": true
@@ -560,7 +564,8 @@
       "src/components/HeaderBanner.tsx",
       "src/components/NavigationBar.tsx",
       "src/components/NoticeBoardSection.tsx",
-      "src/components/PageSeo.tsx"
+      "src/components/PageSeo.tsx",
+      "src/components/RelatedPageLinks.tsx"
     ],
     "redirect": false,
     "context": true
@@ -623,6 +628,7 @@
       "src/components/HomeGalleryFilter.tsx",
       "src/components/HomeNoticeTabs.tsx",
       "src/components/HomePrimarySection.tsx",
+      "src/components/HomeQuickAccess.tsx",
       "src/components/IntroPlaybackContext.ts",
       "src/components/NavigationBar.tsx",
       "src/components/PageSeo.tsx",
@@ -723,7 +729,8 @@
       "src/components/Footer.tsx",
       "src/components/HeaderBanner.tsx",
       "src/components/NavigationBar.tsx",
-      "src/components/PageSeo.tsx"
+      "src/components/PageSeo.tsx",
+      "src/components/RelatedPageLinks.tsx"
     ],
     "redirect": false,
     "context": true

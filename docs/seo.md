@@ -40,7 +40,7 @@ Global institution settings expose the preferred short site name, default descri
 
 ## Hosting and account work still required
 
-The local Vercel login returned a team-access error, so the release has not been published. A Vercel connection with access to the owning project is required. Do not describe these code changes as live until a deployment is verified.
+The initial SEO release was pushed as `953f604` and deployed. Subsequent code changes must also be verified on the live domain after deployment. The local Vercel CLI previously returned a team-access error; GitHub's existing deployment integration can publish commits without changing hosting credentials.
 
 The `www` hostname failed TLS hostname verification during the audit. A permanent host redirect is prepared in Next.js, but a certificate covering `www.nesariamadrasa.com` must be provisioned in hosting before HTTPS requests can reach that redirect. Verify the domain and certificate in the owning Vercel project; do not disable TLS verification.
 
@@ -53,3 +53,23 @@ These changes improve page discovery, preferred-URL consistency, institution rec
 Search engines control indexing and presentation. A traffic or admissions uplift cannot be promised without Search Console and conversion baselines. After deployment, compare impressions, organic clicks, search click-through rate, indexed canonical pages and completed admission enquiries over successive periods, accounting for admission seasonality. Code improvements do not substitute for useful current content, reputation and relevant local demand.
 
 References: [Google site names](https://developers.google.com/search/docs/appearance/site-names), [breadcrumbs](https://developers.google.com/search/docs/appearance/structured-data/breadcrumb), [canonical URLs](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls), [JavaScript URLs](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics), [sitemaps](https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview).
+
+## Navigation and sitelink refinement — 30 October 2026
+
+Following the public-structure comparison with Softway Travels, this pass makes the site's main destinations clearer while keeping its existing design and public routes:
+
+- Adds a compact, server-rendered homepage section linking directly to Admission, Academics, Teachers, About, Notices and Contact. Links have concise Bengali labels, usable tap targets and visible keyboard focus.
+- Adds contextual related-page links to those six pages, including the distinct online application page where appropriate. No public page is hidden merely to influence sitelink selection.
+- Makes the About H1 describe the page, with the institution's full name retained as supporting text. Shortens the default Notices H1 while preserving a custom CMS heading if one exists.
+- Uses the owner-confirmed `https://www.facebook.com/jamianesaria/` profile. Generic Facebook/YouTube homepages are excluded from the institution's structured-data identity links.
+- Stores the homepage links in the native Homepage document and related links in the existing per-page SEO singletons. Studio exposes Bengali and English field labels. Missing CMS data uses defaults; an intentionally empty link list remains empty. Navigation rejects private, external, filtered and fragment destinations, deduplicates URLs and excludes self-links.
+- `scripts/refine-navigation.mjs` previews these public-record changes. `--apply` uses revision guards, preserves existing editorial values, and saves an ignored local backup before mutation. The confirmed social-profile value is the only setting it explicitly replaces.
+- Extends the 29-page SEO browser suite to check the new link groups and the official social-profile identity. `scripts/test-page-links.mjs` covers missing/empty data, URL safety, duplicate/self-link removal and annotation-key safety.
+
+Follow-up validation passed: the production build and TypeScript checks, changed-file lint with no errors, all 10 content/navigation tests, and the full 29-page browser suite with seven redirects and zero runtime errors. The new homepage links were visually checked at 320px, 390px and 1440px, with six valid tap targets and no horizontal overflow. The related links and page-specific About heading also passed. A second CMS migration dry run reported no outstanding updates.
+
+The owner reports that the pages are indexed, with no performance data yet because Search Console is new. This is owner-supplied status, not an independent Search Console inspection. No passwords or private tokens are needed from the owner for this code/CMS work.
+
+At the time of the follow-up check, the main HTTPS domain worked, but `www.nesariamadrasa.com` still failed TLS hostname verification from this environment. The prepared redirect works only after a certificate covering that hostname is served.
+
+These refinements follow [Google's sitelink recommendations](https://developers.google.com/search/docs/appearance/sitelinks). They improve navigation and page clarity; they do not force Google to show a particular search-result layout or order.

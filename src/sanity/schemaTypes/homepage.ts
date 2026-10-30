@@ -1,10 +1,16 @@
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
+import { defaultQuickAccess } from "../../data/seoData";
 
 export const homepageType = defineType({
   name: "homepage",
   title: "হোমপেজ কনটেন্ট (Homepage Content)",
   type: "document",
   fields: [
+    defineField({ name: "quickAccess", title: "গুরুত্বপূর্ণ পাতার দ্রুত লিংক (Quick access links)", type: "object", initialValue: defaultQuickAccess, fields: [
+      defineField({ name: "enabled", title: "দেখান (Show section)", type: "boolean", initialValue: true }),
+      defineField({ name: "title", title: "শিরোনাম (Heading)", type: "string" }),
+      defineField({ name: "links", title: "গুরুত্বপূর্ণ পাতা (Important pages)", type: "array", of: [defineArrayMember({ type: "publicPageLink" })], validation: (rule) => rule.max(8) }),
+    ] }),
     defineField({
       name: "introVideo",
       title: "সূচনা ভিডিও (Opening video)",

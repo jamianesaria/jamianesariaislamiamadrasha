@@ -18,14 +18,18 @@ import {
   FileCheck2,
   Phone,
 } from "lucide-react";
-import { EditableImage as Image, getEditableData, EditableText } from "@/content/server";
+import { EditableImage as Image, getEditableData, getFieldAttribute, EditableText } from "@/content/server";
 import { fieldSource } from "@/content/model";
+import { clean, getPageSeoRecords } from "@/lib/seo";
+import { seoRoutes } from "@/data/seoData";
 
 
 
 export default async function AboutJamiaSection() {
   const aboutPageData = await getEditableData("copy.data.aboutPageData", _fallback_aboutPageData);
   const siteSettings = await getEditableData("siteSettings", _fallback_siteSettings);
+  const pageSeo = (await getPageSeoRecords()).find((page) => clean(page.route) === "/about");
+  const attribute = await getFieldAttribute();
 
   const { header, sections } = aboutPageData;
 
@@ -73,9 +77,10 @@ export default async function AboutJamiaSection() {
             </div>
 
             <div className="flex-1 space-y-2.5">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#016332] tracking-tight">
-                {header.title}
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#016332] tracking-tight" data-sanity={attribute(pageSeo, "pageHeading")}>
+                {clean(pageSeo?.pageHeading, seoRoutes["/about"].label)}
               </h1>
+              <p className="text-sm sm:text-base font-semibold text-gray-700">{header.title}</p>
 
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 pt-0.5">
                 <span className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#8B111A] bg-amber-50 border border-[#D9822B]/40 px-3.5 py-1 rounded-full">

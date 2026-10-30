@@ -1,3 +1,4 @@
+import RelatedPageLinks from "@/components/RelatedPageLinks";
 import PageSeo from "@/components/PageSeo";
 import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
@@ -35,6 +36,7 @@ async function NoticesPage() {
       <main className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-9 w-full flex-1">
         <PageSeo route="/notices" />
         <NoticeBoardSection initialNotices={notices} />
+        <RelatedPageLinks route="/notices" />
       </main>
 
       {/* 5. Footer */}

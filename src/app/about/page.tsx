@@ -1,3 +1,4 @@
+import RelatedPageLinks from "@/components/RelatedPageLinks";
 import PageSeo from "@/components/PageSeo";
 import { EditablePage, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
@@ -28,6 +29,7 @@ export default async function AboutPage() {
       <main className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 w-full flex-1">
         <PageSeo route="/about" />
         <AboutJamiaSection />
+        <RelatedPageLinks route="/about" />
       </main>
 
       <Footer initialSettings={siteData} />

@@ -1,3 +1,4 @@
+import RelatedPageLinks from "@/components/RelatedPageLinks";
 import PageSeo from "@/components/PageSeo";
 import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
@@ -29,6 +30,7 @@ async function AcademicsPage() {
       <main className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 w-full flex-1">
         <PageSeo route="/academics" />
         <AcademicsPageSection initialDepartments={departments} />
+        <RelatedPageLinks route="/academics" />
       </main>
 
       <Footer initialSettings={siteData} />

@@ -11,6 +11,7 @@ import { examResultType } from "./examResult";
 import { admissionInfoType } from "./admissionInfo";
 import { pageContentType } from "./pageContent";
 import { pageSeoType } from "./pageSeo";
+import { pageLinkType } from "./pageLink";
 import { calendarEventType } from "./calendarEvent";
 import { vacancyType } from "./vacancy";
 import { galleryPhotoType } from "./galleryPhoto";
@@ -32,11 +33,12 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     admissionInfoType,
     pageContentType,
     pageSeoType,
+    pageLinkType,
     calendarEventType,
     vacancyType,
     galleryPhotoType,
     galleryVideoType,
     badriKafilaType,
     blogPostType,
-  ].map((type) => ["homepage", "siteSettings", "badriKafila", "pageContent"].includes(type.name) ? type : { ...type, fields: [...type.fields, defineField({ name: "archivedAt", title: "আর্কাইভের সময়", type: "datetime", readOnly: true, hidden: true })] }),
+  ].map((type) => type.type !== "document" || ["homepage", "siteSettings", "badriKafila", "pageContent"].includes(type.name) ? type : { ...type, fields: [...type.fields, defineField({ name: "archivedAt", title: "আর্কাইভের সময়", type: "datetime", readOnly: true, hidden: true })] }),
 };

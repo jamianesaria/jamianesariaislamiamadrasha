@@ -291,7 +291,7 @@ function NoticeBoardContent({ initialNotices }: { initialNotices?: NoticeFullIte
           {/* Central Calligraphy & Header */}
           <div className="space-y-3 max-w-4xl">
             <p className="font-serif text-sm sm:text-base text-amber-300/90 tracking-widest text-center sm:text-left"><EditableText document="copy.ui.NoticeBoardSection" entry="ef3g54u" fallback={"بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"} /></p>
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight"><EditableText document="copy.ui.NoticeBoardSection" entry="e1cv6689" fallback={"জামিয়ার কেন্দ্রীয় বিজ্ঞপ্তি প্রাচীর ও মহাফেজখানা"} /></h1>
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight"><EditableText document="copy.ui.NoticeBoardSection" entry="e1cv6689" fallback={"নোটিশ ও বিজ্ঞপ্তি"} /></h1>
             <p className="text-xs sm:text-base text-emerald-100/85 leading-relaxed max-w-3xl"><EditableText document="copy.ui.NoticeBoardSection" entry="e1rj8t9q" fallback={"জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানার শিক্ষা বিভাগসমূহ, ভর্তি কার্যক্রম, কেন্দ্রীয় পরীক্ষা, বাৎসরিক ছুটির পঞ্জিকা ও প্রশাসনিক সিদ্ধান্তের প্রামাণ্য ও সত্যায়িত প্রজ্ঞাপন বোর্ড।"} /></p>
           </div>
 

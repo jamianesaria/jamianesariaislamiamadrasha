@@ -1,3 +1,4 @@
+import RelatedPageLinks from "@/components/RelatedPageLinks";
 import PageSeo from "@/components/PageSeo";
 import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
@@ -34,6 +35,7 @@ async function ContactPage() {
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-6 w-full flex-1">
         <PageSeo route="/contact" />
         <ContactSection initialSettings={siteData} />
+        <RelatedPageLinks route="/contact" />
       </main>
 
       {/* 5. Footer */}

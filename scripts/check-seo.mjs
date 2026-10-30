@@ -1,7 +1,7 @@
 // Read-only regression checks against a running build. No form submissions or CMS writes.
 import assert from "node:assert/strict";
 import { mkdirSync, writeFileSync } from "node:fs";
-import { seoRoutes, SITE_URL, blogPath } from "../src/data/seoData.ts";
+import { seoRoutes, SITE_URL, blogPath, primaryPageLinks, relatedPageRoutes } from "../src/data/seoData.ts";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || "playwright");
 const base = process.env.QA_BASE_URL || "http://localhost:3020";
 const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE || undefined });
@@ -38,6 +38,8 @@ try {
       breadcrumbs: document.querySelectorAll('nav[aria-label*="Breadcrumb"] [aria-current="page"]').length,
       overflow: document.documentElement.scrollWidth > innerWidth + 1,
       articleText: document.querySelector("main article")?.textContent.length || 0,
+      quickLinks: [...document.querySelectorAll("[data-quick-access] a[href]")].map((a) => a.getAttribute("href")),
+      relatedLinks: [...document.querySelectorAll("[data-related-pages] a[href]")].map((a) => a.getAttribute("href")),
       links: [...document.querySelectorAll("main a[href]")].map((a) => a.getAttribute("href")),
     }));
     assert.equal(seo.canonical, `${SITE_URL}${route === "/" ? "/" : route}`, route);
@@ -47,6 +49,10 @@ try {
     assert.equal(seo.overflow, false, route);
     assert.ok(seo.graph.some((node) => node["@type"] === "WebSite"), route);
     assert.ok(seo.graph.some((node) => node["@type"] === "EducationalOrganization"), route);
+    const institution = seo.graph.find((node) => node["@type"] === "EducationalOrganization");
+    assert.ok(institution.sameAs.includes("https://www.facebook.com/jamianesaria/"), "Use the confirmed institution profile");
+    if (route === "/") assert.deepEqual(seo.quickLinks, primaryPageLinks.map((link) => link.href));
+    if (relatedPageRoutes[route]) assert.deepEqual(seo.relatedLinks, relatedPageRoutes[route]);
     if (route !== "/") {
       assert.equal(seo.breadcrumbs, 1, route);
       const trail = seo.graph.find((node) => node["@type"] === "BreadcrumbList");
