@@ -240,7 +240,7 @@ export const noticesQuery = groq`*[_type == "notice" && !defined(archivedAt)] | 
   instructions,
   signatoryName,
   signatoryDesignation,
-  "pdfUrl": pdfFile.asset->url
+  "pdfUrl": coalesce(pdfFile.asset->url, pdf.asset->url, attachment.asset->url)
 }`;
 
 const categoryMap: Record<
@@ -485,7 +485,7 @@ export const classRoutinesQuery = groq`*[_type == "classRoutine" && !defined(arc
   classId,
   timetableRows,
   scheduleRows,
-  "pdfUrl": pdfFile.asset->url
+  "pdfUrl": coalesce(pdfFile.asset->url, pdf.asset->url, routinePdf.asset->url)
 }`;
 
 export async function getClassRoutines() {
@@ -509,7 +509,7 @@ export const examRoutinesQuery = groq`*[_type == "examRoutine" && !defined(archi
   classId,
   examRows,
   instructions,
-  "pdfUrl": pdfFile.asset->url
+  "pdfUrl": coalesce(pdfFile.asset->url, pdf.asset->url, routinePdf.asset->url)
 }`;
 
 export async function getExamRoutines() {
@@ -533,7 +533,7 @@ export const examResultsQuery = groq`*[_type == "examResult" && !defined(archive
   classId,
   isPublished,
   summaryNotes,
-  "meritListPdfUrl": meritListPdf.asset->url
+  "meritListPdfUrl": coalesce(meritListPdf.asset->url, pdfFile.asset->url, pdf.asset->url)
 }`;
 
 export async function getExamResults() {

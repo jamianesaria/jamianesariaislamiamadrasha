@@ -6,7 +6,7 @@ import type { ClassRoutineDocument } from "@/sanity/lib/documents";
 import { stegaClean } from "@sanity/client/stega";
 import { Calendar, Search } from "lucide-react";
 import { useEditableData, EditableText } from "@/content/client";
-
+import PdfDocumentViewer from "./PdfDocumentViewer";
 
 export default function ClassRoutineSection({ records = [] }: { records?: ClassRoutineDocument[] }) {
   const availableClasses = useEditableData("copy.data.availableClasses", _fallback_availableClasses);
@@ -14,8 +14,16 @@ export default function ClassRoutineSection({ records = [] }: { records?: ClassR
   const [selectedClass, setSelectedClass] = useState<string>("nursery");
   const [searched, setSearched] = useState<boolean>(false);
 
-  const routine = records.find((item) => stegaClean(item.classId || "") === selectedClass || stegaClean(item.className).toLowerCase() === availableClasses.find((entry) => entry.id === selectedClass)?.name.toLowerCase());
+  const routine = records.find(
+    (item) =>
+      stegaClean(item.classId || "") === selectedClass ||
+      stegaClean(item.classId || "") === "all" ||
+      stegaClean(item.className || "").toLowerCase() ===
+        availableClasses.find((entry) => entry.id === selectedClass)?.name.toLowerCase()
+  );
   const routineData = searched ? routine?.timetableRows || [] : [];
+  const selectedClassName =
+    availableClasses.find((c) => c.id === selectedClass)?.name || routine?.className || "শ্রেণি";
 
   const handleSearch = () => {
     setSearched(true);
@@ -31,7 +39,6 @@ export default function ClassRoutineSection({ records = [] }: { records?: ClassR
 
       {/* Filter and Dropdown Controls */}
       <div className="p-5 space-y-4">
-        {routine?.pdfUrl && <a href={stegaClean(routine.pdfUrl)} target="_blank" rel="noreferrer" className="text-sm font-semibold text-[#371b61] underline"><EditableText document="copy.ui.ClassRoutineSection" entry="e48p6sy" fallback={"অফিসিয়াল রুটিন PDF দেখুন"} /></a>}
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
           {/* Left: Search button */}
           <div>
@@ -68,11 +75,32 @@ export default function ClassRoutineSection({ records = [] }: { records?: ClassR
           </div>
         </div>
 
-        {/* Routine Display Area / Not Found message matching screenshot */}
-        <div className="mt-6 border border-gray-200 rounded overflow-hidden">
-          {searched && !routineData.length && !!routine?.scheduleRows?.length ? (
-            <div className="overflow-x-auto"><table className="w-full text-left border-collapse text-xs sm:text-sm"><thead><tr className="bg-[#371b61] text-white font-bold">{["ঘণ্টা", "সময়", "বিষয়", "শিক্ষক", "কক্ষ"].map((label) => <th key={label} className="py-2.5 px-3 border border-purple-900">{label}</th>)}</tr></thead><tbody>{routine.scheduleRows.map((row, index) => <tr key={row._key || index} className="hover:bg-purple-50/30">{[row.period, row.time, row.subject, row.teacher, row.room].map((text, column) => <td key={column} className="py-3 px-3 border border-gray-200">{text}</td>)}</tr>)}</tbody></table></div>
-          ) : searched && routineData.length > 0 ? (
+        {/* Routine Display Area */}
+        {searched && !routineData.length && !!routine?.scheduleRows?.length ? (
+          <div className="mt-6 border border-gray-200 rounded overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs sm:text-sm">
+                <thead>
+                  <tr className="bg-[#371b61] text-white font-bold">
+                    {["ঘণ্টা", "সময়", "বিষয়", "শিক্ষক", "কক্ষ"].map((label) => (
+                      <th key={label} className="py-2.5 px-3 border border-purple-900">{label}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {routine.scheduleRows.map((row, index) => (
+                    <tr key={row._key || index} className="hover:bg-purple-50/30">
+                      {[row.period, row.time, row.subject, row.teacher, row.room].map((text, column) => (
+                        <td key={column} className="py-3 px-3 border border-gray-200">{text}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : searched && routineData.length > 0 ? (
+          <div className="mt-6 border border-gray-200 rounded overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs sm:text-sm">
                 <thead>
@@ -105,15 +133,27 @@ export default function ClassRoutineSection({ records = [] }: { records?: ClassR
                 </tbody>
               </table>
             </div>
-          ) : (
-            /* Default "Not Found" state matching the screenshot */
+          </div>
+        ) : searched && !routine?.pdfUrl ? (
+          /* Default "Not Found" state matching the screenshot */
+          <div className="mt-6 border border-gray-200 rounded overflow-hidden">
             <div className="py-12 px-4 text-center bg-gray-50/50">
               <p className="text-gray-500 text-sm font-semibold tracking-wide"><EditableText document="copy.ui.ClassRoutineSection" entry="e1i7ivyu" fallback={"Not Found"} /></p>
             </div>
-          )}
-        </div>
+          </div>
+        ) : null}
+
+        {/* Visual PDF Document Canvas: Displays like a picture and provides download/view */}
+        {routine?.pdfUrl && (
+          <div className="mt-6">
+            <PdfDocumentViewer
+              url={stegaClean(routine.pdfUrl)}
+              title={`${selectedClassName} — দৈনিক ক্লাস রুটিন (${routine.academicYear || "২০২৬"})`}
+              badge="অফিসিয়াল ক্লাস রুটিন PDF"
+            />
+          </div>
+        )}
       </div>
     </div>
   );
 }
-

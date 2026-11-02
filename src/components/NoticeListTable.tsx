@@ -4,6 +4,7 @@ import { useState } from "react";
 import { noticeListTableData as _fallback_noticeListTableData, NoticeItem } from "@/data/siteData";
 import { FileText, Eye, Download, X, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEditableData, EditableText } from "@/content/client";
+import PdfDocumentViewer from "./PdfDocumentViewer";
 
 
 export default function NoticeListTable() {
@@ -120,7 +121,7 @@ export default function NoticeListTable() {
       {/* Notice Detail Modal */}
       {selectedNotice && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-150">
-          <div className="bg-white rounded-lg shadow-2xl max-w-lg w-full overflow-hidden border border-gray-200">
+          <div className="bg-white rounded-lg shadow-2xl max-w-3xl sm:max-w-4xl w-full overflow-hidden border border-gray-200">
             {/* Modal Header */}
             <div className="bg-[#126b59] text-white px-4 py-3 flex items-center justify-between font-bold">
               <span><EditableText document="copy.ui.NoticeListTable" entry="e1d3ck1l" fallback={"নোটিশের বিস্তারিত"} /></span>
@@ -148,6 +149,17 @@ export default function NoticeListTable() {
                 <p className="text-xs sm:text-sm text-gray-700 leading-relaxed text-justify">
                   {selectedNotice.details}
                 </p>
+              )}
+
+              {selectedNotice.pdfUrl && selectedNotice.pdfUrl !== "#" && (
+                <div className="pt-2">
+                  <PdfDocumentViewer
+                    url={selectedNotice.pdfUrl}
+                    title={selectedNotice.title}
+                    badge="অফিসিয়াল নোটিশ PDF"
+                    compact
+                  />
+                </div>
               )}
 
               <div className="pt-3 flex items-center justify-between border-t border-gray-100">

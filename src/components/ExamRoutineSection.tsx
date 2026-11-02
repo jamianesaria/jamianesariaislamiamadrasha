@@ -6,7 +6,7 @@ import type { ExamRoutineDocument } from "@/sanity/lib/documents";
 import { stegaClean } from "@sanity/client/stega";
 import { GraduationCap, Search, Calendar, Clock, MapPin } from "lucide-react";
 import { useEditableData, EditableText } from "@/content/client";
-
+import PdfDocumentViewer from "./PdfDocumentViewer";
 
 export default function ExamRoutineSection({ records = [] }: { records?: ExamRoutineDocument[] }) {
   const availableClasses = useEditableData("copy.data.availableClasses", _fallback_availableClasses);
@@ -14,8 +14,16 @@ export default function ExamRoutineSection({ records = [] }: { records?: ExamRou
   const [selectedClass, setSelectedClass] = useState<string>("play");
   const [searched, setSearched] = useState<boolean>(false);
 
-  const routine = records.find((item) => stegaClean(item.classId || "") === "all" || stegaClean(item.classId || "") === selectedClass || stegaClean(item.className || "").toLowerCase() === availableClasses.find((entry) => entry.id === selectedClass)?.name.toLowerCase());
+  const routine = records.find(
+    (item) =>
+      stegaClean(item.classId || "") === "all" ||
+      stegaClean(item.classId || "") === selectedClass ||
+      stegaClean(item.className || "").toLowerCase() ===
+        availableClasses.find((entry) => entry.id === selectedClass)?.name.toLowerCase()
+  );
   const examData = searched ? routine?.examRows || [] : [];
+  const selectedClassName =
+    availableClasses.find((c) => c.id === selectedClass)?.name || routine?.className || "সকল শ্রেণি";
 
   const handleSearch = () => {
     setSearched(true);
@@ -23,7 +31,6 @@ export default function ExamRoutineSection({ records = [] }: { records?: ExamRou
 
   return (
     <div className="bg-white rounded border border-gray-200 shadow-xs overflow-hidden">
-      {routine?.pdfUrl && <a href={stegaClean(routine.pdfUrl)} target="_blank" rel="noreferrer" className="block p-3 text-sm font-semibold text-[#126b59] underline"><EditableText document="copy.ui.ExamRoutineSection" entry="eln59sg" fallback={"অফিসিয়াল পরীক্ষার রুটিন PDF দেখুন"} /></a>}
       {/* Table Header Bar - matching teal/deep cyan-green from screenshot */}
       <div className="bg-[#126b59] text-white px-4 py-2.5 flex items-center gap-2 font-bold text-sm sm:text-base shadow-xs">
         <GraduationCap size={18} />
@@ -112,15 +119,25 @@ export default function ExamRoutineSection({ records = [] }: { records?: ExamRou
                   </tbody>
                 </table>
               </div>
-            ) : (
+            ) : !routine?.pdfUrl ? (
               <div className="py-10 text-center bg-gray-50/50">
                 <p className="text-gray-500 text-sm font-semibold"><EditableText document="copy.ui.ExamRoutineSection" entry="extuppm" fallback={"নির্বাচিত শ্রেণির পরীক্ষার রুটিন শীঘ্রই প্রকাশিত হবে।"} /></p>
               </div>
-            )}
+            ) : null}
+          </div>
+        )}
+
+        {/* Visual PDF Document Canvas: Displays like a picture and provides download/view */}
+        {routine?.pdfUrl && (
+          <div className="mt-6">
+            <PdfDocumentViewer
+              url={stegaClean(routine.pdfUrl)}
+              title={`${selectedClassName} — ${routine.title || routine.examTerm || "পরীক্ষার রুটিন"} (${routine.academicYear || "২০২৬"})`}
+              badge="অফিসিয়াল পরীক্ষা রুটিন PDF"
+            />
           </div>
         )}
       </div>
     </div>
   );
 }
-

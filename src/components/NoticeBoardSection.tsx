@@ -42,6 +42,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { EditableText, useEditableData } from "@/content/client";
+import PdfDocumentViewer from "./PdfDocumentViewer";
 
 
 type CategoryFilter = "all" | "admission" | "exam" | "holiday" | "routine" | "general";
@@ -981,7 +982,7 @@ function NoticeBoardContent({ initialNotices }: { initialNotices?: NoticeFullIte
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#FAF7F0] text-stone-900 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[92vh] flex flex-col overflow-hidden border-4 border-[#2b180d] my-auto"
+            className="bg-[#FAF7F0] text-stone-900 rounded-2xl shadow-2xl max-w-4xl lg:max-w-5xl w-full max-h-[92vh] flex flex-col overflow-hidden border-4 border-[#2b180d] my-auto"
           >
             {/* Modal Top Control Bar */}
             <div className="bg-[#1b2b1d] text-white px-4 sm:px-6 py-3 flex items-center justify-between border-b-2 border-amber-600 shrink-0">
@@ -1132,6 +1133,31 @@ function NoticeBoardContent({ initialNotices }: { initialNotices?: NoticeFullIte
                   </div>
                 </div>
               )}
+
+              {/* Official PDF Document Viewer */}
+              {(() => {
+                const pdfTargetUrl =
+                  selectedNotice.pdfUrl &&
+                  selectedNotice.pdfUrl !== "#" &&
+                  !selectedNotice.pdfUrl.endsWith("/#")
+                    ? selectedNotice.pdfUrl
+                    : selectedNotice.attachments?.find((att) =>
+                        att.url &&
+                        (att.url.toLowerCase().endsWith(".pdf") || att.url.includes("/files/"))
+                      )?.url;
+
+                if (!pdfTargetUrl) return null;
+
+                return (
+                  <div className="pt-2">
+                    <PdfDocumentViewer
+                      url={pdfTargetUrl}
+                      title={selectedNotice.title}
+                      badge="অফিসিয়াল প্রজ্ঞাপন PDF"
+                    />
+                  </div>
+                );
+              })()}
 
               {/* Official Seal & Signatory Block */}
               <div className="pt-6 border-t border-stone-200 flex flex-wrap items-center justify-between gap-4">
