@@ -10,9 +10,77 @@ export default async function PageSeo({ route, title }: { route: string; title?:
   const labelFor = (path: string) => clean(records.find((page) => clean(page.route) === path)?.breadcrumbLabel, seoRoutes[path]?.label || path);
   const label = clean(record?.breadcrumbLabel, title || entry?.label || settings.name);
   const crumbs = [{ label: settings.homeLabel, path: "/" }, ...(parent ? [{ label: labelFor(parent), path: parent }] : []), { label, path: route }];
+  const siteNavigationItems = [
+    { name: "জামিয়া পরিচিতি", description: "জামিয়ার ইতিহাস, ঐতিহ্য, লক্ষ্য-উদ্দেশ্য ও পরিচিতি", url: `${SITE_URL}/about` },
+    { name: "শিক্ষা বিভাগ", description: "মক্তব, হিফজ, কিতাব ও মাদানি নেসাব বিভাগের বিবরণ", url: `${SITE_URL}/academics` },
+    { name: "ভর্তি তথ্য ও ফি", description: "ভর্তির নিয়মাবলি, যোগ্যতা, বয়সসীমা, ফি চার্ট ও অনলাইন আবেদন", url: `${SITE_URL}/admission` },
+    { name: "শিক্ষক মণ্ডলী", description: "মুহাদ্দিস, ক্বারী ও সুযোগ্য শিক্ষকবৃন্দের তালিকা", url: `${SITE_URL}/teachers` },
+    { name: "পরীক্ষা ও ফলাফল", description: "বার্ষিক ও সাময়িক পরীক্ষার রুটিন এবং অনলাইন ফলাফল", url: `${SITE_URL}/results/academic` },
+    { name: "নোটিশ বোর্ড", description: "মাদরাসার সকল জরুরি প্রাতিষ্ঠানিক প্রজ্ঞাপন ও নোটিশ", url: `${SITE_URL}/notices` },
+    { name: "এতিমখানা ও সেবা", description: "এতিম ও অসহায় শিক্ষার্থীদের সহায়তা ও অনুদানের ফান্ড", url: `${SITE_URL}/orphanage` },
+    { name: "যোগাযোগ ও অবস্থান", description: "মাদরাসার অবস্থান, ফোন নম্বর, হেল্পলাইন ও গুগল ম্যাপ", url: `${SITE_URL}/contact` },
+  ];
+
   const graph = [
-    { "@type": "WebSite", "@id": `${SITE_URL}/#website`, url: SITE_URL, name: settings.name, alternateName: [settings.fullName, settings.englishName], inLanguage: "bn-BD", publisher: { "@id": `${SITE_URL}/#institution` } },
-    { "@type": "EducationalOrganization", "@id": `${SITE_URL}/#institution`, url: SITE_URL, name: settings.fullName, alternateName: settings.englishName, logo: absoluteUrl(settings.logo), telephone: settings.phone.startsWith("0") ? `+88${settings.phone}` : settings.phone, email: settings.email, address: { "@type": "PostalAddress", streetAddress: settings.address, addressLocality: "টঙ্গী", addressRegion: "গাজীপুর", addressCountry: "BD" }, sameAs: [settings.facebook, settings.youtube].filter((url) => /^https:\/\//.test(url) && !/^https:\/\/(www\.)?(youtube|facebook)\.com\/?$/.test(url)) },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: `${SITE_URL}/`,
+      name: settings.name,
+      alternateName: settings.alternateNames,
+      inLanguage: "bn-BD",
+      publisher: { "@id": `${SITE_URL}/#institution` },
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${SITE_URL}/notices?category={search_term_string}`,
+        },
+        "query-input": "required name=search_term_string",
+      },
+    },
+    {
+      "@type": "EducationalOrganization",
+      "@id": `${SITE_URL}/#institution`,
+      url: SITE_URL,
+      name: settings.fullName,
+      alternateName: settings.englishName,
+      logo: {
+        "@type": "ImageObject",
+        url: absoluteUrl(settings.logo),
+        width: 339,
+        height: 339,
+        caption: settings.fullName,
+      },
+      image: absoluteUrl(settings.image),
+      telephone: settings.phone.startsWith("0") ? `+88${settings.phone}` : settings.phone,
+      email: settings.email,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: settings.address,
+        addressLocality: "টঙ্গী",
+        addressRegion: "গাজীপুর",
+        addressCountry: "BD",
+      },
+      sameAs: [settings.facebook, settings.youtube].filter((url) => /^https:\/\//.test(url) && !/^https:\/\/(www\.)?(youtube|facebook)\.com\/?$/.test(url)),
+    },
+    ...(route === "/"
+      ? [
+          {
+            "@type": "ItemList",
+            "@id": `${SITE_URL}/#site-navigation`,
+            name: "ওয়েবসাইট প্রধান বিভাগসমূহ ও নেভিগেশন (Main Navigation)",
+            description: "জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানার প্রধান তথ্য ও নেভিগেশন লিংকসমূহ",
+            itemListElement: siteNavigationItems.map((item, idx) => ({
+              "@type": "SiteNavigationElement",
+              position: idx + 1,
+              name: item.name,
+              description: item.description,
+              url: item.url,
+            })),
+          },
+        ]
+      : []),
     ...(route !== "/" ? [{ "@type": "BreadcrumbList", "@id": `${absoluteUrl(route)}#breadcrumb`, itemListElement: crumbs.map((crumb, index) => ({ "@type": "ListItem", position: index + 1, name: crumb.label, item: absoluteUrl(crumb.path) })) }] : []),
   ];
   return <>

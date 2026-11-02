@@ -21,17 +21,33 @@ export const getPageSeoRecords = cache(async (): Promise<PageSeoRecord[]> => {
 export const getSeoSettings = cache(async () => {
   const { getSiteSettings } = await import("@/sanity/lib/queries");
   const settings = await getSiteSettings();
+  const fullName = clean(settings.nameBn, seoDefaults.siteName);
+  const englishName = clean(settings.nameEn, seoDefaults.englishSiteName);
+  const shortName = clean(settings.seoSiteName, seoDefaults.shortSiteName);
   return {
-    name: clean(settings.seoSiteName, seoDefaults.siteName),
+    name: fullName,
+    shortName,
     googleVerification: clean("googleSiteVerification" in settings ? settings.googleSiteVerification : ""),
-    fullName: clean(settings.nameBn), englishName: clean(settings.nameEn),
+    fullName,
+    englishName,
+    alternateNames: [
+      shortName,
+      "জামিয়া নেছারিয়া",
+      englishName,
+      "Jamia Nesaria Islamia Madrasha",
+      "Jamia Nesaria",
+      "JNIM",
+    ].filter((val, idx, arr) => Boolean(val) && arr.indexOf(val) === idx),
     description: clean(settings.seoDescription, seoDefaults.description),
     image: clean(settings.seoImageUrl, seoDefaults.image),
     homeLabel: clean(settings.breadcrumbHomeLabel, seoDefaults.homeLabel),
     breadcrumbLabel: clean(settings.breadcrumbNavLabel, seoDefaults.breadcrumbLabel),
-    logo: clean(settings.logoUrl), address: clean(settings.address),
-    phone: clean(settings.phone), email: clean(settings.email),
-    facebook: clean(settings.facebookUrl), youtube: clean(settings.youtubeUrl),
+    logo: clean(settings.logoUrl, "/jamia-logo-v2.png"),
+    address: clean(settings.address),
+    phone: clean(settings.phone),
+    email: clean(settings.email),
+    facebook: clean(settings.facebookUrl),
+    youtube: clean(settings.youtubeUrl),
   };
 });
 export function clean(value?: string, fallback = ""): string { return stegaClean(value || fallback).trim(); }
@@ -55,5 +71,17 @@ export async function pageMetadata(route: string, fallback: Metadata, legacy?: {
     robots: preview || page?.noIndex ? { index: false, follow: true } : { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
     openGraph: { type: "website", locale: "bn_BD", siteName: settings.name, title, description, url: absoluteUrl(route), images: [{ url: image, alt: settings.fullName }] },
     twitter: { card: "summary_large_image", title, description, images: [image] },
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "48x48" },
+        { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+        { url: "/icon.png", sizes: "96x96", type: "image/png" },
+        { url: "/favicon-192x192.png", sizes: "192x192", type: "image/png" },
+      ],
+      apple: [
+        { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+      ],
+      shortcut: "/favicon.ico",
+    },
   };
 }

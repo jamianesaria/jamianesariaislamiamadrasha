@@ -1,9 +1,19 @@
 import { stegaClean } from "@sanity/client/stega";
 
 // Public routes only. Student records, submissions, API handlers and Studio never belong here.
-export const SITE_URL = "https://nesariamadrasa.com";
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "https://nesariamadrasa.com");
 export const seoDefaults = {
-  siteName: "জামিয়া নেছারিয়া ইসলামিয়া",
+  siteName: "জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা",
+  shortSiteName: "জামিয়া নেছারিয়া ইসলামিয়া",
+  englishSiteName: "Jamia Nesaria Islamia Madrasha & Orphanage",
+  alternateNames: [
+    "জামিয়া নেছারিয়া ইসলামিয়া",
+    "জামিয়া নেছারিয়া",
+    "JAMIA NESARIA ISLAMIA MADRASHA & ORPHANAGE",
+    "Jamia Nesaria Islamia Madrasha",
+    "Jamia Nesaria",
+    "JNIM",
+  ],
   description: "টঙ্গী, গাজীপুরের জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানা। মক্তব, হিফজ, কিতাব ও মাদানি নেসাব বিভাগের শিক্ষা, ভর্তি তথ্য, নোটিশ ও যোগাযোগ।",
   image: "/social-share.png",
   homeLabel: "হোম",

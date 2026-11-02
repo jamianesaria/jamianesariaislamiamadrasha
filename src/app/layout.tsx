@@ -18,7 +18,33 @@ export const metadata: Metadata = {
   title: seoRoutes["/"].label,
   description: seoDefaults.description,
   applicationName: seoDefaults.siteName,
-  // Next's file conventions supply favicon.ico, icon.png and apple-icon.png.
+  openGraph: {
+    type: "website",
+    locale: "bn_BD",
+    siteName: seoDefaults.siteName,
+    title: seoRoutes["/"].label,
+    description: seoDefaults.description,
+    url: SITE_URL,
+    images: [{ url: seoDefaults.image, alt: seoDefaults.siteName }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: seoRoutes["/"].label,
+    description: seoDefaults.description,
+    images: [seoDefaults.image],
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+      { url: "/icon.png", sizes: "96x96", type: "image/png" },
+      { url: "/favicon-192x192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
