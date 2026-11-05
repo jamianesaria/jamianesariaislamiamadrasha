@@ -128,7 +128,18 @@ export const homepageQuery = groq`*[_type == "homepage"][0]{
   principalDesignation,
   principalMessage,
   admissionBannerTitle,
-  admissionBannerDesc
+  admissionBannerDesc,
+  atAGlanceEstablished,
+  atAGlanceLandDonors,
+  atAGlanceMutawalli,
+  atAGlancePresident,
+  atAGlanceTeachers,
+  atAGlanceStudents,
+  atAGlanceAcademicPrograms,
+  atAGlanceAddress,
+  missionMainGoal,
+  missionObjectives,
+  madrasaFeatureItems[]{_key,id,title,description}
 }`;
 
 export async function getHomepageContent() {
@@ -183,8 +194,36 @@ export async function getHomepageContent() {
           ...fallbackHome.atAGlance,
           established: data.statsEstablished
             ? `${data.statsEstablished} খ্রিষ্টাব্দ`
-            : fallbackHome.atAGlance.established,
+            : (data.atAGlanceEstablished || fallbackHome.atAGlance.established),
+          landDonors: (data.atAGlanceLandDonors && data.atAGlanceLandDonors.length > 0)
+            ? data.atAGlanceLandDonors
+            : fallbackHome.atAGlance.landDonors,
+          mutawalli: data.atAGlanceMutawalli || fallbackHome.atAGlance.mutawalli,
+          president: data.atAGlancePresident || fallbackHome.atAGlance.president,
           muhtamim: data.principalName || fallbackHome.atAGlance.muhtamim,
+          teachers: data.atAGlanceTeachers || data.statsTeachers || fallbackHome.atAGlance.teachers || "৩২ জন",
+          students: data.atAGlanceStudents || data.statsTotalStudents || fallbackHome.atAGlance.students || "৫০০ জন",
+          academicPrograms: data.atAGlanceAcademicPrograms || fallbackHome.atAGlance.academicPrograms,
+          address: data.atAGlanceAddress || fallbackHome.atAGlance.address,
+        },
+        missionAndObjectives: {
+          ...fallbackHome.missionAndObjectives,
+          mainGoal: data.missionMainGoal || fallbackHome.missionAndObjectives.mainGoal,
+          objectives:
+            Array.isArray(data.missionObjectives) && data.missionObjectives.length > 0
+              ? data.missionObjectives
+              : fallbackHome.missionAndObjectives.objectives,
+        },
+        madrasaFeatures: {
+          ...fallbackHome.madrasaFeatures,
+          items:
+            Array.isArray(data.madrasaFeatureItems) && data.madrasaFeatureItems.length > 0
+              ? data.madrasaFeatureItems.map((item, idx) => ({
+                  id: item.id || fallbackHome.madrasaFeatures.items[idx]?.id || `feature-${idx}`,
+                  title: item.title || fallbackHome.madrasaFeatures.items[idx]?.title || "",
+                  description: item.description || fallbackHome.madrasaFeatures.items[idx]?.description || "",
+                }))
+              : fallbackHome.madrasaFeatures.items,
         },
         admissionCall: {
           ...fallbackHome.admissionCall,
@@ -356,7 +395,14 @@ export async function getCommitteeMembers() {
   try {
     const data = await fetchSiteQuery<CommitteeDocument[]>(committeeQuery, {});
     if (Array.isArray(data)) {
-      return data.map((m) => ({
+      const seen = new Set<string>();
+      const unique = data.filter((m) => {
+        const key = `${Boolean(m.isLandDonor)}:${stegaClean(m.name || "").trim()}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+      return unique.map((m) => ({
         _id: m._id,
         _type: "committeeMember",
         id: m._id,

@@ -56,7 +56,7 @@ export interface PageLink { _key: string; label: string; href: string }
 export const primaryPageLinks: PageLink[] = [
   { _key: "admission", label: "ভর্তি তথ্য", href: "/admission" },
   { _key: "academics", label: "শিক্ষা বিভাগ", href: "/academics" },
-  { _key: "teachers", label: "শিক্ষকবৃন্দ", href: "/teachers" },
+  { _key: "orphanage", label: "এতিমখানা ও সহযোগিতা", href: "/orphanage" },
   { _key: "about", label: "জামিয়া পরিচিতি", href: "/about" },
   { _key: "notices", label: "নোটিশ ও বিজ্ঞপ্তি", href: "/notices" },
   { _key: "contact", label: "যোগাযোগ", href: "/contact" },
@@ -74,6 +74,7 @@ export const relatedPageRoutes: Record<string, string[]> = {
   "/teachers": ["/academics", "/admission", "/contact"],
   "/notices": ["/admission", "/exam-routine", "/contact"],
   "/contact": ["/admission", "/academics", "/about"],
+  "/orphanage": ["/about", "/admission", "/contact"],
 };
 export function defaultRelatedLinks(route: string): PageLink[] {
   return (relatedPageRoutes[route] || []).map((href) => ({

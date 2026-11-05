@@ -27,6 +27,9 @@ const nextConfig: NextConfig = {
   htmlLimitedBots: /.*/,
   experimental: {
     agentFeedback: true,
+    // Pages read draftMode() for Sanity visual editing, so implicit instant-navigation
+    // validation flags every route in dev. Only validate segments that opt in via `instant`.
+    instantInsights: { validationLevel: "manual-warning" },
     optimizePackageImports: ["lucide-react", "@sanity/icons", "@sanity/ui"],
   },
   cacheComponents: true,

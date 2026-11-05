@@ -18,6 +18,8 @@ import { galleryPhotoType } from "./galleryPhoto";
 import { galleryVideoType } from "./galleryVideo";
 import { badriKafilaType } from "./badriKafila";
 import { blogPostType } from "./blogPost";
+import { DeletableDocumentInput } from "../management/DeletableDocumentInput";
+import { canDeleteRecord } from "../management/deletion";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -40,5 +42,5 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     galleryVideoType,
     badriKafilaType,
     blogPostType,
-  ].map((type) => type.type !== "document" || ["homepage", "siteSettings", "badriKafila", "pageContent"].includes(type.name) ? type : { ...type, fields: [...type.fields, defineField({ name: "archivedAt", title: "আর্কাইভের সময়", type: "datetime", readOnly: true, hidden: true })] }),
+  ].map((type) => type.type !== "document" || ["homepage", "siteSettings", "badriKafila", "pageContent"].includes(type.name) ? type : { ...type, ...(canDeleteRecord(type.name) ? { components: { input: DeletableDocumentInput } } : {}), fields: [...type.fields, defineField({ name: "archivedAt", title: "আর্কাইভের সময়", type: "datetime", readOnly: true, hidden: true })] }),
 };

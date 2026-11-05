@@ -201,17 +201,19 @@ export default function OrphanageSection() {
               </div>
 
               {/* Feature Highlights Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3">
-                {intro.features.map((feat, idx) => (
-                  <div
-                    key={idx}
-                    className="p-3.5 rounded-xl border border-gray-200/90 bg-[#FAF7F0] flex items-start gap-2.5 text-xs sm:text-[13px] text-gray-800"
-                  >
-                    <CheckCircle2 size={16} className="text-[#016332] shrink-0 mt-0.5" />
-                    <span className="leading-relaxed font-medium">{feat}</span>
-                  </div>
-                ))}
-              </div>
+              {intro.features.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3">
+                  {intro.features.map((feat, idx) => (
+                    <div
+                      key={idx}
+                      className="p-3.5 rounded-xl border border-gray-200/90 bg-[#FAF7F0] flex items-start gap-2.5 text-xs sm:text-[13px] text-gray-800"
+                    >
+                      <CheckCircle2 size={16} className="text-[#016332] shrink-0 mt-0.5" />
+                      <span className="leading-relaxed font-medium">{feat}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {/* Orphanage Image */}
               <div className="pt-2">
@@ -229,179 +231,6 @@ export default function OrphanageSection() {
                       <span><EditableText document="copy.ui.OrphanageSection" entry="ehufmgk" fallback={"জামিয়া নেছারিয়া ইসলামিয়া এতিমখানা ও হিফজুল কুরআন বিভাগের শিক্ষার্থী ও দারস"} /></span>
                     </p>
                   </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* =================================================================
-              Section: নির্মাণ প্রকল্প — ছাত্রাবাসের চতুর্থ তলা নির্মাণে এগিয়ে আসুন
-              (User explicitly specified: "এই লেখাটা এতিমখানা পরিচিত এর নিচে দিবেন")
-          ================================================================= */}
-          <section
-            id={hostelConstruction.id}
-            className="bg-white rounded-2xl border-2 border-[#D9822B] shadow-md overflow-hidden scroll-mt-20 relative"
-          >
-            {/* Top Badge */}
-            <div className="bg-gradient-to-r from-[#750d15] via-[#8B111A] to-[#9e141e] text-white px-5 py-4 border-b-2 border-[#D9822B] flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-2.5">
-                <Building2 size={22} className="text-[#ffd86b]" />
-                <div>
-                  <span className="text-[11px] font-bold tracking-wider text-amber-300 uppercase block">
-                    {hostelConstruction.title}
-                  </span>
-                  <h2 className="text-lg sm:text-xl font-extrabold text-white">
-                    {hostelConstruction.subtitle}
-                  </h2>
-                </div>
-              </div>
-              <span className="text-xs bg-amber-400/20 text-amber-200 border border-amber-300/40 px-3 py-1 rounded-full font-bold">
-                {hostelConstruction.badge}
-              </span>
-            </div>
-
-            <div className="p-5 sm:p-7 space-y-6">
-              {/* Motto Banner */}
-              <div className="bg-gradient-to-r from-[#FAF7F0] via-white to-[#FAF7F0] border-l-4 border-l-[#8B111A] rounded-r-xl p-4 border-y border-r border-gray-200 shadow-2xs">
-                <p className="text-base sm:text-lg font-extrabold text-[#8B111A] tracking-tight"><EditableText document="copy.ui.OrphanageSection" entry="eb0sgmj" fallback={"“"} />{hostelConstruction.motto}<EditableText document="copy.ui.OrphanageSection" entry="ehizyim" fallback={"”"} /></p>
-                <p className="text-xs font-semibold text-gray-600 mt-1">
-                  {hostelConstruction.salam}
-                </p>
-              </div>
-
-              {/* Campus Image */}
-              <div className="relative h-56 sm:h-64 w-full rounded-xl overflow-hidden border border-gray-200 shadow-xs">
-                <Image document="copy.ui.OrphanageSection" entry="evcwqw9"
-                  src="/prodhan_banner.jpeg"
-                  alt="জামিয়া নেছারিয়া ইসলামিয়া মাদরাসার নতুন ছাত্রাবাস ও একাডেমিক ভবন"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 60vw"
-                  className="object-cover"
-                />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent p-3.5 text-white">
-                  <p className="text-xs font-semibold text-amber-200 flex items-center gap-2">
-                    <Building2 size={14} className="text-amber-300" />
-                    <span><EditableText document="copy.ui.OrphanageSection" entry="eojpe69" fallback={"জামিয়া নেছারিয়া ইসলামিয়া মাদরাসার বর্তমান তিনতলা ছাত্রাবাস ভবন (চতুর্থ তলা সম্প্রসারণের অপেক্ষায়)"} /></span>
-                  </p>
-                </div>
-              </div>
-
-              {/* প্রকল্পের পরিচিতি ও প্রয়োজনীয়তা */}
-              <div className="space-y-3">
-                <h3 className="text-base font-bold text-[#016332] flex items-center gap-2 border-b border-gray-100 pb-2">
-                  <span className="w-1.5 h-4 bg-[#016332] rounded-full" />
-                  <span>{hostelConstruction.necessityTitle}</span>
-                </h3>
-                <div className="space-y-2.5 text-sm sm:text-[14.5px] text-gray-800 leading-relaxed text-justify">
-                  {hostelConstruction.necessityParagraphs.map((p, idx) => (
-                    <p key={idx}>{p}</p>
-                  ))}
-                </div>
-              </div>
-
-              {/* নির্মাণকাজ সম্পন্ন করতে আপনাদের সহযোগিতা কাম্য */}
-              <div className="space-y-3 bg-[#FAF7F0]/80 rounded-xl p-4 sm:p-5 border border-[#D9822B]/30">
-                <h3 className="text-base font-bold text-[#8B111A] flex items-center gap-2">
-                  <HeartHandshake size={18} className="text-[#8B111A]" />
-                  <span>{hostelConstruction.appealTitle}</span>
-                </h3>
-                <p className="text-xs sm:text-sm font-bold text-[#016332]">
-                  {hostelConstruction.appealAudience}
-                </p>
-                <p className="text-sm text-gray-800 leading-relaxed text-justify">
-                  {hostelConstruction.appealParagraph}
-                </p>
-              </div>
-
-              {/* যেভাবে সহযোগিতা করতে পারেন */}
-              <div className="space-y-3">
-                <h4 className="text-sm sm:text-base font-bold text-gray-900 flex items-center gap-2">
-                  <span className="w-1.5 h-4 bg-[#8B111A] rounded-full" />
-                  <span>{hostelConstruction.waysToHelpTitle}</span>
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {hostelConstruction.waysToHelp.map((way, idx) => (
-                    <div
-                      key={idx}
-                      className="p-3.5 rounded-xl border border-gray-200 bg-white hover:border-[#016332]/50 hover:bg-[#016332]/[0.02] transition-colors flex items-start gap-2.5 shadow-2xs"
-                    >
-                      <span className="w-5 h-5 rounded-full bg-[#016332]/10 text-[#016332] font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
-                        {idx + 1}
-                      </span>
-                      <p className="text-xs sm:text-sm text-gray-800 font-medium leading-relaxed">
-                        {way.replace(/^[১-৪]\.\s*/, "")}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-xs font-semibold text-[#8B111A] bg-[#8B111A]/5 p-2.5 rounded-lg border border-[#8B111A]/15 text-center">
-                  {hostelConstruction.closingNote}
-                </p>
-              </div>
-
-              {/* নির্মাণ প্রকল্পে অনুদান প্রদান ও যোগাযোগ */}
-              <div className="rounded-xl border border-gray-200 bg-gray-50/70 p-4 sm:p-5 space-y-3">
-                <h4 className="text-sm sm:text-base font-bold text-gray-900 flex items-center gap-2">
-                  <Coins size={17} className="text-[#016332]" />
-                  <span>{hostelConstruction.donationNoticeTitle}</span>
-                </h4>
-                <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">
-                  {hostelConstruction.donationNoticeParagraph}
-                </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-xs">
-                  <div className="bg-white p-3 rounded-lg border border-gray-200">
-                    <span className="text-gray-500 block font-medium"><EditableText document="copy.ui.OrphanageSection" entry="e1weprxa" fallback={"মোবাইল:"} /></span>
-                    <a
-                      href={`tel:${stegaClean(hostelConstruction.contactDetails.phone)}`}
-                      className="font-bold text-[#8B111A] hover:underline flex items-center gap-1 mt-0.5"
-                    >
-                      <Phone size={12} />
-                      <span>{hostelConstruction.contactDetails.phone}</span>
-                    </a>
-                  </div>
-                  <div className="bg-white p-3 rounded-lg border border-gray-200">
-                    <span className="text-gray-500 block font-medium"><EditableText document="copy.ui.OrphanageSection" entry="e4dmdak" fallback={"ই-মেইল:"} /></span>
-                    <a
-                      href={`mailto:${stegaClean(hostelConstruction.contactDetails.email)}`}
-                      className="font-bold text-[#016332] hover:underline flex items-center gap-1 mt-0.5"
-                    >
-                      <Mail size={12} />
-                      <span>{hostelConstruction.contactDetails.email}</span>
-                    </a>
-                  </div>
-                  <div className="bg-white p-3 rounded-lg border border-gray-200">
-                    <span className="text-gray-500 block font-medium"><EditableText document="copy.ui.OrphanageSection" entry="eakwumu" fallback={"ঠিকানা:"} /></span>
-                    <span className="font-semibold text-gray-800 block mt-0.5 leading-snug">
-                      {hostelConstruction.contactDetails.address}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Important instruction callout */}
-                <div className="bg-amber-50 border border-amber-300/80 rounded-lg p-3 text-xs text-amber-900 flex items-start gap-2">
-                  <Info size={16} className="text-amber-700 shrink-0 mt-0.5" />
-                  <p className="leading-relaxed">
-                    <span className="font-bold"><EditableText document="copy.ui.OrphanageSection" entry="e1thzm9r" fallback={"গুরুত্বপূর্ণ নির্দেশনা:"} /></span> {hostelConstruction.donationInstruction}
-                  </p>
-                </div>
-              </div>
-
-              {/* আসুন, নির্মাণকাজে অংশীদার হই & দোয়া */}
-              <div className="bg-gradient-to-br from-[#016332]/5 to-[#016332]/10 rounded-xl p-4 sm:p-5 border border-[#016332]/25 space-y-3">
-                <h4 className="text-base font-bold text-[#016332]">
-                  {hostelConstruction.callToActionTitle}
-                </h4>
-                <p className="text-xs sm:text-sm text-gray-800 leading-relaxed text-justify">
-                  {hostelConstruction.callToActionText}
-                </p>
-                <div className="bg-white p-3.5 rounded-lg border border-emerald-200 shadow-2xs">
-                  <p className="text-xs sm:text-sm font-bold text-[#8B111A] text-center leading-relaxed"><EditableText document="copy.ui.OrphanageSection" entry="e17o22z" fallback={"“"} />{hostelConstruction.duaText}<EditableText document="copy.ui.OrphanageSection" entry="e11b9acu" fallback={"”"} /></p>
-                </div>
-                <div className="text-right text-xs text-gray-700 pt-2 border-t border-gray-200/80">
-                  <p className="font-semibold">{hostelConstruction.signatory.text}</p>
-                  <p className="font-bold text-[#016332]">{hostelConstruction.signatory.institution}</p>
-                  <p className="text-gray-500">{hostelConstruction.signatory.address}</p>
                 </div>
               </div>
             </div>
@@ -864,6 +693,178 @@ export default function OrphanageSection() {
                   <Coins size={13} />
                   <span><EditableText document="copy.ui.OrphanageSection" entry="ea8i5e6" fallback={"ব্যাংক ও বিকাশ দেখুন"} /></span>
                 </a>
+              </div>
+            </div>
+          </section>
+
+          {/* =================================================================
+              Section: নির্মাণ প্রকল্প — ছাত্রাবাসের চতুর্থ তলা নির্মাণে এগিয়ে আসুন
+          ================================================================= */}
+          <section
+            id={hostelConstruction.id}
+            className="bg-white rounded-2xl border-2 border-[#D9822B] shadow-md overflow-hidden scroll-mt-20 relative"
+          >
+            {/* Top Badge */}
+            <div className="bg-gradient-to-r from-[#750d15] via-[#8B111A] to-[#9e141e] text-white px-5 py-4 border-b-2 border-[#D9822B] flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5">
+                <Building2 size={22} className="text-[#ffd86b]" />
+                <div>
+                  <span className="text-[11px] font-bold tracking-wider text-amber-300 uppercase block">
+                    {hostelConstruction.title}
+                  </span>
+                  <h2 className="text-lg sm:text-xl font-extrabold text-white">
+                    {hostelConstruction.subtitle}
+                  </h2>
+                </div>
+              </div>
+              <span className="text-xs bg-amber-400/20 text-amber-200 border border-amber-300/40 px-3 py-1 rounded-full font-bold">
+                {hostelConstruction.badge}
+              </span>
+            </div>
+
+            <div className="p-5 sm:p-7 space-y-6">
+              {/* Motto Banner */}
+              <div className="bg-gradient-to-r from-[#FAF7F0] via-white to-[#FAF7F0] border-l-4 border-l-[#8B111A] rounded-r-xl p-4 border-y border-r border-gray-200 shadow-2xs">
+                <p className="text-base sm:text-lg font-extrabold text-[#8B111A] tracking-tight"><EditableText document="copy.ui.OrphanageSection" entry="eb0sgmj" fallback={"“"} />{hostelConstruction.motto}<EditableText document="copy.ui.OrphanageSection" entry="ehizyim" fallback={"”"} /></p>
+                <p className="text-xs font-semibold text-gray-600 mt-1">
+                  {hostelConstruction.salam}
+                </p>
+              </div>
+
+              {/* Campus Image */}
+              <div className="relative h-56 sm:h-64 w-full rounded-xl overflow-hidden border border-gray-200 shadow-xs">
+                <Image document="copy.ui.OrphanageSection" entry="evcwqw9"
+                  src="/prodhan_banner.jpeg"
+                  alt="জামিয়া নেছারিয়া ইসলামিয়া মাদরাসার নতুন ছাত্রাবাস ও একাডেমিক ভবন"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 60vw"
+                  className="object-cover"
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent p-3.5 text-white">
+                  <p className="text-xs font-semibold text-amber-200 flex items-center gap-2">
+                    <Building2 size={14} className="text-amber-300" />
+                    <span><EditableText document="copy.ui.OrphanageSection" entry="eojpe69" fallback={"জামিয়া নেছারিয়া ইসলামিয়া মাদরাসার বর্তমান তিনতলা ছাত্রাবাস ভবন (চতুর্থ তলা সম্প্রসারণের অপেক্ষায়)"} /></span>
+                  </p>
+                </div>
+              </div>
+
+              {/* প্রকল্পের পরিচিতি ও প্রয়োজনীয়তা */}
+              <div className="space-y-3">
+                <h3 className="text-base font-bold text-[#016332] flex items-center gap-2 border-b border-gray-100 pb-2">
+                  <span className="w-1.5 h-4 bg-[#016332] rounded-full" />
+                  <span>{hostelConstruction.necessityTitle}</span>
+                </h3>
+                <div className="space-y-2.5 text-sm sm:text-[14.5px] text-gray-800 leading-relaxed text-justify">
+                  {hostelConstruction.necessityParagraphs.map((p, idx) => (
+                    <p key={idx}>{p}</p>
+                  ))}
+                </div>
+              </div>
+
+              {/* নির্মাণকাজ সম্পন্ন করতে আপনাদের সহযোগিতা কাম্য */}
+              <div className="space-y-3 bg-[#FAF7F0]/80 rounded-xl p-4 sm:p-5 border border-[#D9822B]/30">
+                <h3 className="text-base font-bold text-[#8B111A] flex items-center gap-2">
+                  <HeartHandshake size={18} className="text-[#8B111A]" />
+                  <span>{hostelConstruction.appealTitle}</span>
+                </h3>
+                <p className="text-xs sm:text-sm font-bold text-[#016332]">
+                  {hostelConstruction.appealAudience}
+                </p>
+                <p className="text-sm text-gray-800 leading-relaxed text-justify">
+                  {hostelConstruction.appealParagraph}
+                </p>
+              </div>
+
+              {/* যেভাবে সহযোগিতা করতে পারেন */}
+              <div className="space-y-3">
+                <h4 className="text-sm sm:text-base font-bold text-gray-900 flex items-center gap-2">
+                  <span className="w-1.5 h-4 bg-[#8B111A] rounded-full" />
+                  <span>{hostelConstruction.waysToHelpTitle}</span>
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {hostelConstruction.waysToHelp.map((way, idx) => (
+                    <div
+                      key={idx}
+                      className="p-3.5 rounded-xl border border-gray-200 bg-white hover:border-[#016332]/50 hover:bg-[#016332]/[0.02] transition-colors flex items-start gap-2.5 shadow-2xs"
+                    >
+                      <span className="w-5 h-5 rounded-full bg-[#016332]/10 text-[#016332] font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                        {idx + 1}
+                      </span>
+                      <p className="text-xs sm:text-sm text-gray-800 font-medium leading-relaxed">
+                        {way.replace(/^[১-৪]\.\s*/, "")}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs font-semibold text-[#8B111A] bg-[#8B111A]/5 p-2.5 rounded-lg border border-[#8B111A]/15 text-center">
+                  {hostelConstruction.closingNote}
+                </p>
+              </div>
+
+              {/* নির্মাণ প্রকল্পে অনুদান প্রদান ও যোগাযোগ */}
+              <div className="rounded-xl border border-gray-200 bg-gray-50/70 p-4 sm:p-5 space-y-3">
+                <h4 className="text-sm sm:text-base font-bold text-gray-900 flex items-center gap-2">
+                  <Coins size={17} className="text-[#016332]" />
+                  <span>{hostelConstruction.donationNoticeTitle}</span>
+                </h4>
+                <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">
+                  {hostelConstruction.donationNoticeParagraph}
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-xs">
+                  <div className="bg-white p-3 rounded-lg border border-gray-200">
+                    <span className="text-gray-500 block font-medium"><EditableText document="copy.ui.OrphanageSection" entry="e1weprxa" fallback={"মোবাইল:"} /></span>
+                    <a
+                      href={`tel:${stegaClean(hostelConstruction.contactDetails.phone)}`}
+                      className="font-bold text-[#8B111A] hover:underline flex items-center gap-1 mt-0.5"
+                    >
+                      <Phone size={12} />
+                      <span>{hostelConstruction.contactDetails.phone}</span>
+                    </a>
+                  </div>
+                  <div className="bg-white p-3 rounded-lg border border-gray-200">
+                    <span className="text-gray-500 block font-medium"><EditableText document="copy.ui.OrphanageSection" entry="e4dmdak" fallback={"ই-মেইল:"} /></span>
+                    <a
+                      href={`mailto:${stegaClean(hostelConstruction.contactDetails.email)}`}
+                      className="font-bold text-[#016332] hover:underline flex items-center gap-1 mt-0.5"
+                    >
+                      <Mail size={12} />
+                      <span>{hostelConstruction.contactDetails.email}</span>
+                    </a>
+                  </div>
+                  <div className="bg-white p-3 rounded-lg border border-gray-200">
+                    <span className="text-gray-500 block font-medium"><EditableText document="copy.ui.OrphanageSection" entry="eakwumu" fallback={"ঠিকানা:"} /></span>
+                    <span className="font-semibold text-gray-800 block mt-0.5 leading-snug">
+                      {hostelConstruction.contactDetails.address}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Important instruction callout */}
+                <div className="bg-amber-50 border border-amber-300/80 rounded-lg p-3 text-xs text-amber-900 flex items-start gap-2">
+                  <Info size={16} className="text-amber-700 shrink-0 mt-0.5" />
+                  <p className="leading-relaxed">
+                    <span className="font-bold"><EditableText document="copy.ui.OrphanageSection" entry="e1thzm9r" fallback={"গুরুত্বপূর্ণ নির্দেশনা:"} /></span> {hostelConstruction.donationInstruction}
+                  </p>
+                </div>
+              </div>
+
+              {/* আসুন, নির্মাণকাজে অংশীদার হই & দোয়া */}
+              <div className="bg-gradient-to-br from-[#016332]/5 to-[#016332]/10 rounded-xl p-4 sm:p-5 border border-[#016332]/25 space-y-3">
+                <h4 className="text-base font-bold text-[#016332]">
+                  {hostelConstruction.callToActionTitle}
+                </h4>
+                <p className="text-xs sm:text-sm text-gray-800 leading-relaxed text-justify">
+                  {hostelConstruction.callToActionText}
+                </p>
+                <div className="bg-white p-3.5 rounded-lg border border-emerald-200 shadow-2xs">
+                  <p className="text-xs sm:text-sm font-bold text-[#8B111A] text-center leading-relaxed"><EditableText document="copy.ui.OrphanageSection" entry="e17o22z" fallback={"“"} />{hostelConstruction.duaText}<EditableText document="copy.ui.OrphanageSection" entry="e11b9acu" fallback={"”"} /></p>
+                </div>
+                <div className="text-right text-xs text-gray-700 pt-2 border-t border-gray-200/80">
+                  <p className="font-semibold">{hostelConstruction.signatory.text}</p>
+                  <p className="font-bold text-[#016332]">{hostelConstruction.signatory.institution}</p>
+                  <p className="text-gray-500">{hostelConstruction.signatory.address}</p>
+                </div>
               </div>
             </div>
           </section>

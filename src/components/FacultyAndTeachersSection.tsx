@@ -125,7 +125,7 @@ export default function FacultyAndTeachersSection({
   // Build unified teacher and staff list
   const allTeachersList = useMemo<TeacherItem[]>(() => {
     if (initialTeachers !== undefined) {
-      return initialTeachers.map((t, idx) => {
+      const mapped = initialTeachers.map((t, idx) => {
         let cat = stegaClean(t.department || "kitab");
         if (cat === "officers") cat = "other";
         let title = "মুহাদ্দিস ও কিতাব বিভাগ";
@@ -152,9 +152,31 @@ export default function FacultyAndTeachersSection({
           photo: t.photo || "/avatar-scholar.svg",
         };
       });
+      const mukhtarIdx = mapped.findIndex((t) => stegaClean(t.name).includes("মুখতার হোসাইন"));
+      if (mukhtarIdx > 0) {
+        const [mukhtar] = mapped.splice(mukhtarIdx, 1);
+        mapped.unshift(mukhtar);
+      }
+      return mapped;
     }
 
     const list: TeacherItem[] = [];
+
+    // Kitab Department first so মুফতি মুখতার হোসাইন is at the very top
+    faculty.departments[0].teachers.forEach((t) => {
+      list.push({
+        id: `kitab-${t.id}`,
+        serial: t.serial,
+        name: t.name,
+        designation: t.designation,
+        district: t.district,
+        mobile: t.mobile,
+        note: t.note,
+        category: "kitab",
+        categoryTitle: "মুহাদ্দিস ও কিতাব বিভাগ",
+        photo: "/avatar-scholar.svg",
+      });
+    });
 
     // Bukhari Scholars
     bukhariScholars.scholars.forEach((b) => {
@@ -167,22 +189,6 @@ export default function FacultyAndTeachersSection({
         honor: b.honor,
         category: "bukhari",
         categoryTitle: "বুখারীর বিশেষ দরস",
-        photo: "/avatar-scholar.svg",
-      });
-    });
-
-    // Kitab Department
-    faculty.departments[0].teachers.forEach((t) => {
-      list.push({
-        id: `kitab-${t.id}`,
-        serial: t.serial,
-        name: t.name,
-        designation: t.designation,
-        district: t.district,
-        mobile: t.mobile,
-        note: t.note,
-        category: "kitab",
-        categoryTitle: "মুহাদ্দিস ও কিতাব বিভাগ",
         photo: "/avatar-scholar.svg",
       });
     });
@@ -313,11 +319,11 @@ export default function FacultyAndTeachersSection({
             <span className="text-gray-200"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e13ngiv" fallback={"বুখারীর দরস"} /></span>
           </div>
           <div className="bg-black/20 backdrop-blur-xs p-3 rounded-xl border border-white/10 text-center">
-            <span className="text-2xl font-black text-amber-300 block"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="ev5kbz0" fallback={"১৪"} /></span>
+            <span className="text-2xl font-black text-amber-300 block"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="ev5kbz0" fallback={"১২"} /></span>
             <span className="text-gray-200"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e250e2p" fallback={"মুহাদ্দিস ও কিতাব"} /></span>
           </div>
           <div className="bg-black/20 backdrop-blur-xs p-3 rounded-xl border border-white/10 text-center">
-            <span className="text-2xl font-black text-amber-300 block"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="er7n80x" fallback={"১১"} /></span>
+            <span className="text-2xl font-black text-amber-300 block"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="er7n80x" fallback={"৭"} /></span>
             <span className="text-gray-200"><EditableText document="copy.ui.FacultyAndTeachersSection" entry="e10jkka1" fallback={"হিফজ ও মক্তব"} /></span>
           </div>
           <div className="bg-black/20 backdrop-blur-xs p-3 rounded-xl border border-white/10 text-center">
@@ -356,12 +362,12 @@ export default function FacultyAndTeachersSection({
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-1 no-scrollbar text-xs font-semibold">
           {[
             { id: "all", label: "সকল শিক্ষক ও স্টাফ", count: allTeachersList.length },
-            { id: "bukhari", label: "বুখারীর বিশেষ দরস", count: 3 },
-            { id: "kitab", label: "মুহাদ্দিস ও কিতাব বিভাগ", count: 14 },
-            { id: "hifz", label: "হিফজ ও নাজেরা", count: 8 },
-            { id: "maktab", label: "মক্তব বিভাগ", count: 3 },
-            { id: "other", label: "কর্মকর্তা ও শিক্ষক", count: 4 },
-            { id: "staff", label: "স্টাফবৃন্দ", count: 4 },
+            { id: "bukhari", label: "বুখারীর বিশেষ দরস", count: allTeachersList.filter((t) => t.category === "bukhari").length },
+            { id: "kitab", label: "মুহাদ্দিস ও কিতাব বিভাগ", count: allTeachersList.filter((t) => t.category === "kitab").length },
+            { id: "hifz", label: "হিফজ ও নাজেরা", count: allTeachersList.filter((t) => t.category === "hifz").length },
+            { id: "maktab", label: "মক্তব বিভাগ", count: allTeachersList.filter((t) => t.category === "maktab").length },
+            { id: "other", label: "কর্মকর্তা ও শিক্ষক", count: allTeachersList.filter((t) => t.category === "other").length },
+            { id: "staff", label: "স্টাফবৃন্দ", count: allTeachersList.filter((t) => t.category === "staff").length },
           ].map((tab) => {
             const isActive = activeCategory === tab.id;
             return (

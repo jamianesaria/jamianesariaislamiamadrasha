@@ -53,7 +53,13 @@ export default function ManagingCommitteeSection({
   const [selectedMemberRecord, setSelectedMember] = useState<CommitteeMemberItem | null>(null);
 
   const { header, landDonors, managingCommittee, pledge } = committeeAndFacultyData;
-  const currentMembers: CommitteeMemberItem[] = (initialMembers !== undefined ? initialMembers.filter((member) => !member.isLandDonor) : managingCommittee.members).map((member, index) => ({ ...member, serial: String(member.serial || index + 1), mobile: member.mobile || "" }));
+  const rawMembers: { id: string | number; _id?: string; _type?: string; serial?: string | number; name: string; designation: string; mobile?: string; photo?: string; address?: string }[] = initialMembers !== undefined ? [...initialMembers.filter((member) => !member.isLandDonor)] : [...managingCommittee.members];
+  const mukhtarMemberIdx = rawMembers.findIndex((member) => stegaClean(member.name || "").includes("মুখতার হোসাইন"));
+  if (mukhtarMemberIdx > 0) {
+    const [mukhtarMember] = rawMembers.splice(mukhtarMemberIdx, 1);
+    rawMembers.unshift(mukhtarMember);
+  }
+  const currentMembers: CommitteeMemberItem[] = rawMembers.map((member, index) => ({ ...member, serial: String(index + 1), mobile: member.mobile || "" }));
   const currentDonors: { id: string | number; name: string; role: string; badge: string; contribution: string; photo?: string; _id?: string; _type?: string }[] = initialMembers !== undefined ? initialMembers.filter((member) => member.isLandDonor).map((member) => ({ ...member, role: member.designation, badge: "জমিদাতা", contribution: member.donorContribution || "" })) : landDonors.donors;
 
   const selectedMember = currentMembers.find((member) => member.id === selectedMemberRecord?.id) || null;

@@ -274,25 +274,21 @@ export default async function HomePrimarySection({
               </div>
 
               <div className="divide-y divide-gray-100 text-xs sm:text-sm">
+                {/* ১. প্রতিষ্ঠাকাল */}
                 <div className="grid grid-cols-12 px-4 py-3 bg-white hover:bg-[#FAF7F0]/50 transition-colors">
                   <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e1tm18qj" fallback={"প্রতিষ্ঠাকাল"} /></span>
                   <span className="col-span-8 font-bold text-gray-900"><EditableText document="copy.ui.HomePrimarySection" entry="ezgrggs" fallback={": "} />{atAGlance.established}
                   </span>
                 </div>
 
+                {/* ২. জমিদাতাগন (প্রতিষ্ঠাকালের ঠিক নিচে) */}
                 <div className="grid grid-cols-12 px-4 py-3 bg-[#F9FAF8] hover:bg-[#FAF7F0]/50 transition-colors">
-                  <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="el2ufwt" fallback={"মুতাওয়াল্লী"} /></span>
-                  <span className="col-span-8 font-bold text-gray-900"><EditableText document="copy.ui.HomePrimarySection" entry="e1oq8e6q" fallback={": "} />{atAGlance.mutawalli}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-12 px-4 py-3 bg-white hover:bg-[#FAF7F0]/50 transition-colors">
                   <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e1i3k9cx" fallback={"জমিদাতাগন"} /></span>
                   <div className="col-span-8 font-semibold text-gray-900 space-y-1">
                     {atAGlance.landDonors.map((donor, idx) => (
                       <div
                         key={idx}
-                        className="bg-[#FAF7F0] border border-gray-200/80 px-2.5 py-0.5 rounded text-xs"
+                        className="bg-white border border-gray-200/80 px-2.5 py-0.5 rounded text-xs"
                       >
                         {donor}
                       </div>
@@ -300,24 +296,49 @@ export default async function HomePrimarySection({
                   </div>
                 </div>
 
+                {/* ৩. মুতাওয়াল্লী */}
+                <div className="grid grid-cols-12 px-4 py-3 bg-white hover:bg-[#FAF7F0]/50 transition-colors">
+                  <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="el2ufwt" fallback={"মুতাওয়াল্লী"} /></span>
+                  <span className="col-span-8 font-bold text-gray-900"><EditableText document="copy.ui.HomePrimarySection" entry="e1oq8e6q" fallback={": "} />{atAGlance.mutawalli}
+                  </span>
+                </div>
+
+                {/* ৪. সভাপতি */}
                 <div className="grid grid-cols-12 px-4 py-3 bg-[#F9FAF8] hover:bg-[#FAF7F0]/50 transition-colors">
                   <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="ev78mb9" fallback={"সভাপতি"} /></span>
                   <span className="col-span-8 font-bold text-gray-900"><EditableText document="copy.ui.HomePrimarySection" entry="efuzlg1" fallback={": "} />{atAGlance.president}
                   </span>
                 </div>
 
+                {/* ৫. মুহতামিম */}
                 <div className="grid grid-cols-12 px-4 py-3 bg-white hover:bg-[#FAF7F0]/50 transition-colors">
                   <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e42q6vk" fallback={"মুহতামিম"} /></span>
                   <span className="col-span-8 font-bold text-[#016332]"><EditableText document="copy.ui.HomePrimarySection" entry="evttax9" fallback={": "} />{atAGlance.muhtamim}
                   </span>
                 </div>
 
+                {/* ৬. শিক্ষক (শিক্ষা কার্যক্রমের ঠিক উপরে) */}
+                <div className="grid grid-cols-12 px-4 py-3 bg-[#F9FAF8] hover:bg-[#FAF7F0]/50 transition-colors">
+                  <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="eglance_teachers" fallback={"শিক্ষক"} /></span>
+                  <span className="col-span-8 font-bold text-gray-900"><EditableText document="copy.ui.HomePrimarySection" entry="ecolon_teachers" fallback={": "} />{atAGlance.teachers || "৩২ জন"}
+                  </span>
+                </div>
+
+                {/* ৭. শিক্ষার্থী (শিক্ষা কার্যক্রমের ঠিক উপরে) */}
+                <div className="grid grid-cols-12 px-4 py-3 bg-white hover:bg-[#FAF7F0]/50 transition-colors">
+                  <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="eglance_students" fallback={"শিক্ষার্থী"} /></span>
+                  <span className="col-span-8 font-bold text-[#8B111A]"><EditableText document="copy.ui.HomePrimarySection" entry="ecolon_students" fallback={": "} />{atAGlance.students || "৫০০ জন"}
+                  </span>
+                </div>
+
+                {/* ৮. শিক্ষা কার্যক্রম */}
                 <div className="grid grid-cols-12 px-4 py-3 bg-[#F9FAF8] hover:bg-[#FAF7F0]/50 transition-colors">
                   <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e12q7x5k" fallback={"শিক্ষা কার্যক্রম"} /></span>
                   <span className="col-span-8 font-semibold text-gray-900 leading-snug"><EditableText document="copy.ui.HomePrimarySection" entry="ehivn56" fallback={": "} />{atAGlance.academicPrograms}
                   </span>
                 </div>
 
+                {/* ৯. নিবন্ধন নম্বর */}
                 <div className="grid grid-cols-12 px-4 py-3 bg-white hover:bg-[#FAF7F0]/50 transition-colors">
                   <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e116wvzk" fallback={"নিবন্ধন নম্বর"} /></span>
                   <div className="col-span-8 text-xs font-semibold text-gray-800 space-y-1">
@@ -326,6 +347,7 @@ export default async function HomePrimarySection({
                   </div>
                 </div>
 
+                {/* ১০. ঠিকানা ও ফোন নম্বর */}
                 <div className="grid grid-cols-12 px-4 py-3 bg-[#F9FAF8] hover:bg-[#FAF7F0]/50 transition-colors">
                   <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e1d7lh4n" fallback={"ঠিকানা"} /></span>
                   <span className="col-span-8 font-medium text-gray-800 leading-snug whitespace-pre-line">
@@ -742,6 +764,9 @@ export default async function HomePrimarySection({
                   <p className="text-sm sm:text-[15.5px] text-gray-700 leading-relaxed text-justify">
                     {orphanageSupport.description}
                   </p>
+                  <p className="inline-flex max-w-full rounded-full border border-amber-300/70 bg-amber-50 px-3 py-1 text-xs font-bold text-[#8B111A]">
+                    {orphanageSupport.registration}
+                  </p>
                 </div>
 
                 {/* বোতাম: এতিমখানার পরিচিতি & সহযোগিতার উপায় */}
@@ -810,6 +835,7 @@ export default async function HomePrimarySection({
 
                 {/* Quick Bank & bKash info */}
                 <div className="mt-3.5 pt-3 border-t border-gray-200/90 space-y-1.5 text-xs">
+                  <h5 className="pb-1 font-bold text-[#016332]">{orphanageSupport.paymentTitle}</h5>
                   <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-md border border-pink-200">
                     <span className="font-bold text-pink-700"><EditableText document="copy.ui.HomePrimarySection" entry="e1j8zhu" fallback={"বিকাশ (bKash):"} /></span>
                     <span className="font-bold text-gray-900"><EditableText document="copy.ui.HomePrimarySection" entry="ect6l3a" fallback={"+8801716296379"} /></span>
@@ -836,6 +862,31 @@ export default async function HomePrimarySection({
                 </div>
               </div>
             </div>
+
+            {/* Full client appeal stays in the existing card; details keep the home page compact. */}
+            <details className="group border-t border-gray-200 bg-[#FAF7F0]/50">
+              <summary className="flex cursor-pointer items-center justify-between gap-3 px-5 py-3.5 text-sm font-bold text-[#016332] marker:content-none sm:px-7 [&::-webkit-details-marker]:hidden">
+                <span>{orphanageSupport.appealTitle}</span>
+                <span aria-hidden="true" className="text-lg leading-none transition-transform group-open:rotate-45">+</span>
+              </summary>
+              <div className="grid gap-5 border-t border-gray-200 px-5 py-5 text-sm text-gray-700 sm:px-7 lg:grid-cols-2">
+                <div>
+                  <h4 className="mb-3 font-bold text-[#016332]">{orphanageSupport.waysTitle}</h4>
+                  <ol className="list-decimal space-y-2 pl-6 marker:font-bold marker:text-[#8B111A]">
+                    {orphanageSupport.supportWays.map((way, index) => <li key={index}>{way}</li>)}
+                  </ol>
+                  <p className="mt-4 leading-relaxed">{orphanageSupport.impact}</p>
+                </div>
+                <div className="rounded-lg border border-[#D9822B]/30 bg-white p-4">
+                  <h4 className="mb-3 font-bold text-[#016332]">{orphanageSupport.closingTitle}</h4>
+                  <p className="leading-relaxed">{orphanageSupport.closingDescription}</p>
+                  <p className="mt-3 leading-relaxed">{orphanageSupport.closingPrayer}</p>
+                  <Link href={orphanageSupport.buttons[1].href} className="mt-4 inline-flex items-center gap-1.5 font-bold text-[#8B111A] hover:underline">
+                    {orphanageSupport.buttons[1].label}<ArrowRight size={14} />
+                  </Link>
+                </div>
+              </div>
+            </details>
           </div>
 
           {/* ===================================================================

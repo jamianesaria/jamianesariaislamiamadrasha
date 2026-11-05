@@ -150,6 +150,116 @@ export const homepageType = defineType({
       type: "text",
       rows: 3,
     }),
+    defineField({
+      name: "atAGlanceEstablished",
+      title: "এক নজরে: প্রতিষ্ঠাকাল (Established Year/String)",
+      type: "string",
+      initialValue: "১৯৬৯ খ্রিষ্টাব্দ (১৩৭৬ বাংলা | ১৩৮৮ হিজরি)",
+    }),
+    defineField({
+      name: "atAGlanceLandDonors",
+      title: "এক নজরে: জমিদাতাগণ (Land Donors List)",
+      type: "array",
+      of: [{ type: "string" }],
+      initialValue: ["১। মরহুম চান মিয়া সাহেব", "২। আমিনা খাতুন", "৩। সফর বানু"],
+    }),
+    defineField({
+      name: "atAGlanceMutawalli",
+      title: "এক নজরে: মুতাওয়াল্লী (Mutawalli Name)",
+      type: "string",
+      initialValue: "মনিরুজ্জামান মনু",
+    }),
+    defineField({
+      name: "atAGlancePresident",
+      title: "এক নজরে: সভাপতি (President Name)",
+      type: "string",
+      initialValue: "কবির হোসেন শিমুল",
+    }),
+    defineField({
+      name: "atAGlanceTeachers",
+      title: "এক নজরে: শিক্ষক সংখ্যা (Teachers Count)",
+      type: "string",
+      initialValue: "৩২ জন",
+    }),
+    defineField({
+      name: "atAGlanceStudents",
+      title: "এক নজরে: শিক্ষার্থী সংখ্যা (Students Count)",
+      type: "string",
+      initialValue: "৫০০ জন",
+    }),
+    defineField({
+      name: "atAGlanceAcademicPrograms",
+      title: "এক নজরে: শিক্ষা কার্যক্রম (Academic Programs)",
+      type: "string",
+      initialValue: "মক্তব, হিফজ, হিফজ রিভিশন, কিতাব ও মাদানি নেসাব বিভাগ",
+    }),
+    defineField({
+      name: "atAGlanceAddress",
+      title: "এক নজরে: ঠিকানা ও ফোন নম্বর (Address & Phone)",
+      type: "text",
+      rows: 3,
+      initialValue: "মরকুন, তিস্তা গেট–আনোয়ার সিল্ক মিলস সংলগ্ন, টঙ্গী, গাজীপুর, বাংলাদেশ।\nফোন: 01716296379",
+    }),
+    defineField({
+      name: "missionMainGoal",
+      title: "লক্ষ্য ও উদ্দেশ্য: মূল লক্ষ্য (Main Goal)",
+      type: "text",
+      rows: 2,
+      initialValue:
+        "জামিয়া নেছারিয়া ইসলামিয়া মাদরাসা ও এতিমখানার মূল লক্ষ্য হলো আল্লাহ তাআলার সন্তুষ্টি অর্জন এবং কুরআন-সুন্নাহর আলোকে শিক্ষার্থীদের জীবন গঠন করা।",
+    }),
+    defineField({
+      name: "missionObjectives",
+      title: "লক্ষ্য ও উদ্দেশ্য: প্রধান উদ্দেশ্যসমূহ (Objectives List)",
+      type: "array",
+      of: [{ type: "string" }],
+      initialValue: [
+        "বিশুদ্ধ কুরআন-সুন্নাহভিত্তিক ইসলামী শিক্ষা প্রদান।",
+        "ইলম, আমল ও আখলাকের সমন্বয়ে শিক্ষার্থী গড়ে তোলা।",
+        "যোগ্য আলেম, দাঈ ও আদর্শ মানুষ তৈরি করা।",
+      ],
+    }),
+    defineField({
+      name: "madrasaFeatureItems",
+      title: "মাদরাসার বৈশিষ্ট্য (Madrasa Features Cards)",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "object",
+          fields: [
+            defineField({ name: "id", title: "আইডি (Icon Key)", type: "string" }),
+            defineField({ name: "title", title: "শিরোনাম (Title)", type: "string" }),
+            defineField({ name: "description", title: "বর্ণনা (Description)", type: "text", rows: 3 }),
+          ],
+        }),
+      ],
+      initialValue: [
+        {
+          id: "teachers",
+          title: "অভিজ্ঞ ও যোগ্য শিক্ষকমণ্ডলী",
+          description:
+            "দেশ-বিদেশের উচ্চতর শিক্ষাপ্রতিষ্ঠান থেকে সনদপ্রাপ্ত বিজ্ঞ ও অভিজ্ঞ শিক্ষকমণ্ডলীর মাধ্যমে পাঠদানের ব্যবস্থা।",
+        },
+        {
+          id: "supervision",
+          title: "বিশিষ্ট আলেম-উলামার তত্ত্বাবধান",
+          description:
+            "দেশবরেণ্য শিক্ষাবিদ ও বুজুর্গ ওলামায়ে কেরামের সার্বিক তত্ত্বাবধান, পরামর্শ ও দিকনির্দেশনায় পরিচালিত হওয়ার প্রত্যয়।",
+        },
+        {
+          id: "education-initiative",
+          title: "শিক্ষার মানোন্নয়নে বিশেষ উদ্যোগ",
+          description:
+            "শিক্ষার মান ক্রমাগত উন্নয়নের লক্ষ্যে সার্বক্ষণিক তদারকি, সাপ্তাহিক ও মাসিক পরীক্ষা, বক্তৃতা প্রশিক্ষণ, পাঠাগারের উদ্যোগে নিয়মিত বই-পুস্তক বিতরণ এবং বাংলা ও আরবি ত্রৈমাসিক দেয়ালিকা প্রকাশসহ সৃজনশীল বিভিন্ন কার্যক্রম গ্রহণ।",
+        },
+        {
+          id: "library",
+          title: "সমৃদ্ধ গ্রন্থাগার",
+          description:
+            "শিক্ষার্থীদের জ্ঞানচর্চা ও অধ্যয়নের সুযোগ সম্প্রসারণের লক্ষ্যে দেশি-বিদেশি বিভিন্ন বিষয়ের বিপুলসংখ্যক কিতাব ও বইসমৃদ্ধ গ্রন্থাগারের ব্যবস্থা।",
+        },
+      ],
+    }),
   ],
   preview: {
     prepare() {
