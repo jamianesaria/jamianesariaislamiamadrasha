@@ -1,5 +1,6 @@
 import RelatedPageLinks from "@/components/RelatedPageLinks";
 import PageSeo from "@/components/PageSeo";
+import PageIdentityFrame from "@/components/PageIdentityFrame";
 import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
@@ -35,6 +36,7 @@ async function AdmissionPage() {
       {/* 4. Main Admission Information Content Area */}
       <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 w-full flex-1">
         <PageSeo route="/admission" />
+        <PageIdentityFrame route="/admission" />
         <AdmissionInfoSection initialAdmissionData={admissionData} />
         <RelatedPageLinks route="/admission" />
       </main>

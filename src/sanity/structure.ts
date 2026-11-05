@@ -23,6 +23,16 @@ export const structure: StructureResolver = (S) =>
         )
       ),
 
+      S.listItem().id("pageFrames").title("পাতার উপরের পরিচিতি ফ্রেম (Page Frames)").child(
+        S.list().id("pageFramePages").title("পাতাভিত্তিক পরিচিতি ফ্রেম").items(
+          ["/committee", "/teachers", "/admission", "/results/academic", "/notices", "/orphanage", "/badri-kafila", "/gallery", "/blog", "/contact"].map((route) =>
+            S.listItem().id(`frame-${route.replaceAll("/", "-")}`).title(seoRoutes[route].label).child(
+              S.document().schemaType("pageSeo").documentId(pageSeoDocumentId(route)).title(`${seoRoutes[route].label} — পরিচিতি ফ্রেম`)
+            )
+          )
+        )
+      ),
+
       // 2. Singleton: Homepage Content
       S.listItem()
         .id("homepage")

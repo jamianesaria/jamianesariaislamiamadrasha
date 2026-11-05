@@ -60,3 +60,13 @@ The completed live visual audit passed 26/26 views, 26 private draft checks, 26 
 - The full live draft test passed authenticated access, the rendered field edit and image source annotation, refresh persistence, isolation from public visitors and preview exit. An initial navigation timeout did not recur in a focused check and the successful full retry. Only the unchanged test draft and its own preview secret were removed.
 - A live browser-response scan checked 173 HTML, JavaScript and component responses across the homepage, contact, blog and Studio; the configured server token was absent from all checked responses.
 - No DNS or domain-registration changes were made. The owner's personal Studio session and role-specific permissions still require their own sign-in, as described above.
+
+## Main navigation identity frames (2026-11-06)
+
+The ten top-level pages `/committee`, `/teachers`, `/admission`, `/results/academic`, `/notices`, `/orphanage`, `/badri-kafila`, `/gallery`, `/blog`, and `/contact` now show the same green-ribbon identity frame style used on About and Academics. Each page has its own title, introduction, highlight, detail line, badges, and optional image. The existing content sections below the frame remain in place.
+
+**Where to edit:** Sanity Studio → **পাতার উপরের পরিচিতি ফ্রেম (Page Frames)** → choose a page. This shortcut opens that page's existing `pageSeo` document. `frameEnabled` hides the frame; `frameImage` overrides the shared site logo; an empty `frameBadges` array removes all badges. All ten published `pageSeo` documents were populated additively with initial frame content. No new document type was created.
+
+**Where the code lives:** `src/components/PageIdentityFrame.tsx` renders the shared frame; `src/data/pageFrameDefaults.ts` supplies fallback copy; `src/sanity/schemaTypes/pageSeo.ts` defines the editable fields; `src/lib/seo.ts` projects them; `src/sanity/structure.ts` provides the Studio shortcut. The ten route files place the frame after `PageSeo`.
+
+**Verification:** TypeScript, focused lint, and the production build passed. All ten routes rendered the frame at desktop and phone widths with no horizontal overflow. The change has not been pushed or deployed as part of this work.

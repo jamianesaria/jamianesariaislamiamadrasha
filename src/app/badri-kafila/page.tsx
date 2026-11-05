@@ -1,4 +1,5 @@
 import PageSeo from "@/components/PageSeo";
+import PageIdentityFrame from "@/components/PageIdentityFrame";
 import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
@@ -33,6 +34,7 @@ async function BadriKafilaPage() {
       {/* 4. Main 313 Badri Kafila Content */}
       <main className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-10 w-full flex-1">
         <PageSeo route="/badri-kafila" />
+        <PageIdentityFrame route="/badri-kafila" />
         <BadriKafilaSection />
       </main>
 

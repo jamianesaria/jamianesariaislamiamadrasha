@@ -1,4 +1,5 @@
 import PageSeo from "@/components/PageSeo";
+import PageIdentityFrame from "@/components/PageIdentityFrame";
 import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
@@ -27,6 +28,7 @@ function GalleryPage() {
       {/* 4. Main Gallery Content Area */}
       <main className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-10 w-full flex-1">
         <PageSeo route="/gallery" />
+        <PageIdentityFrame route="/gallery" />
         <MainGallerySection />
       </main>
 

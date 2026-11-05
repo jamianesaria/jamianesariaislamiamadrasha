@@ -1,5 +1,6 @@
 import RelatedPageLinks from "@/components/RelatedPageLinks";
 import PageSeo from "@/components/PageSeo";
+import PageIdentityFrame from "@/components/PageIdentityFrame";
 import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
@@ -29,6 +30,7 @@ async function TeachersPage() {
 
       <main className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 w-full flex-1">
         <PageSeo route="/teachers" />
+        <PageIdentityFrame route="/teachers" />
         <FacultyAndTeachersSection initialTeachers={teachers} initialSettings={siteData} />
         <RelatedPageLinks route="/teachers" />
       </main>

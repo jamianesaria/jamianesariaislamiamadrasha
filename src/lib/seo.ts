@@ -10,12 +10,13 @@ export interface PageSeoRecord {
   _id?: string; _type?: string;
   route: string; seoTitle?: string; seoDescription?: string; breadcrumbLabel?: string;
   pageHeading?: string; seoImageUrl?: string; noIndex?: boolean; _updatedAt?: string;
+  frameEnabled?: boolean; frameEyebrow?: string; frameTitle?: string; frameSubtitle?: string; frameMeta?: string; frameDetail?: string; frameBadges?: string[]; frameImageUrl?: string; frameImageAlt?: string; frameBackLabel?: string; frameBackUrl?: string;
   backToBlogLabel?: string; articleAuthorLabel?: string; articleDateLabel?: string;
   relatedLinksTitle?: string; relatedLinks?: PageLink[];
 }
 export const getPageSeoRecords = cache(async (): Promise<PageSeoRecord[]> => {
   try {
-    return await fetchSiteQuery<PageSeoRecord[]>('*[_type == "pageSeo" && !defined(archivedAt)]{_id,_type,route,seoTitle,seoDescription,breadcrumbLabel,pageHeading,noIndex,backToBlogLabel,articleAuthorLabel,articleDateLabel,relatedLinksTitle,relatedLinks[]{_key,label,href},_updatedAt,"seoImageUrl":seoImage.asset->url}') || [];
+    return await fetchSiteQuery<PageSeoRecord[]>('*[_type == "pageSeo" && !defined(archivedAt)]{_id,_type,route,seoTitle,seoDescription,breadcrumbLabel,pageHeading,noIndex,frameEnabled,frameEyebrow,frameTitle,frameSubtitle,frameMeta,frameDetail,frameBadges,frameImageAlt,frameBackLabel,frameBackUrl,"frameImageUrl":frameImage.asset->url,backToBlogLabel,articleAuthorLabel,articleDateLabel,relatedLinksTitle,relatedLinks[]{_key,label,href},_updatedAt,"seoImageUrl":seoImage.asset->url}') || [];
   } catch (error) { unstable_rethrow(error); return []; }
 });
 export const getSeoSettings = cache(async () => {

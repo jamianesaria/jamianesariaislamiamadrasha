@@ -1,4 +1,5 @@
 import PageSeo from "@/components/PageSeo";
+import PageIdentityFrame from "@/components/PageIdentityFrame";
 import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
 import NavigationBar from "@/components/NavigationBar";
@@ -28,6 +29,7 @@ async function AcademicResultPage() {
       {/* 4. Main Academic Result Content Area */}
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-6 w-full flex-1">
         <PageSeo route="/results/academic" />
+        <PageIdentityFrame route="/results/academic" />
         <PublicResultsSection records={records} />
       </main>
 
