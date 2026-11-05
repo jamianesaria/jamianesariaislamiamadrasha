@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { stegaClean } from "@sanity/client/stega";
 
 import { eventListTableData as _fallback_eventListTableData, EventItem } from "@/data/siteData";
 import { Calendar, Eye, MapPin, X, Clock } from "lucide-react";
@@ -156,6 +157,10 @@ export default function EventListTable({ records }: { records?: EventItem[] }) {
                 <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">
                   {selectedEvent.description}
                 </p>
+              )}
+
+              {selectedEvent.pdfUrl && (
+                <a href={stegaClean(selectedEvent.pdfUrl)} target="_blank" rel="noopener noreferrer" className="inline-flex rounded bg-[#8B111A] px-3 py-2 text-xs font-bold text-white">PDF দেখুন / ডাউনলোড</a>
               )}
 
               <div className="pt-2 text-right">

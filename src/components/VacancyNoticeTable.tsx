@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { stegaClean } from "@sanity/client/stega";
 
 import { siteSettings as _fallback_siteSettings, vacancyListTableData as _fallback_vacancyListTableData, VacancyItem } from "@/data/siteData";
 import { Briefcase, Calendar, MapPin, X, FileText, Download } from "lucide-react";
@@ -160,14 +161,16 @@ export default function VacancyNoticeTable({ records }: { records?: VacancyItem[
               )}
 
               <div className="pt-3 flex items-center justify-between border-t border-gray-100">
-                <a
-                  href={selectedVacancy.pdfUrl || "#"}
+                {selectedVacancy.pdfUrl && <a
+                  href={stegaClean(selectedVacancy.pdfUrl)}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   download
                   className="inline-flex items-center gap-1.5 bg-[#8B111A] hover:bg-[#6E0B13] text-white text-xs px-3 py-1.5 rounded transition-colors"
                 >
                   <Download size={13} />
                   <span><EditableText document="copy.ui.VacancyNoticeTable" entry="eqsp92w" fallback={"সার্কুলার ডাউনলোড"} /></span>
-                </a>
+                </a>}
 
                 <button
                   onClick={() => setSelectedVacancy(null)}

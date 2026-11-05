@@ -1,11 +1,10 @@
-import { breakingNews as _fallback_breakingNews } from "@/data/siteData";
-import { getEditableData, EditableText } from "@/content/server";
+import { EditableText } from "@/content/server";
+import { getNewsTicker } from "@/sanity/lib/queries";
 
 
-export default async function BreakingNewsBar({ newsItems }: { newsItems?: string[] }) {
-  const breakingNews = await getEditableData("copy.data.breakingNews", _fallback_breakingNews);
-
-  const items = newsItems && newsItems.length > 0 ? newsItems : breakingNews;
+export default async function BreakingNewsBar(_props: { newsItems?: string[] }) {
+  const items = (await getNewsTicker()).filter((item) => item.trim());
+  if (!items.length) return null;
   return (
     <div className="w-full bg-[#FAF7F0] border-b border-[#e5dfd0] shadow-2xs">
       <div className="max-w-7xl mx-auto flex items-center overflow-hidden">

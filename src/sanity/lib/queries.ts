@@ -210,12 +210,8 @@ export const newsTickerQuery = groq`*[_type == "homepage"][0]{
 export async function getNewsTicker(): Promise<string[]> {
   try {
     const data = await fetchSiteQuery<HomepageDocument | null>(newsTickerQuery, {});
-    if (data && Array.isArray(data.newsTicker) && data.newsTicker.length > 0) {
-      return data.newsTicker;
-    }
-    if (data?.heroSubheadline) {
-      return [data.heroSubheadline];
-    }
+    // An empty or removed list means the editor intentionally cleared the ticker.
+    if (data) return Array.isArray(data.newsTicker) ? data.newsTicker : [];
   } catch (err) {
     unstable_rethrow(err);
     console.warn("Using fallback news ticker: Sanity is unavailable.");
@@ -477,7 +473,7 @@ export async function getBadriKafila() {
 }
 
 // 9. Class Routines Query (Projected)
-export const classRoutinesQuery = groq`*[_type == "classRoutine" && !defined(archivedAt)] | order(academicYear desc) {
+export const classRoutinesQuery = groq`*[_type == "classRoutine" && !defined(archivedAt)] | order(academicYear desc, _updatedAt desc) {
   _id,
   title,
   className,
@@ -500,7 +496,7 @@ export async function getClassRoutines() {
 }
 
 // 10. Exam Routines Query (Projected)
-export const examRoutinesQuery = groq`*[_type == "examRoutine" && !defined(archivedAt)] | order(academicYear desc) {
+export const examRoutinesQuery = groq`*[_type == "examRoutine" && !defined(archivedAt)] | order(academicYear desc, _updatedAt desc) {
   _id,
   title,
   examTerm,

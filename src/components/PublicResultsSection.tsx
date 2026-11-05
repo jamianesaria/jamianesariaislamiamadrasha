@@ -6,6 +6,7 @@ import { stegaClean } from "@sanity/client/stega";
 import type { ResultDocument } from "@/sanity/lib/documents";
 import { EditableText } from "@/content/client";
 import PdfDocumentViewer from "./PdfDocumentViewer";
+import { availableClasses } from "@/data/siteData";
 
 export default function PublicResultsSection({
   records,
@@ -23,12 +24,15 @@ export default function PublicResultsSection({
     () => records.filter((record) => (stegaClean(record.examTerm) === "admission") === admission),
     [records, admission]
   );
-  const years = [...new Set(candidates.map((record) => stegaClean(record.academicYear)))];
-  const classes = [...new Set(candidates.map((record) => stegaClean(record.className)))];
+  const classLabel = (record: ResultDocument) =>
+    availableClasses.find((item) => item.id === stegaClean(record.classId || ""))?.name ||
+    stegaClean(record.className || "");
+  const years = [...new Set(candidates.map((record) => stegaClean(record.academicYear)))].filter(Boolean);
+  const classes = [...new Set(candidates.map(classLabel))].filter(Boolean);
   const results = candidates.filter(
     (record) =>
       (!year || stegaClean(record.academicYear) === year) &&
-      (!className || stegaClean(record.className) === className)
+      (!className || classLabel(record) === className)
   );
 
   const displayList = searched ? results : candidates;
@@ -150,7 +154,7 @@ export default function PublicResultsSection({
                       )}
                     </td>
                     <td className="p-3 border border-gray-200 text-gray-700 whitespace-nowrap">
-                      <span className="font-semibold">{record.className}</span>
+                      <span className="font-semibold">{classLabel(record)}</span>
                       <br />
                       <span className="text-xs text-gray-500">{record.academicYear}</span>
                     </td>
@@ -215,7 +219,7 @@ export default function PublicResultsSection({
                 </h3>
               </div>
               <span className="text-xs font-bold bg-[#014222] text-white px-3 py-1 rounded-full shadow-2xs">
-                {activeRecord.className} ({activeRecord.academicYear})
+                {classLabel(activeRecord)} ({activeRecord.academicYear})
               </span>
             </div>
 

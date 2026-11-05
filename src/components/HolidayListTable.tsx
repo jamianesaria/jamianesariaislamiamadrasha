@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { stegaClean } from "@sanity/client/stega";
 import { holidayListTableData as _fallback_holidayListTableData, HolidayItem } from "@/data/siteData";
 import { CalendarDays, Eye, X, Calendar, Clock } from "lucide-react";
 import { useEditableData, EditableText } from "@/content/client";
@@ -103,6 +104,10 @@ export default function HolidayListTable({ records }: { records?: HolidayItem[] 
                 <p className="text-xs sm:text-sm text-gray-700 leading-relaxed text-justify">
                   {selectedHoliday.description}
                 </p>
+              )}
+
+              {selectedHoliday.pdfUrl && (
+                <a href={stegaClean(selectedHoliday.pdfUrl)} target="_blank" rel="noopener noreferrer" className="inline-flex rounded bg-[#8B111A] px-3 py-2 text-xs font-bold text-white">PDF দেখুন / ডাউনলোড</a>
               )}
 
               <div className="pt-2 text-right">

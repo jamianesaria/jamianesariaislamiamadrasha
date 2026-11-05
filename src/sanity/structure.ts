@@ -34,6 +34,11 @@ export const structure: StructureResolver = (S) =>
             .title("হোমপেজ প্রধান পাতা ও মুহতামিমের বাণী")
         ),
 
+      S.listItem()
+        .id("breakingNews")
+        .title("জরুরি ঘোষণা / চলমান খবর (Breaking News)")
+        .child(S.document().schemaType("homepage").documentId("homepage").title("জরুরি ঘোষণা / টিকার বার্তা")),
+
       S.divider(),
 
       // 3. Notices

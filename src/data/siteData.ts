@@ -730,6 +730,7 @@ export const recentEvents = [
 
 // Events List for /functions/event-list
 export interface EventItem {
+  pdfUrl?: string;
   id: string | number;
   photo?: string;
   eventName: string;
@@ -1164,6 +1165,7 @@ export const noticeListTableData: NoticeItem[] = [
 
 // Holidays List for /functions/holiday
 export interface HolidayItem {
+  pdfUrl?: string;
   id: string | number;
   title: string;
   dateTime: string;

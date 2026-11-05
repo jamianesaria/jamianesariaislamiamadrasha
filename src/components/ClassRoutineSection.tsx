@@ -13,17 +13,19 @@ export default function ClassRoutineSection({ records = [] }: { records?: ClassR
 
   const [selectedClass, setSelectedClass] = useState<string>("nursery");
   const [searched, setSearched] = useState<boolean>(false);
+  const [selectedRoutineId, setSelectedRoutineId] = useState<string>("");
 
-  const routine = records.find(
-    (item) =>
-      stegaClean(item.classId || "") === selectedClass ||
-      stegaClean(item.classId || "") === "all" ||
-      stegaClean(item.className || "").toLowerCase() ===
-        availableClasses.find((entry) => entry.id === selectedClass)?.name.toLowerCase()
+  const selectedClassLabel = availableClasses.find((entry) => stegaClean(entry.id) === selectedClass)?.name;
+  const specificRoutines = records.filter((item) =>
+    stegaClean(item.classId || "") === selectedClass ||
+    (!stegaClean(item.classId || "") && selectedClassLabel &&
+      stegaClean(item.className || "").toLowerCase() === stegaClean(selectedClassLabel).toLowerCase())
   );
+  const matchingRoutines = [...specificRoutines, ...records.filter((item) => stegaClean(item.classId || "") === "all")];
+  const routine = matchingRoutines.find((item) => item._id === selectedRoutineId) || matchingRoutines[0];
   const routineData = searched ? routine?.timetableRows || [] : [];
   const selectedClassName =
-    availableClasses.find((c) => c.id === selectedClass)?.name || routine?.className || "শ্রেণি";
+    availableClasses.find((c) => stegaClean(c.id) === selectedClass)?.name || routine?.className || "শ্রেণি";
 
   const handleSearch = () => {
     setSearched(true);
@@ -61,19 +63,29 @@ export default function ClassRoutineSection({ records = [] }: { records?: ClassR
               id="class-select"
               value={selectedClass}
               onChange={(e) => {
-                setSelectedClass(e.target.value);
+                setSelectedClass(stegaClean(e.target.value));
+              setSelectedRoutineId("");
                 setSearched(false);
               }}
               className="w-full border border-gray-300 rounded px-3 py-1.5 text-xs sm:text-sm text-gray-800 bg-white focus:outline-none focus:border-[#371b61] shadow-2xs cursor-pointer"
             >
               {availableClasses.map((cls) => (
-                <option key={cls.id} value={cls.id}>
+                <option key={cls.id} value={stegaClean(cls.id)}>
                   {cls.name}
                 </option>
               ))}
             </select>
           </div>
         </div>
+
+        {matchingRoutines.length > 1 && (
+          <label className="block max-w-md text-xs font-bold text-gray-700">
+            রুটিন নির্বাচন
+            <select value={routine?._id || ""} onChange={(event) => { setSelectedRoutineId(event.target.value); setSearched(true); }} className="block w-full mt-1 border border-gray-300 rounded px-3 py-2 bg-white">
+              {matchingRoutines.map((item) => <option key={item._id} value={item._id}>{item.title} ({item.academicYear})</option>)}
+            </select>
+          </label>
+        )}
 
         {/* Routine Display Area */}
         {searched && !routineData.length && !!routine?.scheduleRows?.length ? (

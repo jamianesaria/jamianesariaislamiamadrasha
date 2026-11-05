@@ -10,7 +10,13 @@ import { useEditableData, EditableText } from "@/content/client";
 
 
 export default function NavigationBar() {
-  const navigationItems = useEditableData("copy.data.navigationItems", _fallback_navigationItems);
+  const savedNavigation = useEditableData("copy.data.navigationItems", _fallback_navigationItems);
+  const hasClassRoutine = savedNavigation.some((item) => stegaClean(item.href) === "/functions/class-routine" || item.children?.some((child) => stegaClean(child.href) === "/functions/class-routine"));
+  const navigationItems = hasClassRoutine ? savedNavigation : savedNavigation.map((item) =>
+    stegaClean(item.href) === "/results/academic"
+      ? { ...item, children: [{ label: "ক্লাস রুটিন", href: "/functions/class-routine" }, ...(item.children || [])] }
+      : item
+  );
   const siteSettings = useEditableData("siteSettings", _fallback_siteSettings);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
