@@ -1,17 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { stegaClean } from "@sanity/client/stega";
 
-import { siteSettings as _fallback_siteSettings, vacancyListTableData as _fallback_vacancyListTableData, VacancyItem } from "@/data/siteData";
-import { Briefcase, Calendar, MapPin, X, Download } from "lucide-react";
-import { EditableImage as Image, useEditableData, EditableText, useFieldAttribute } from "@/content/client";
-import { fieldSource } from "@/content/model";
+import { vacancyListTableData as _fallback_vacancyListTableData, VacancyItem } from "@/data/siteData";
+import { Briefcase, X, Download } from "lucide-react";
+import { useEditableData, EditableText, useFieldAttribute } from "@/content/client";
 
 
-export default function VacancyNoticeTable({ records }: { records?: VacancyItem[] }) {
+export default function VacancyNoticeTable({ records, identity }: { records?: VacancyItem[]; identity: ReactNode }) {
   const attribute = useFieldAttribute();
-  const siteSettings = useEditableData("siteSettings", _fallback_siteSettings);
   const vacancyListTableData = useEditableData("copy.data.vacancyListTableData", _fallback_vacancyListTableData);
 
   const vacancies = records ?? vacancyListTableData;
@@ -28,34 +26,7 @@ export default function VacancyNoticeTable({ records }: { records?: VacancyItem[
 
       <div className="p-6 sm:p-8 space-y-6">
         {/* Center: Madrasa Logo & Header */}
-        <div className="flex flex-col items-center justify-center text-center">
-          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-[#8B111A] p-0.5 bg-white shadow-md relative overflow-hidden mb-3">
-            <Image document="copy.ui.VacancyNoticeTable" entry="ero212q" source={fieldSource(siteSettings, "logoUrl")}
-              src={siteSettings.logoUrl || "/jamia-logo-v2.png"}
-              alt={siteSettings.nameBn}
-              fill
-              sizes="96px"
-              className="object-contain p-0 scale-105"
-            />
-          </div>
-
-          <h2 className="text-xl sm:text-2xl font-extrabold text-[#8B111A]">
-            {siteSettings.nameBn}
-          </h2>
-          <h3 className="text-xs sm:text-sm font-bold text-gray-700 tracking-wider mt-0.5 uppercase font-sans">
-            {siteSettings.nameEn}
-          </h3>
-
-          <div className="flex items-center gap-2 mt-2 text-xs font-semibold text-gray-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
-            <Calendar size={13} className="text-[#8B111A]" />
-            <span><EditableText document="copy.ui.VacancyNoticeTable" entry="e1k9nx6l" fallback={"প্রতিষ্ঠিত: "} />{siteSettings.established}</span>
-          </div>
-
-          <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
-            <MapPin size={13} className="text-[#8B111A]" />
-            <span>{siteSettings.address}</span>
-          </p>
-        </div>
+        {identity}
 
         {/* Vacancy Table matching screenshot columns: #, Post name, Posting date, Dateline, View */}
         <div className="border border-gray-200 rounded overflow-hidden">

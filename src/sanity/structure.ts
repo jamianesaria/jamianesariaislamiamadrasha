@@ -25,11 +25,21 @@ export const structure: StructureResolver = (S) =>
 
       S.listItem().id("pageFrames").title("পাতার উপরের পরিচিতি ফ্রেম (Page Frames)").child(
         S.list().id("pageFramePages").title("পাতাভিত্তিক পরিচিতি ফ্রেম").items(
-          ["/committee", "/teachers", "/admission", "/results/academic", "/notices", "/orphanage", "/badri-kafila", "/gallery", "/blog", "/contact"].map((route) =>
+          [
+            S.listItem().id("sharedIdentityText").title("সবার জন্য জামিয়া পরিচিতি (Shared identity text)").child(
+              S.document().schemaType("pageContent").documentId("copy.data.aboutPageData").title("সব পাতার প্রতিষ্ঠানের নাম, প্রতিষ্ঠাকাল ও ঠিকানা")
+            ),
+            S.listItem().id("sharedIdentityRegistrations").title("সবার জন্য নিবন্ধন পরিচিতি (Shared registrations)").child(
+              S.document().schemaType("pageContent").documentId("copy.ui.AboutJamiaSection").title("সব পাতার নিবন্ধন ও পরিচিতির লেখা")
+            ),
+            S.listItem().id("sharedIdentityHeading").title("সবার জন্য পরিচিতির শিরোনাম (Shared identity heading)").child(
+              S.document().schemaType("pageSeo").documentId(pageSeoDocumentId("/about")).title("জামিয়া পরিচিতির শিরোনাম")
+            ),
+            ...["/committee", "/teachers", "/admission", "/results/academic", "/notices", "/orphanage", "/badri-kafila", "/gallery", "/blog", "/contact"].map((route) =>
             S.listItem().id(`frame-${route.replaceAll("/", "-")}`).title(seoRoutes[route].label).child(
               S.document().schemaType("pageSeo").documentId(pageSeoDocumentId(route)).title(`${seoRoutes[route].label} — পরিচিতি ফ্রেম`)
             )
-          )
+          )]
         )
       ),
 

@@ -1,3 +1,4 @@
+import InstitutionalIdentity from "./InstitutionalIdentity";
 
 import { stegaClean } from "@sanity/client/stega";
 import Link from "next/link";
@@ -8,8 +9,6 @@ import { academicsPageData as _fallback_academicsPageData, siteSettings as _fall
 import {
   GraduationCap,
   BookOpen,
-  Calendar,
-  MapPin,
   Clock,
   Award,
   CheckCircle2,
@@ -22,8 +21,7 @@ import {
   Rocket,
   ShieldCheck,
 } from "lucide-react";
-import { EditableImage as Image, getEditableData, getFieldAttribute, EditableText } from "@/content/server";
-import { fieldSource } from "@/content/model";
+import { getEditableData, getFieldAttribute, EditableText } from "@/content/server";
 
 
 interface AcademicsPageSectionProps {
@@ -86,42 +84,7 @@ export default async function AcademicsPageSection({ initialDepartments }: Acade
           ><EditableText document="copy.ui.AcademicsPageSection" entry="e1k1qppm" fallback={"← হোমপেজে ফিরে যান"} /></Link>
         </div>
 
-        <div className="p-6 sm:p-8 bg-gradient-to-b from-[#FAF7F0]/70 to-white">
-          <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
-            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-3 border-[#8B111A] ring-4 ring-amber-100/80 p-0.5 bg-white shadow-md shrink-0 overflow-hidden">
-              <Image document="copy.ui.AcademicsPageSection" entry="e1s9brw3" source={fieldSource(siteSettings, "logoUrl")}
-                src={siteSettings.logoUrl || "/jamia-logo-v2.png"}
-                alt={header.institutionName}
-                width={112}
-                height={112}
-                className="w-full h-full object-contain rounded-full scale-105"
-              />
-            </div>
-
-            <div className="flex-1 space-y-2">
-              <span className="inline-block bg-[#8B111A] text-amber-200 text-xs font-bold px-3 py-0.5 rounded-full">
-                {header.pageTitle}
-              </span>
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#016332] tracking-tight">
-                {header.pageTitle}
-              </h1>
-              <p className="font-semibold text-gray-700">{header.institutionName}</p>
-
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 text-xs sm:text-sm text-gray-700 font-semibold">
-                <span className="inline-flex items-center gap-1.5 bg-amber-50 border border-[#D9822B]/40 text-[#8B111A] px-3 py-1 rounded-full">
-                  <Calendar size={13} />
-                  <span>{header.established}</span>
-                </span>
-                <span className="inline-flex items-center gap-1.5 bg-gray-100 border border-gray-200 text-gray-800 px-3 py-1 rounded-full">
-                  <MapPin size={13} className="text-[#016332]" />
-                  <span>{header.address}</span>
-                </span>
-              </div>
-
-              <p className="text-sm sm:text-base font-bold text-[#8B111A] pt-1"><EditableText document="copy.ui.AcademicsPageSection" entry="e12w83ws" fallback={"“"} />{header.slogan}<EditableText document="copy.ui.AcademicsPageSection" entry="e1yijzdy" fallback={"”"} /></p>
-            </div>
-          </div>
-        </div>
+        <InstitutionalIdentity headingAs="h1" />
       </div>
 
       {/* =====================================================================

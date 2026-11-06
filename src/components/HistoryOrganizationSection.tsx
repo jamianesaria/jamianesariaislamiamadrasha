@@ -1,12 +1,11 @@
+import InstitutionalIdentity from "./InstitutionalIdentity";
 
-import { siteSettings as _fallback_siteSettings, organizationHistoryData as _fallback_organizationHistoryData } from "@/data/siteData";
-import { BookOpen, MapPin, Calendar, CheckCircle2 } from "lucide-react";
-import { EditableImage as Image, getEditableData, EditableText } from "@/content/server";
-import { fieldSource } from "@/content/model";
+import { organizationHistoryData as _fallback_organizationHistoryData } from "@/data/siteData";
+import { BookOpen, CheckCircle2 } from "lucide-react";
+import { getEditableData, EditableText } from "@/content/server";
 
 
 export default async function HistoryOrganizationSection() {
-  const siteSettings = await getEditableData("siteSettings", _fallback_siteSettings);
   const organizationHistoryData = await getEditableData("copy.data.organizationHistoryData", _fallback_organizationHistoryData);
 
   return (
@@ -19,36 +18,7 @@ export default async function HistoryOrganizationSection() {
 
       <div className="p-6 sm:p-10 space-y-8">
         {/* Center: Madrasa Emblem Logo matching screenshot */}
-        <div className="flex flex-col items-center justify-center text-center">
-          <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[3px] border-[#8B111A] p-0.5 bg-white shadow-lg ring-4 ring-amber-100/80 relative overflow-hidden mb-4">
-            <Image document="copy.ui.HistoryOrganizationSection" entry="efioy2q" source={fieldSource(siteSettings, "logoUrl")}
-              src={siteSettings.logoUrl || "/jamia-logo-v2.png"}
-              alt={siteSettings.nameBn}
-              fill
-              sizes="144px"
-              className="object-contain p-0 scale-105"
-              quality={100}
-            />
-          </div>
-
-          {/* Titles matching screenshot structure */}
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#8B111A] tracking-tight">
-            {siteSettings.nameBn}
-          </h2>
-          <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-700 tracking-wider mt-1 uppercase font-sans">
-            {siteSettings.nameEn}
-          </h3>
-
-          <div className="flex items-center gap-2 mt-2 text-xs sm:text-sm font-semibold text-gray-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
-            <Calendar size={14} className="text-[#8B111A]" />
-            <span><EditableText document="copy.ui.HistoryOrganizationSection" entry="ehganrq" fallback={"প্রতিষ্ঠিত: "} />{siteSettings.established}</span>
-          </div>
-
-          <div className="flex items-center gap-1.5 mt-2 text-xs sm:text-sm text-gray-500">
-            <MapPin size={14} className="text-[#8B111A] shrink-0" />
-            <span>{siteSettings.address}</span>
-          </div>
-        </div>
+        <InstitutionalIdentity />
 
         {/* Detailed History narrative paragraphs */}
         <div className="space-y-4 pt-6 border-t border-gray-200 text-xs sm:text-sm text-gray-700 leading-relaxed text-justify">

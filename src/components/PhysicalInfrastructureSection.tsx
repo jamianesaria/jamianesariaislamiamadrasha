@@ -1,12 +1,11 @@
+import InstitutionalIdentity from "./InstitutionalIdentity";
 
-import { siteSettings as _fallback_siteSettings, physicalInfrastructureData as _fallback_physicalInfrastructureData } from "@/data/siteData";
-import { Building2, MapPin, Calendar, CheckCircle, ShieldCheck } from "lucide-react";
-import { EditableImage as Image, getEditableData, EditableText } from "@/content/server";
-import { fieldSource } from "@/content/model";
+import { physicalInfrastructureData as _fallback_physicalInfrastructureData } from "@/data/siteData";
+import { Building2, CheckCircle, ShieldCheck } from "lucide-react";
+import { getEditableData, EditableText } from "@/content/server";
 
 
 export default async function PhysicalInfrastructureSection() {
-  const siteSettings = await getEditableData("siteSettings", _fallback_siteSettings);
   const physicalInfrastructureData = await getEditableData("copy.data.physicalInfrastructureData", _fallback_physicalInfrastructureData);
 
   return (
@@ -19,34 +18,7 @@ export default async function PhysicalInfrastructureSection() {
 
       <div className="p-6 sm:p-10 space-y-8">
         {/* Center: Madrasa Logo and Identification */}
-        <div className="flex flex-col items-center justify-center text-center">
-          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-[#8B111A] p-0.5 bg-white shadow-md relative overflow-hidden mb-4">
-            <Image document="copy.ui.PhysicalInfrastructureSection" entry="e1kleqqi" source={fieldSource(siteSettings, "logoUrl")}
-              src={siteSettings.logoUrl || "/jamia-logo-v2.png"}
-              alt={siteSettings.nameBn}
-              fill
-              sizes="112px"
-              className="object-contain p-0 scale-105"
-            />
-          </div>
-
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#8B111A] tracking-tight">
-            {siteSettings.nameBn}
-          </h2>
-          <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-700 tracking-wider mt-1 uppercase font-sans">
-            {siteSettings.nameEn}
-          </h3>
-
-          <div className="flex items-center gap-2 mt-2 text-xs sm:text-sm font-semibold text-gray-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
-            <Calendar size={14} className="text-[#8B111A]" />
-            <span><EditableText document="copy.ui.PhysicalInfrastructureSection" entry="e1cxnx7j" fallback={"প্রতিষ্ঠিত: "} />{siteSettings.establishedFull}</span>
-          </div>
-
-          <div className="flex items-center gap-1.5 mt-2 text-xs sm:text-sm text-gray-500">
-            <MapPin size={14} className="text-[#8B111A] shrink-0" />
-            <span>{siteSettings.address}</span>
-          </div>
-        </div>
+        <InstitutionalIdentity />
 
         {/* Infrastructure Highlights Grid */}
         <div className="pt-6 border-t border-gray-200">

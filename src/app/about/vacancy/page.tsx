@@ -1,3 +1,4 @@
+import InstitutionalIdentity from "@/components/InstitutionalIdentity";
 import PageSeo from "@/components/PageSeo";
 import { editableRoute, editableMetadata } from "@/content/server";
 import HeaderBanner from "@/components/HeaderBanner";
@@ -28,7 +29,7 @@ async function VacancyPage() {
       {/* 4. Main Vacancy Notice Content Area */}
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-6 w-full flex-1">
         <PageSeo route="/about/vacancy" />
-        <VacancyNoticeTable records={records} />
+        <VacancyNoticeTable records={records} identity={<InstitutionalIdentity />} />
       </main>
 
       {/* 5. Footer */}
