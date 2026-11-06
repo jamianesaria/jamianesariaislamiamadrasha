@@ -2,6 +2,8 @@
 import { stegaClean } from "@sanity/client/stega";
 import Link from "next/link";
 import type { AcademicDepartment } from "@/sanity/lib/departments";
+import { departmentForSection } from "@/sanity/lib/departments";
+import AcademicDepartmentSummary from "./AcademicDepartmentSummary";
 import { academicsPageData as _fallback_academicsPageData, siteSettings as _fallback_siteSettings } from "@/data/siteData";
 import {
   GraduationCap,
@@ -20,7 +22,7 @@ import {
   Rocket,
   ShieldCheck,
 } from "lucide-react";
-import { EditableImage as Image, getEditableData, EditableText } from "@/content/server";
+import { EditableImage as Image, getEditableData, getFieldAttribute, EditableText } from "@/content/server";
 import { fieldSource } from "@/content/model";
 
 
@@ -31,6 +33,11 @@ interface AcademicsPageSectionProps {
 export default async function AcademicsPageSection({ initialDepartments }: AcademicsPageSectionProps = {}) {
   const academicsPageData = await getEditableData("copy.data.academicsPageData", _fallback_academicsPageData);
   const siteSettings = await getEditableData("siteSettings", _fallback_siteSettings);
+  const attribute = await getFieldAttribute();
+  const maktabRecord = departmentForSection(initialDepartments, "maktab");
+  const hifzRecord = departmentForSection(initialDepartments, "hifz");
+  const kitabRecord = departmentForSection(initialDepartments, "kitab");
+  const madaniRecord = departmentForSection(initialDepartments, "madani-nisab");
 
   const {
     header,
@@ -209,14 +216,15 @@ export default async function AcademicsPageSection({ initialDepartments }: Acade
             <div className="bg-gradient-to-r from-[#014d26] via-[#016332] to-[#02733b] text-white px-4 sm:px-6 py-3 border-b-2 border-[#D9822B] flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <span className="w-1.5 h-5 bg-[#D9822B] rounded-full inline-block" />
-                <h2 className="text-base sm:text-lg font-bold">
-                  {maktabDept.title}
+                <h2 data-sanity={attribute(maktabRecord, "title")} className="text-base sm:text-lg font-bold">
+                  {maktabRecord?.name || maktabDept.title}
                 </h2>
               </div>
               <span className="text-xs bg-white/15 text-amber-200 px-2.5 py-0.5 rounded-full font-semibold"><EditableText document="copy.ui.AcademicsPageSection" entry="ebbmzyv" fallback={"প্রাথমিক দ্বীনি ও সাধারণ শিক্ষা"} /></span>
             </div>
 
             <div className="p-5 sm:p-7 grid grid-cols-1 md:grid-cols-2 gap-5">
+              {maktabRecord && <div className="md:col-span-2"><AcademicDepartmentSummary department={maktabRecord} /></div>}
               {maktabDept.subDepartments?.map((sub, idx) => (
                 <div
                   key={idx}
@@ -261,14 +269,15 @@ export default async function AcademicsPageSection({ initialDepartments }: Acade
             <div className="bg-gradient-to-r from-[#014d26] via-[#016332] to-[#02733b] text-white px-4 sm:px-6 py-3 border-b-2 border-[#D9822B] flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <span className="w-1.5 h-5 bg-[#D9822B] rounded-full inline-block" />
-                <h2 className="text-base sm:text-lg font-bold">
-                  {hifzDept.title}
+                <h2 data-sanity={attribute(hifzRecord, "title")} className="text-base sm:text-lg font-bold">
+                  {hifzRecord?.name || hifzDept.title}
                 </h2>
               </div>
               <span className="text-xs bg-white/15 text-amber-200 px-2.5 py-0.5 rounded-full font-semibold"><EditableText document="copy.ui.AcademicsPageSection" entry="e10le5c9" fallback={"তাহফিজুল কুরআন ও ইয়াদ"} /></span>
             </div>
 
             <div className="p-5 sm:p-7 grid grid-cols-1 md:grid-cols-2 gap-5">
+              {hifzRecord && <div className="md:col-span-2"><AcademicDepartmentSummary department={hifzRecord} /></div>}
               {hifzDept.subDepartments?.map((sub, idx) => (
                 <div
                   key={idx}
@@ -313,8 +322,8 @@ export default async function AcademicsPageSection({ initialDepartments }: Acade
             <div className="bg-gradient-to-r from-[#014d26] via-[#016332] to-[#02733b] text-white px-4 sm:px-6 py-3 border-b-2 border-[#D9822B] flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <span className="w-1.5 h-5 bg-[#D9822B] rounded-full inline-block" />
-                <h2 className="text-base sm:text-lg font-bold">
-                  {kitabDept.title}
+                <h2 data-sanity={attribute(kitabRecord, "title")} className="text-base sm:text-lg font-bold">
+                  {kitabRecord?.name || kitabDept.title}
                 </h2>
               </div>
               <span className="text-xs bg-white/15 text-amber-200 px-2.5 py-0.5 rounded-full font-semibold"><EditableText document="copy.ui.AcademicsPageSection" entry="e1cve7xb" fallback={"ইবতেদায়ী থেকে দাওরায়ে হাদিস (মাস্টার্স সমমান)"} /></span>
@@ -322,6 +331,7 @@ export default async function AcademicsPageSection({ initialDepartments }: Acade
 
             <div className="p-5 sm:p-7 space-y-6">
               <div className="space-y-3">
+                <AcademicDepartmentSummary department={kitabRecord} />
                 {kitabDept.introParagraphs?.map((p, idx) => (
                   <p
                     key={idx}
@@ -392,7 +402,7 @@ export default async function AcademicsPageSection({ initialDepartments }: Acade
               <div className="flex items-center gap-2.5">
                 <span className="w-1.5 h-5 bg-[#D9822B] rounded-full inline-block" />
                 <h2 className="text-base sm:text-lg font-bold">
-                  {madaniDept.title}
+                  <span data-sanity={attribute(madaniRecord, "title")}>{madaniRecord?.name || madaniDept.title}</span>
                 </h2>
               </div>
               <span className="text-xs bg-amber-400/20 text-amber-200 border border-amber-300/40 px-3 py-0.5 rounded-full font-bold">
@@ -402,8 +412,9 @@ export default async function AcademicsPageSection({ initialDepartments }: Acade
 
             <div className="p-5 sm:p-7 space-y-6">
               <p className="text-sm sm:text-[15.5px] text-gray-700 leading-relaxed text-justify">
-                {madaniDept.intro}
+                {madaniRecord?.overview || madaniDept.intro}
               </p>
+              {madaniRecord && <AcademicDepartmentSummary department={{ ...madaniRecord, overview: "" }} />}
 
               {/* মাদানি নেসাব বিভাগের বৈশিষ্ট্য ও শিক্ষার লক্ষ্য (১–৬) */}
               <div>

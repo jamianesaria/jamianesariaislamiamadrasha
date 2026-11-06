@@ -11,15 +11,12 @@ import {
   Phone,
   Copy,
   Check,
-  Building2,
   MapPin,
   Sparkles,
   X,
   Search,
   ArrowRight,
   Users,
-  Briefcase,
-  Layers,
 } from "lucide-react";
 import { EditableImage as Image, useEditableData, EditableText } from "@/content/client";
 import { fieldSource } from "@/content/model";
@@ -52,7 +49,6 @@ interface FacultyAndTeachersSectionProps {
 
 export default function FacultyAndTeachersSection({
   initialTeachers,
-  initialSettings,
 }: FacultyAndTeachersSectionProps = {}) {
   const committeeAndFacultyData = useEditableData("copy.data.committeeAndFacultyData", _fallback_committeeAndFacultyData);
   const siteSettings = useEditableData("siteSettings", _fallback_siteSettings);

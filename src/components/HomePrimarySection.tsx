@@ -32,13 +32,11 @@ import {
 import { EditableImage as Image, getEditableData, getFieldAttribute, EditableText } from "@/content/server";
 import { fieldSource } from "@/content/model";
 
-const homePageContent = _fallback_homePageContent;
-const siteSettings = _fallback_siteSettings;
 
 
 interface HomePrimarySectionProps {
-  initialData?: typeof homePageContent;
-  initialSettings?: typeof siteSettings;
+  initialData?: typeof _fallback_homePageContent;
+  initialSettings?: typeof _fallback_siteSettings;
   initialNotices?: NoticeFullItem[];
   initialDepartments?: AcademicDepartment[];
   initialBlogPosts?: BlogPostItem[];

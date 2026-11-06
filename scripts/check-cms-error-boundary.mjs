@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import env from "@next/env";
@@ -41,6 +41,12 @@ try {
   assert.equal(logs.includes(invalidToken), false, "SDK request credentials must not enter server logs");
   assert.equal((await page.content()).includes(invalidToken), false, "Credentials must not enter browser HTML");
   console.log(JSON.stringify({ cmsFailureExercised: true, fallbackStatus: preview.status(), credentialInLogs: false, credentialInHtml: false }));
+} catch (error) {
+  mkdirSync(".cms-work/public-qa", { recursive: true });
+  const sensitive = [invalidToken, process.env.SANITY_API_TOKEN, process.env.SANITY_API_READ_TOKEN].filter(Boolean);
+  const redacted = sensitive.reduce((text, value) => text.replaceAll(value, "[redacted]"), logs);
+  writeFileSync(".cms-work/public-qa/cms-failure-log.txt", redacted);
+  throw error;
 } finally {
   await browser?.close();
   server.kill();

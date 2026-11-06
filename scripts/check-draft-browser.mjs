@@ -12,7 +12,7 @@ const client=createClient({projectId:process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,d
 const id="copy.ui.ContactSection";const draftId="drafts."+id;const secretId="qa-preview-"+randomUUID();
 const existing=await client.getDocument(draftId);
 if(existing)throw new Error("An existing staff draft is present; this test will not replace it.");
-const published=await client.getDocument(id);const {_createdAt,_updatedAt,_rev,...document}=published;
+const published=await client.getDocument(id);const document=Object.fromEntries(Object.entries(published).filter(([key])=>!["_createdAt","_updatedAt","_rev"].includes(key)));
 const marker="Preview QA "+randomUUID();const selected=document.entries.find(entry=>entry._key==="e1jai5nk");
 assert.ok(selected);const entryKey=selected._key;
 const draft=await client.create({...document,_id:draftId,entries:document.entries.map(entry=>entry._key===entryKey?{...entry,text:marker}:entry)});
@@ -35,7 +35,10 @@ try{
  await preview.addCookies([{name:perspectiveCookieName,value:"published",url:base,httpOnly:true,secure:base.startsWith("https:"),sameSite:base.startsWith("https:")?"None":"Lax"}]);
  await page.reload({waitUntil:"domcontentloaded"});assert.equal(await page.getByText(marker).count(),0,"Published preview perspective must exclude the draft");
  await preview.addCookies([{name:perspectiveCookieName,value:"drafts",url:base,httpOnly:true,secure:base.startsWith("https:"),sameSite:base.startsWith("https:")?"None":"Lax"}]);
- await page.reload({waitUntil:"domcontentloaded"});await page.getByText(marker).waitFor();
+ assert.ok((await (await preview.request.get(base+"/contact")).text()).includes(marker),"The draft perspective response must include the temporary marker");
+ const switched=await page.reload({waitUntil:"domcontentloaded"});
+ assert.ok((await switched.text()).includes(marker),"The completed page response must include the selected draft");
+ await page.getByText(marker).waitFor();
  await page.screenshot({path:".cms-work/public-qa/draft-contact.png"});
  const disabled=await preview.request.get(base+"/api/draft-mode/disable");assert.equal(disabled.status(),200);
  await page.goto(base+"/contact",{waitUntil:"domcontentloaded"});assert.equal(await page.getByText(marker).count(),0);

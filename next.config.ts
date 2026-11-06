@@ -39,7 +39,13 @@ const nextConfig: NextConfig = {
     return [{ source: "/:path*", has: [{ type: "host" as const, value: "www.nesariamadrasa.com" }], destination: "https://nesariamadrasa.com/:path*", permanent: true }];
   },
   async headers() {
-    return [{ source: "/api/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] }, ...IMMUTABLE_PUBLIC_ASSETS.map((source) => ({
+    return [{ source: "/:path*", headers: [
+      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+      { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+      // Permit embedded Studio preview while blocking unrelated sites from framing pages.
+      { key: "Content-Security-Policy", value: "frame-ancestors 'self' https://*.sanity.studio https://www.sanity.io" },
+    ] }, { source: "/api/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] }, ...IMMUTABLE_PUBLIC_ASSETS.map((source) => ({
       source,
       headers: [
         {

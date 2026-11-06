@@ -7,31 +7,23 @@ import { siteSettings as _fallback_siteSettings } from "@/data/siteData";
 import {
   Shield,
   HeartHandshake,
-  Award,
   Sparkles,
   BookOpen,
-  Calendar,
   CheckCircle2,
   Copy,
   Check,
   Phone,
   Send,
   Download,
-  Flame,
   Clock,
-  Building,
   UserCheck,
   Star,
   Compass,
   ArrowRight,
   BadgeCheck,
-  ScrollText,
-  Landmark,
   Coins,
-  Heart,
   Crown,
   Layers,
-  HelpCircle,
 } from "lucide-react";
 import { useEditableData, EditableText } from "@/content/client";
 
@@ -41,7 +33,6 @@ export default function BadriKafilaSection() {
 
   // Interactive Seat Selection
   const [selectedSeat, setSelectedSeat] = useState<number>(313);
-  const [seatSearch, setSeatSearch] = useState<string>("");
 
   // Form states
   const [memberType, setMemberType] = useState<"self" | "deceased">("self");

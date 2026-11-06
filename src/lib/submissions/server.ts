@@ -11,7 +11,7 @@ let privacyVerifiedUntil = 0;
 async function privateClient(): Promise<SanityClient> {
   const token = process.env.SANITY_SUBMISSIONS_WRITE_TOKEN || process.env.SANITY_API_TOKEN;
   if (!token || privateDataset === publicDataset) throw new SubmissionError("আবেদন গ্রহণের ব্যবস্থা সাময়িকভাবে বন্ধ। অনুগ্রহ করে অফিসে যোগাযোগ করুন।", 503);
-  const client = createClient({ projectId, apiVersion, dataset: privateDataset, token, useCdn: false, perspective: "published" });
+  const client = createClient({ projectId, apiVersion, dataset: privateDataset, token, useCdn: false, perspective: "published", timeout: 10_000, maxRetries: 1 });
   if (Date.now() > privacyVerifiedUntil) {
     const datasets = await client.datasets.list();
     // Sanity's fixed access rules require authentication for IDs containing a dot,

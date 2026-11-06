@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { mapAcademicDepartments } from "../src/sanity/lib/departments.ts";
+import { mapAcademicDepartments, departmentForSection } from "../src/sanity/lib/departments.ts";
 
 test("duplicate slugs return one department with its source document identity", () => {
   const departments = mapAcademicDepartments([
@@ -44,4 +44,13 @@ test("mapping does not mutate or delete source records", () => {
   const before = structuredClone(records);
   mapAcademicDepartments(records);
   assert.deepEqual(records, before);
+});
+
+test("detailed academic sections find the native Madani slug and tolerate missing records", () => {
+  const records = mapAcademicDepartments([{ _id: "native-madani", slug: "madani-nesab", title: "Published title", overview: "Published summary", features: ["Published feature"] }]);
+  const selected = departmentForSection(records, "madani-nisab");
+  assert.equal(selected?._id, "native-madani");
+  assert.equal(selected?.overview, "Published summary");
+  assert.equal(departmentForSection([], "maktab"), undefined);
+  assert.equal(departmentForSection(undefined, "hifz"), undefined);
 });

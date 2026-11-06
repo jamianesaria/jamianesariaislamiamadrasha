@@ -43,7 +43,6 @@ interface ManagingCommitteeSectionProps {
 
 export default function ManagingCommitteeSection({
   initialMembers,
-  initialSettings,
 }: ManagingCommitteeSectionProps = {}) {
   const committeeAndFacultyData = useEditableData("copy.data.committeeAndFacultyData", _fallback_committeeAndFacultyData);
   const siteSettings = useEditableData("siteSettings", _fallback_siteSettings);

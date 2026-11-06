@@ -19,7 +19,6 @@
       "copy.ui.NavigationBar"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.data.physicalInfrastructureData",
@@ -47,7 +46,6 @@
     ],
     "documents": [
       "copy.data.aboutPageData",
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.ui.AboutJamiaSection",
@@ -76,7 +74,6 @@
       "copy.ui.VacancyNoticeTable"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.data.vacancyListTableData",
@@ -104,7 +101,6 @@
     ],
     "documents": [
       "copy.data.academicsPageData",
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.ui.AcademicsPageSection",
@@ -114,6 +110,7 @@
       "copy.ui.NavigationBar"
     ],
     "components": [
+      "src/components/AcademicDepartmentSummary.tsx",
       "src/components/AcademicsPageSection.tsx",
       "src/components/BreakingNewsBar.tsx",
       "src/components/Footer.tsx",
@@ -133,7 +130,6 @@
       "copy.ui.NavigationBar"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.data.officialAdmissionData",
@@ -149,6 +145,7 @@
       "src/components/Footer.tsx",
       "src/components/HeaderBanner.tsx",
       "src/components/NavigationBar.tsx",
+      "src/components/PageIdentityFrame.tsx",
       "src/components/PageSeo.tsx",
       "src/components/RelatedPageLinks.tsx"
     ],
@@ -164,7 +161,6 @@
     ],
     "documents": [
       "copy.data.availableClasses",
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.ui.ApplyOnlineForm",
@@ -191,7 +187,6 @@
       "copy.ui.NavigationBar"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.ui.BadriKafilaSection",
@@ -206,6 +201,7 @@
       "src/components/Footer.tsx",
       "src/components/HeaderBanner.tsx",
       "src/components/NavigationBar.tsx",
+      "src/components/PageIdentityFrame.tsx",
       "src/components/PageSeo.tsx"
     ],
     "redirect": false,
@@ -219,7 +215,6 @@
       "copy.ui.NavigationBar"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.data.sampleBlogPosts",
@@ -235,6 +230,7 @@
       "src/components/Footer.tsx",
       "src/components/HeaderBanner.tsx",
       "src/components/NavigationBar.tsx",
+      "src/components/PageIdentityFrame.tsx",
       "src/components/PageSeo.tsx"
     ],
     "redirect": false,
@@ -246,7 +242,6 @@
       "copy.ui.NavigationBar"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.ui.BreakingNewsBar",
@@ -272,7 +267,6 @@
       "copy.ui.NavigationBar"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.committeeAndFacultyData",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
@@ -288,6 +282,7 @@
       "src/components/HeaderBanner.tsx",
       "src/components/ManagingCommitteeSection.tsx",
       "src/components/NavigationBar.tsx",
+      "src/components/PageIdentityFrame.tsx",
       "src/components/PageSeo.tsx"
     ],
     "redirect": false,
@@ -300,7 +295,6 @@
       "copy.ui.NavigationBar"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.ui.BreakingNewsBar",
@@ -315,6 +309,7 @@
       "src/components/Footer.tsx",
       "src/components/HeaderBanner.tsx",
       "src/components/NavigationBar.tsx",
+      "src/components/PageIdentityFrame.tsx",
       "src/components/PageSeo.tsx",
       "src/components/RelatedPageLinks.tsx"
     ],
@@ -330,7 +325,6 @@
     ],
     "documents": [
       "copy.data.availableClasses",
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.ui.BreakingNewsBar",
@@ -345,7 +339,8 @@
       "src/components/Footer.tsx",
       "src/components/HeaderBanner.tsx",
       "src/components/NavigationBar.tsx",
-      "src/components/PageSeo.tsx"
+      "src/components/PageSeo.tsx",
+      "src/components/PdfDocumentViewer.tsx"
     ],
     "redirect": false,
     "context": true
@@ -366,7 +361,6 @@
     ],
     "documents": [
       "copy.data.availableClasses",
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.ui.BreakingNewsBar",
@@ -381,7 +375,8 @@
       "src/components/Footer.tsx",
       "src/components/HeaderBanner.tsx",
       "src/components/NavigationBar.tsx",
-      "src/components/PageSeo.tsx"
+      "src/components/PageSeo.tsx",
+      "src/components/PdfDocumentViewer.tsx"
     ],
     "redirect": false,
     "context": true
@@ -394,7 +389,6 @@
       "copy.ui.NavigationBar"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.eventListTableData",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
@@ -423,7 +417,6 @@
       "copy.ui.NavigationBar"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.holidayListTableData",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
@@ -460,7 +453,6 @@
       "copy.ui.NavigationBar"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.data.sampleGalleryPhotos",
@@ -477,6 +469,7 @@
       "src/components/HeaderBanner.tsx",
       "src/components/MainGallerySection.tsx",
       "src/components/NavigationBar.tsx",
+      "src/components/PageIdentityFrame.tsx",
       "src/components/PageSeo.tsx"
     ],
     "redirect": false,
@@ -490,7 +483,6 @@
       "copy.ui.PhotoGallerySection"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.data.sampleGalleryPhotos",
@@ -519,7 +511,6 @@
       "copy.ui.VideoGallerySection"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.data.sampleGalleryVideos",
@@ -548,7 +539,6 @@
       "copy.ui.NoticeBoardSection"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.data.noticesData",
@@ -564,7 +554,9 @@
       "src/components/HeaderBanner.tsx",
       "src/components/NavigationBar.tsx",
       "src/components/NoticeBoardSection.tsx",
+      "src/components/PageIdentityFrame.tsx",
       "src/components/PageSeo.tsx",
+      "src/components/PdfDocumentViewer.tsx",
       "src/components/RelatedPageLinks.tsx"
     ],
     "redirect": false,
@@ -578,7 +570,6 @@
       "copy.ui.OrphanageSection"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.data.orphanagePageData",
@@ -594,6 +585,7 @@
       "src/components/HeaderBanner.tsx",
       "src/components/NavigationBar.tsx",
       "src/components/OrphanageSection.tsx",
+      "src/components/PageIdentityFrame.tsx",
       "src/components/PageSeo.tsx"
     ],
     "redirect": false,
@@ -608,7 +600,6 @@
       "copy.ui.NavigationBar"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.data.sampleBlogPosts",
@@ -658,7 +649,6 @@
       "copy.ui.PublicResultsSection"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.ui.BreakingNewsBar",
@@ -672,7 +662,9 @@
       "src/components/Footer.tsx",
       "src/components/HeaderBanner.tsx",
       "src/components/NavigationBar.tsx",
+      "src/components/PageIdentityFrame.tsx",
       "src/components/PageSeo.tsx",
+      "src/components/PdfDocumentViewer.tsx",
       "src/components/PublicResultsSection.tsx"
     ],
     "redirect": false,
@@ -685,7 +677,6 @@
       "copy.ui.PublicResultsSection"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
       "copy.ui.BreakingNewsBar",
@@ -700,6 +691,7 @@
       "src/components/HeaderBanner.tsx",
       "src/components/NavigationBar.tsx",
       "src/components/PageSeo.tsx",
+      "src/components/PdfDocumentViewer.tsx",
       "src/components/PublicResultsSection.tsx"
     ],
     "redirect": false,
@@ -713,7 +705,6 @@
       "copy.ui.NavigationBar"
     ],
     "documents": [
-      "copy.data.breakingNews",
       "copy.data.committeeAndFacultyData",
       "copy.data.homePageContent",
       "copy.data.navigationItems",
@@ -729,6 +720,7 @@
       "src/components/Footer.tsx",
       "src/components/HeaderBanner.tsx",
       "src/components/NavigationBar.tsx",
+      "src/components/PageIdentityFrame.tsx",
       "src/components/PageSeo.tsx",
       "src/components/RelatedPageLinks.tsx"
     ],

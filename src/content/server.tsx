@@ -3,6 +3,7 @@ import { cache, type ReactNode } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { draftMode } from "next/headers";
+import { unstable_rethrow } from "next/navigation";
 import { stegaClean } from "@sanity/client/stega";
 import { fetchSiteQuery } from "@/sanity/lib/fetch";
 import { CopyProvider } from "./client";
@@ -17,7 +18,7 @@ export const getCopyState = cache(async (): Promise<CopyState> => {
     const preview = (await draftMode()).isEnabled;
     const documents = await fetchSiteQuery<import("./model").CopyDocument[]>('*[_type=="pageContent"]{_id,title,route,seoTitle,seoDescription,entries[]{_key,source,kind,text,number,alt,image,"imageUrl":coalesce(image.asset->url,imageUrl)}}');
     return { documents: Object.fromEntries(documents.map((document) => [document._id.replace(/^drafts\./, ""), { ...document, route: stegaClean(document.route || "/"), entries: (document.entries || []).map((entry) => ({ ...entry, source: stegaClean(entry.source), kind: stegaClean(entry.kind), ...(entry.imageUrl ? { imageUrl: stegaClean(entry.imageUrl) } : {}) })) }])), preview };
-  } catch { return { documents: {}, preview: false }; }
+  } catch (error) { unstable_rethrow(error); return { documents: {}, preview: false }; }
 });
 export async function EditableText({ document, entry, fallback, plain = false }: { document: string; entry: string; fallback: string; plain?: boolean }) {
   const state = await getCopyState();

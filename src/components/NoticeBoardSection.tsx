@@ -2,7 +2,7 @@
 
 import { stegaClean } from "@sanity/client/stega";
 
-import { useState, useMemo, useEffect, Suspense } from "react";
+import { useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -21,25 +21,18 @@ import {
   X,
   AlertCircle,
   Pin,
-  Sparkles,
   Phone,
-  LayoutGrid,
-  List,
   ChevronRight,
   Check,
   Clock,
   ArrowDownToLine,
   BookOpen,
   GraduationCap,
-  Building,
   HelpCircle,
   RotateCcw,
   Stamp,
-  Award,
-  Layers,
   CalendarDays,
   Flame,
-  CheckCircle2,
 } from "lucide-react";
 import { EditableText, useEditableData } from "@/content/client";
 import PdfDocumentViewer from "./PdfDocumentViewer";
@@ -706,7 +699,7 @@ function NoticeBoardContent({ initialNotices }: { initialNotices?: NoticeFullIte
 
           {/* Gazette Entries List */}
           <div className="divide-y divide-stone-200">
-            {filteredNotices.map((notice, idx) => (
+            {filteredNotices.map((notice) => (
               <div
                 key={notice.id}
                 className="p-5 sm:p-6 hover:bg-emerald-50/40 transition-colors flex flex-col md:flex-row items-start md:items-center justify-between gap-4 group"
@@ -794,7 +787,7 @@ function NoticeBoardContent({ initialNotices }: { initialNotices?: NoticeFullIte
 
           {/* Vertical Timeline */}
           <div className="relative pl-6 sm:pl-8 border-l-2 border-[#016332] space-y-8 max-w-3xl mx-auto">
-            {filteredNotices.map((notice, idx) => (
+            {filteredNotices.map((notice) => (
               <div key={notice.id} className="relative group">
                 {/* Timeline Dot */}
                 <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-white border-4 border-[#016332] group-hover:border-[#8B111A] group-hover:scale-125 transition-all shadow-sm" />

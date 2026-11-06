@@ -10,8 +10,6 @@ import { sampleBlogPosts as _fallback_sampleBlogPosts, BlogPostItem } from "@/da
 import {
   FileText,
   Calendar,
-  ThumbsUp,
-  MessageSquare,
   ArrowRight,
   X,
   User,
@@ -25,7 +23,6 @@ import {
   Quote,
   LayoutGrid,
   ListFilter,
-  SlidersHorizontal,
   Send,
   Phone,
   ZoomIn,

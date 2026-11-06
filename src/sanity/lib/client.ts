@@ -6,6 +6,9 @@ export const client = createClient({
   dataset,
   apiVersion,
   useCdn: true,
+  // Fall back promptly instead of holding public pages through a long CMS outage.
+  timeout: 10_000,
+  maxRetries: 1,
   stega: {
     enabled: false,
     studioUrl: "/studio",

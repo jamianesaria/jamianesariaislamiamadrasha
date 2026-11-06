@@ -428,6 +428,7 @@ export const departmentsQuery = groq`*[_type == "academicDepartment" && !defined
   !$homepageOnly || coalesce(showOnHomepage, slug.current != "orphanage", true)
 )] | order(serial asc, _updatedAt desc, _id asc) {
   _id,
+  _type,
   title,
   "slug": slug.current,
   arabicTitle,
@@ -692,9 +693,9 @@ export async function getBlogPosts() {
 
 export async function getCalendar() {
   try { return await fetchSiteQuery<CalendarDocument[]>('*[_type == "calendarEvent" && !defined(archivedAt)] | order(date desc){_id,"_type":"calendarEvent",title,kind,date,endDate,dateBn,description,location,"imageUrl":coalesce(image.asset->url,imageUrl),"pdfUrl":pdfFile.asset->url}'); }
-  catch { return []; }
+  catch (error) { unstable_rethrow(error); return []; }
 }
 export async function getVacancies() {
   try { return await fetchSiteQuery<VacancyDocument[]>('*[_type == "vacancy" && !defined(archivedAt)] | order(deadline desc){_id,"_type":"vacancy",title,department,qualification,deadline,postedAt,salary,vacancies,"pdfUrl":pdfFile.asset->url}'); }
-  catch { return []; }
+  catch (error) { unstable_rethrow(error); return []; }
 }

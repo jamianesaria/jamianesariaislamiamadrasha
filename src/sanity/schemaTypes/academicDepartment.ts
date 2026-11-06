@@ -4,6 +4,7 @@ export const academicDepartmentType = defineType({
   name: "academicDepartment",
   title: "শিক্ষা বিভাগ ও পাঠ্যক্রম (Academic Departments)",
   type: "document",
+  description: "হোমপেজ ও শিক্ষা বিভাগের পাতার শিরোনাম, পরিচিতি ও বৈশিষ্ট্য এখানে সম্পাদনা করুন। বিস্তারিত পাঠ্যক্রম Page Content-এ থাকবে। (Shared department summary; detailed curriculum remains in Page Content.)",
   fields: [
     defineField({
       name: "title",

@@ -3,11 +3,9 @@
 import { stegaClean } from "@sanity/client/stega";
 import { useState } from "react";
 
-import Link from "next/link";
+
 import {
   orphanagePageData as _fallback_orphanagePageData,
-  siteSettings as _fallback_siteSettings,
-  homePageContent as _fallback_homePageContent,
 } from "@/data/siteData";
 import {
   HeartHandshake,
@@ -21,13 +19,10 @@ import {
   Copy,
   Check,
   ChevronRight,
-  ShieldCheck,
   Sparkles,
   Coins,
-  ArrowRight,
   Info,
   Clock,
-  Send,
 } from "lucide-react";
 import { EditableImage as Image, useEditableData, EditableText } from "@/content/client";
 

@@ -6,7 +6,10 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --test scripts/test-page-links.mjs scripts/test-departments.mjs scripts/test-revalidation.mjs",
+    "backup": "node scripts/backup-sanity.mjs",
+    "backup:verify": "node scripts/verify-sanity-backup.mjs"
   },
   "dependencies": {
     "@sanity/image-url": "^2.1.1",
@@ -25,9 +28,19 @@
     },
     "@module-federation/dts-plugin": {
       "undici": "7.30.1"
+    },
+    "@oclif/core": {
+      "minimatch": "^11.0.5"
+    },
+    "typeid-js": {
+      "uuid": "^11.1.1"
+    },
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "^11.0.5"
     }
   },
   "devDependencies": {
+    "@sanity/export": "^6.2.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -35,8 +48,10 @@
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.4.1",
+    "playwright": "^1.65.0",
     "postcss": "^8.5.31",
     "tailwindcss": "^4",
+    "tar-stream": "^3.2.2",
     "typescript": "^5"
   }
 }

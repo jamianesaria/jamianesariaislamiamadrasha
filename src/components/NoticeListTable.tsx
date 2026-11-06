@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { noticeListTableData as _fallback_noticeListTableData, NoticeItem } from "@/data/siteData";
-import { FileText, Eye, Download, X, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
+import { FileText, Eye, Download, X, Calendar, ChevronRight } from "lucide-react";
 import { useEditableData, EditableText } from "@/content/client";
 import PdfDocumentViewer from "./PdfDocumentViewer";
 

@@ -29,6 +29,11 @@ export interface AcademicDepartment {
   showOnHomepage: boolean;
 }
 
+export function departmentForSection(records: AcademicDepartment[] | undefined, section: string) {
+  const aliases = section === "madani-nisab" ? ["madani-nisab", "madani-nesab", "madani"] : [section];
+  return records?.find((record) => aliases.includes(stegaClean(record.id)));
+}
+
 // The query orders duplicate slugs by latest update first. Keep that record
 // for display without deleting or overwriting any of the source documents.
 export function mapAcademicDepartments(records: AcademicDepartmentRecord[]): AcademicDepartment[] {

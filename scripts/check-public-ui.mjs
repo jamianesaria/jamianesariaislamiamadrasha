@@ -3,7 +3,7 @@ import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
 const { chromium }=await import(process.env.PLAYWRIGHT_MODULE||"playwright");
 const browser=await chromium.launch({headless:true,executablePath:process.env.BROWSER_EXECUTABLE||undefined});
 const base=process.env.QA_BASE_URL||"http://localhost:3020";
-const routes=Object.entries(JSON.parse(readFileSync("src/content/coverage.json","utf8"))).filter(([,item])=>!item.redirect).map(([route])=>route);
+const routes=Object.entries(JSON.parse(readFileSync("src/content/coverage.json","utf8"))).filter(([route,item])=>!item.redirect&&!route.includes("[")).map(([route])=>route);
 const results=[];const errors=[];const redirects=[];
 mkdirSync(".cms-work/public-qa",{recursive:true});
 try{
@@ -16,6 +16,10 @@ try{
   const start=Date.now(); const response=await page.goto(base+route,{waitUntil:"domcontentloaded",timeout:60000});
   assert.equal(response.status(),200,route);
   await page.locator("nav").first().waitFor();
+  if(route==="/blog") {
+   const articles=await page.locator('a[href^="/blog/"]').evaluateAll(links=>links.map(link=>new URL(link.href).pathname));
+   for(const article of articles)if(!routes.includes(article))routes.push(article);
+  }
   await page.waitForFunction(() => getComputedStyle(document.querySelector("nav")).position === "sticky");
   if(route==="/") {
    const intro=page.locator(".website-intro");
@@ -32,7 +36,7 @@ try{
   results.push({route,status:response.status(),milliseconds:Date.now()-start,desktopOverflow,phoneOverflow});
   console.log(JSON.stringify(results.at(-1)));
  }
- for(const [route,target] of Object.entries({"/313-badri-kafila":"/badri-kafila","/functions/notices":"/notices","/profile":"/profile/managing-committee","/vorti-tottho":"/admission"})) {
+ for(const [route,target] of Object.entries({"/313-badri-kafila":"/badri-kafila","/functions/notices":"/notices","/profile":"/committee","/profile/managing-committee":"/committee","/about/history":"/about","/vorti-tottho":"/admission"})) {
   currentRoute=route;await page.goto(base+route,{waitUntil:"domcontentloaded"});
   await page.waitForURL(url=>url.pathname===target);await page.locator("nav").first().waitFor();
   redirects.push({route,target,passed:true});

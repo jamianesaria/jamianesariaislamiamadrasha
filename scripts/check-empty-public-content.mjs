@@ -27,7 +27,7 @@ function load(file) {
     }
     return require(specifier);
   };
-  runInNewContext(`(function(require,module,exports){${code}\n})`, { console })(imports, loadedModule, loadedModule.exports);
+  runInNewContext(`(function(require,module,exports){${code}\n})`, { console, process })(imports, loadedModule, loadedModule.exports);
   return loadedModule.exports;
 }
 const queries = load(resolve("src/sanity/lib/queries.ts"));

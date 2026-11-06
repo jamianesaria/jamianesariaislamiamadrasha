@@ -2,8 +2,8 @@ import { EditableText } from "@/content/server";
 import { getNewsTicker } from "@/sanity/lib/queries";
 
 
-export default async function BreakingNewsBar(_props: { newsItems?: string[] }) {
-  const items = (await getNewsTicker()).filter((item) => item.trim());
+export default async function BreakingNewsBar({ newsItems }: { newsItems?: string[] }) {
+  const items = (newsItems ?? await getNewsTicker()).filter((item) => item.trim());
   if (!items.length) return null;
   return (
     <div className="w-full bg-[#FAF7F0] border-b border-[#e5dfd0] shadow-2xs">

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { stegaClean } from "@sanity/client/stega";
 
 import { siteSettings as _fallback_siteSettings, vacancyListTableData as _fallback_vacancyListTableData, VacancyItem } from "@/data/siteData";
-import { Briefcase, Calendar, MapPin, X, FileText, Download } from "lucide-react";
+import { Briefcase, Calendar, MapPin, X, Download } from "lucide-react";
 import { EditableImage as Image, useEditableData, EditableText, useFieldAttribute } from "@/content/client";
 import { fieldSource } from "@/content/model";
 

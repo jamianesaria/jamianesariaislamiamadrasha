@@ -19,10 +19,8 @@ import {
   ChevronRight,
   Download,
   Calendar,
-  Clock,
   Sparkles,
   Search,
-  Maximize2,
   Share2,
   Check,
 } from "lucide-react";

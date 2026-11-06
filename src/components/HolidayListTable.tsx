@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { stegaClean } from "@sanity/client/stega";
 import { holidayListTableData as _fallback_holidayListTableData, HolidayItem } from "@/data/siteData";
-import { CalendarDays, Eye, X, Calendar, Clock } from "lucide-react";
+import { CalendarDays, Eye, X, Calendar } from "lucide-react";
 import { useEditableData, EditableText } from "@/content/client";
 
 
