@@ -330,17 +330,17 @@ export default async function HomePrimarySection({
                 </div>
 
                 {/* ৮. শিক্ষা কার্যক্রম */}
-                <div className="px-4 py-3 bg-[#F9FAF8] hover:bg-[#FAF7F0]/50 transition-colors">
-                  <h3 className="font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e12q7x5k" fallback={"শিক্ষা কার্যক্রম"} /></h3>
-                  <ul className="mt-2 list-disc pl-5 space-y-1 font-semibold text-gray-900 leading-relaxed">
+                <div className="grid grid-cols-12 px-4 py-3 bg-[#F9FAF8] hover:bg-[#FAF7F0]/50 transition-colors">
+                  <h3 className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e12q7x5k" fallback={"শিক্ষা কার্যক্রম"} /></h3>
+                  <ul className="col-span-8 min-w-0 list-disc pl-4 space-y-1 font-semibold text-gray-900 leading-relaxed">
                     {atAGlance.academicPrograms.split(/\r?\n/).map((program) => program.trim()).filter(Boolean).map((program, index) => <li key={index}>{program}</li>)}
                   </ul>
                 </div>
 
                 {/* ৯. নিবন্ধন ও স্বীকৃতি */}
-                <div className="px-4 py-3 bg-white hover:bg-[#FAF7F0]/50 transition-colors">
-                  <h3 className="font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e116wvzk" fallback={"নিবন্ধন ও স্বীকৃতি"} /></h3>
-                  <ul className="mt-2 list-disc pl-5 space-y-1 font-semibold text-gray-800 leading-relaxed">
+                <div className="grid grid-cols-12 px-4 py-3 bg-white hover:bg-[#FAF7F0]/50 transition-colors">
+                  <h3 className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e116wvzk" fallback={"নিবন্ধন ও স্বীকৃতি"} /></h3>
+                  <ul className="col-span-8 min-w-0 list-disc pl-4 space-y-1 font-semibold text-gray-800 leading-relaxed">
                     <li><EditableText document="copy.ui.HomePrimarySection" entry="e1x8rbwy" fallback={"আল-হাইআতুল উলয়া: "} /><span className="font-bold text-[#016332]"><EditableText document="copy.ui.HomePrimarySection" entry="eje7drx" fallback={"০০৬৮৫"} /></span></li>
                     <li><EditableText document="copy.ui.HomePrimarySection" entry="eiubbvy" fallback={"বেফাকুল মাদারিসিল আরাবিয়া: "} /><span className="font-bold text-[#8B111A]"><EditableText document="copy.ui.HomePrimarySection" entry="e9a51v7" fallback={"১/৭৪৩"} /></span></li>
                     <li><EditableText document="copy.ui.HomePrimarySection" entry="e16v2far" fallback={"এতিমখানা (সমাজসেবা): "} /><span className="font-bold text-[#016332]"><EditableText document="copy.ui.HomePrimarySection" entry="eaofc4i" fallback={"ঢ-০৫০৪"} /></span></li>
