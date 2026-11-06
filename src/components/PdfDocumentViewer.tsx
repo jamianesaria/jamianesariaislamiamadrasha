@@ -10,6 +10,7 @@ interface PdfDocumentViewerProps {
   badge?: string;
   className?: string;
   compact?: boolean;
+  fitViewport?: boolean;
 }
 
 export default function PdfDocumentViewer({
@@ -18,8 +19,9 @@ export default function PdfDocumentViewer({
   badge = "অফিসিয়াল PDF প্রকাশনা",
   className = "",
   compact = false,
+  fitViewport = false,
 }: PdfDocumentViewerProps) {
-  const [viewerMode, setViewerMode] = useState<"google" | "direct">("google");
+  const [viewerMode, setViewerMode] = useState<"google" | "direct">(fitViewport ? "direct" : "google");
   const cleanUrl = stegaClean(url || "").trim();
 
   if (!cleanUrl || cleanUrl === "#" || cleanUrl.startsWith("javascript:")) {
@@ -31,7 +33,7 @@ export default function PdfDocumentViewer({
   )}&embedded=true`;
 
   const currentIframeSrc =
-    viewerMode === "google" ? googleDocsViewerUrl : `${cleanUrl}#toolbar=1&navpanes=0`;
+    viewerMode === "google" ? googleDocsViewerUrl : `${cleanUrl.split("#")[0]}#toolbar=1&navpanes=0${fitViewport ? "&view=FitH" : ""}`;
 
   return (
     <div
@@ -100,7 +102,9 @@ export default function PdfDocumentViewer({
             title={title}
             loading="lazy"
             className={`w-full border-0 block bg-stone-100 ${
-              compact
+              fitViewport
+                ? "h-[75dvh] min-h-[320px]"
+                : compact
                 ? "h-[450px] sm:h-[550px]"
                 : "h-[550px] sm:h-[750px] md:h-[850px]"
             }`}

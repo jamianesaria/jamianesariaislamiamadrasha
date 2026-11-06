@@ -25,6 +25,7 @@ export default function PublicResultsSection({
     [records, admission]
   );
   const classLabel = (record: ResultDocument) =>
+    (stegaClean(record.classId || "") === "all" ? "সকল শ্রেণি" : "") ||
     availableClasses.find((item) => item.id === stegaClean(record.classId || ""))?.name ||
     stegaClean(record.className || "");
   const years = [...new Set(candidates.map((record) => stegaClean(record.academicYear)))].filter(Boolean);
@@ -32,7 +33,7 @@ export default function PublicResultsSection({
   const results = candidates.filter(
     (record) =>
       (!year || stegaClean(record.academicYear) === year) &&
-      (!className || classLabel(record) === className)
+      (!className || stegaClean(record.classId || "") === "all" || classLabel(record) === className)
   );
 
   const displayList = searched ? results : candidates;
@@ -224,6 +225,7 @@ export default function PublicResultsSection({
             </div>
 
             <PdfDocumentViewer
+              fitViewport
               url={stegaClean(activeRecord.meritListPdfUrl)}
               title={`${activeRecord.title} - মেধা তালিকা ও ফলাফল`}
               badge="অনুমোদিত ফলাফল ও মেধা তালিকা PDF"

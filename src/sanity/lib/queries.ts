@@ -573,7 +573,7 @@ export const examResultsQuery = groq`*[_type == "examResult" && !defined(archive
   title,
   academicYear,
   examTerm,
-  className,
+  "className": select(classId == "all" => "সকল শ্রেণি", className),
   classId,
   isPublished,
   summaryNotes,

@@ -7,7 +7,7 @@ export const examResultType = defineType({
   type: "document",
   description: "এখানে কেবল প্রকাশের অনুমোদনপ্রাপ্ত ফলাফলের বিজ্ঞপ্তি ও পাবলিক তালিকা দিন। ব্যক্তিগত শিক্ষার্থী রেকর্ড ইনবক্সের সুরক্ষিত ব্যবস্থার বাইরে প্রকাশ করবেন না।",
   fields: [
-    defineField({ name: "classId", title: "ফলাফলের শ্রেণি", type: "string", options: { list: availableClasses.map((item) => ({ title: item.name, value: item.id })) } }),
+    defineField({ name: "classId", title: "ফলাফলের শ্রেণি", type: "string", options: { list: [{ title: "সকল শ্রেণি (All Classes)", value: "all" }, ...availableClasses.map((item) => ({ title: item.name, value: item.id }))] }, description: "একটি PDF-এ সব শ্রেণির ফলাফল থাকলে সকল শ্রেণি নির্বাচন করুন।" }),
     defineField({
       name: "title",
       title: "ফলাফলের শিরোনাম",
@@ -39,7 +39,7 @@ export const examResultType = defineType({
       name: "className",
       title: "শ্রেণি / বিভাগ",
       type: "string",
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.custom((value, context) => value || context.document?.classId ? true : "ফলাফলের শ্রেণি নির্বাচন করুন অথবা শ্রেণি / বিভাগ লিখুন।"),
     }),
     defineField({
       name: "isPublished",
