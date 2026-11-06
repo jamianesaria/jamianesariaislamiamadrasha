@@ -1,5 +1,6 @@
 import { defineField, defineType } from "sanity";
 import { availableClasses } from "@/data/siteData";
+import { examTerms } from "@/data/examTerms";
 
 export const examResultType = defineType({
   name: "examResult",
@@ -27,11 +28,7 @@ export const examResultType = defineType({
       title: "পরীক্ষার ধরন",
       type: "string",
       options: {
-        list: [
-          { title: "বার্ষিক পরীক্ষা (Annual)", value: "annual" },
-          { title: "অর্ধ-বার্ষিক পরীক্ষা (Half-Yearly)", value: "half-yearly" },
-          { title: "ভর্তি পরীক্ষা (Admission Test)", value: "admission" },
-        ],
+        list: examTerms,
       },
       validation: (Rule) => Rule.required(),
     }),

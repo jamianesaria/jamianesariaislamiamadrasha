@@ -7,6 +7,7 @@ import type { ResultDocument } from "@/sanity/lib/documents";
 import { EditableText } from "@/content/client";
 import PdfDocumentViewer from "./PdfDocumentViewer";
 import { availableClasses } from "@/data/siteData";
+import { examTerms } from "@/data/examTerms";
 
 export default function PublicResultsSection({
   records,
@@ -17,6 +18,7 @@ export default function PublicResultsSection({
 }) {
   const [year, setYear] = useState("");
   const [className, setClassName] = useState("");
+  const [examTerm, setExamTerm] = useState("");
   const [searched, setSearched] = useState(false);
   const [selectedRecordId, setSelectedRecordId] = useState<string | null>(null);
 
@@ -33,6 +35,7 @@ export default function PublicResultsSection({
   const results = candidates.filter(
     (record) =>
       (!year || stegaClean(record.academicYear) === year) &&
+      (admission || !examTerm || stegaClean(record.examTerm) === examTerm) &&
       (!className || stegaClean(record.classId || "") === "all" || classLabel(record) === className)
   );
 
@@ -66,7 +69,7 @@ export default function PublicResultsSection({
 
       <div className="p-4 sm:p-6 space-y-5">
         {/* Search & Filter Bar */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+        <div className={`grid grid-cols-1 sm:grid-cols-2 ${admission ? "lg:grid-cols-3" : "lg:grid-cols-4"} gap-4 items-end`}>
           <label className="text-xs font-bold text-gray-700">
             <EditableText document="copy.ui.PublicResultsSection" entry="e12m8t49" fallback={"শ্রেণি"} />
             <select
@@ -108,6 +111,27 @@ export default function PublicResultsSection({
               ))}
             </select>
           </label>
+
+          {!admission && (
+            <label className="text-xs font-bold text-gray-700">
+              <EditableText document="copy.ui.PublicResultsSection" entry="examTermLabel" fallback="পরীক্ষার ধরন" />
+              <select
+                className="block w-full border border-gray-300 rounded px-3 py-2 mt-1 bg-white cursor-pointer"
+                value={examTerm}
+                onChange={(event) => {
+                  setExamTerm(event.target.value);
+                  setSearched(false);
+                }}
+              >
+                <option value="">
+                  <EditableText plain document="copy.ui.PublicResultsSection" entry="allExamTerms" fallback="সব পরীক্ষার ধরন" />
+                </option>
+                {examTerms.filter((term) => term.value !== "admission").map((term) => (
+                  <option key={term.value} value={term.value}>{term.title}</option>
+                ))}
+              </select>
+            </label>
+          )}
 
           <button
             className="inline-flex items-center justify-center gap-2 rounded bg-[#371b61] hover:bg-[#251044] text-white px-5 py-2 text-sm font-semibold transition-colors cursor-pointer"

@@ -23111,6 +23111,22 @@
     "_type": "pageContent",
     "entries": [
       {
+        "_key": "examTermLabel",
+        "_type": "contentEntry",
+        "kind": "text",
+        "label": "পরীক্ষার ধরন (Exam type label)",
+        "source": "filters.examTerm.label",
+        "text": "পরীক্ষার ধরন"
+      },
+      {
+        "_key": "allExamTerms",
+        "_type": "contentEntry",
+        "kind": "text",
+        "label": "সব পরীক্ষার ধরন (All exam types)",
+        "source": "filters.examTerm.all",
+        "text": "সব পরীক্ষার ধরন"
+      },
+      {
         "_key": "e12m8t49",
         "_type": "contentEntry",
         "kind": "text",
