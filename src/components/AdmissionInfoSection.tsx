@@ -1724,7 +1724,7 @@ export default function AdmissionInfoSection({
                 <h2 className="text-xl sm:text-2xl font-black text-[#014d26] mt-0.5">
                   {data.institutionName}
                 </h2>
-                <p className="text-xs font-bold text-gray-700"><EditableText document="copy.ui.AdmissionInfoSection" entry="ejjarh8" fallback={"ঠিকানা: "} />{data.address}<EditableText document="copy.ui.AdmissionInfoSection" entry="elg4vms" fallback={" | ফোন: ০১৭১৬২৯৬৩৭৯, ০১৭৩৪৩১৯৪২৬, ০১৯০১৪৪৭১৬০"} /></p>
+                <p className="text-xs font-bold text-gray-700"><EditableText document="copy.ui.AdmissionInfoSection" entry="ejjarh8" fallback={"ঠিকানা: "} />{data.address}<EditableText document="copy.ui.AdmissionInfoSection" entry="elg4vms" fallback={" | ফোন: +৮৮০১৭১৬২৯৬৩৭৯, +৮৮০১৭৩৪৩১৯৪২৬, +৮৮০১৯০১৪৪৭১৬০"} /></p>
                 <div className="mt-2 inline-block bg-[#014d26] text-white px-4 py-1 rounded-full text-xs sm:text-sm font-black border border-amber-300"><EditableText document="copy.ui.AdmissionInfoSection" entry="e6thyag" fallback={"ছাত্র ভর্তি আবেদন ফরম — শিক্ষাবর্ষ: "} />{data.sessionName}<EditableText document="copy.ui.AdmissionInfoSection" entry="e1oh19o" fallback={" ("} />{data.hijriYear}<EditableText document="copy.ui.AdmissionInfoSection" entry="e10o0p9o" fallback={")"} /></div>
 
                 {/* Passport Photo Box on Top Right */}

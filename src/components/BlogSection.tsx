@@ -657,11 +657,11 @@ export default function BlogSection({ initialPosts }: BlogSectionProps = {}) {
             <p className="text-xs text-gray-600 leading-relaxed"><EditableText document="copy.ui.BlogSection" entry="emt96lf" fallback={"দ্বীনি শিক্ষা, ভর্তি ও এতিমখানা তহবিলে অনুদান সংক্রান্ত যে কোনো তথ্যের জন্য আমাদের হেল্পডেস্কে যোগাযোগ করতে পারেন।"} /></p>
             <div className="pt-2 border-t border-gray-100 flex flex-col gap-2">
               <a
-                href="tel:01712218086"
+                href="tel:+8801712218086"
                 className="flex items-center justify-between text-xs font-bold text-[#016332] bg-emerald-50 px-3 py-2 rounded-lg hover:bg-emerald-100 transition-colors"
               >
                 <span><EditableText document="copy.ui.BlogSection" entry="ec4zju" fallback={"অফিস হটলাইন:"} /></span>
-                <span><EditableText document="copy.ui.BlogSection" entry="esmlmpc" fallback={"০১৭১২-২১৮০৮৬"} /></span>
+                <span><EditableText document="copy.ui.BlogSection" entry="esmlmpc" fallback={"+৮৮০১৭১২২১৮০৮৬"} /></span>
               </a>
               <Link
                 href="/admission"

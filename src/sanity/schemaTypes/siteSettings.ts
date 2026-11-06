@@ -53,14 +53,14 @@ export const siteSettingsType = defineType({
       name: "phone",
       title: "প্রধান মোবাইল নম্বর",
       type: "string",
-      initialValue: "01716296379",
+      initialValue: "+8801716296379",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "emergencyPhone",
       title: "জরুরি হেল্পলাইন",
       type: "string",
-      initialValue: "01713004929",
+      initialValue: "+8801713004929",
     }),
     defineField({
       name: "email",

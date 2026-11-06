@@ -269,10 +269,10 @@ export default function BadriKafilaSection() {
 
       {/* =====================================================================
           ৩। ১. কাফেলাটি ৩১৩ সদস্যবিশিষ্ট হওয়ার ৪টি ঐতিহাসিক রহস্য
-          (4 Divine Pillars crafted as Golden Tablets, not flat cards)
+          Four subsections in one shared panel
       ===================================================================== */}
-      <section id="mystery" className="space-y-8 scroll-mt-20">
-        <div className="text-center max-w-3xl mx-auto space-y-3">
+      <section id="mystery" className="rounded-3xl bg-[#FAF7F0] border-2 border-amber-700/30 p-6 sm:p-11 shadow-xl space-y-6 scroll-mt-20">
+        <div className="text-left space-y-3 border-b border-amber-200 pb-5">
           <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#016332] bg-emerald-50 px-3.5 py-1 rounded-full border border-emerald-200">
             <Sparkles size={14} />
             <span><EditableText document="copy.ui.BadriKafilaSection" entry="e1pldc41" fallback={"কোরআন, হাদিস ও ইতিহাসের মহিমা"} /></span>
@@ -281,12 +281,12 @@ export default function BadriKafilaSection() {
           <p className="text-xs sm:text-sm text-stone-600 leading-relaxed"><EditableText document="copy.ui.BadriKafilaSection" entry="e1dn6ddu" fallback={"হাজারো রহস্যে ঘেরা এই মহাবিশ্বের মহান স্রষ্টা ও একচ্ছত্র নিয়ন্ত্রক মহান আল্লাহ। তিনি একক, অদ্বিতীয় ও বিজোড়। তিনি বিজোড় ভালোবাসেন। ‘৩১৩’ একটি ঐতিহাসিক ও আধ্যাত্মিক সংখ্যা। এই বিজোড় সংখ্যাটি প্রভূত বরকতময়, মহিমামণ্ডিত ও নানাবিধ রহস্যে ঘেরা।"} /></p>
         </div>
 
-        {/* 4 Majestic Golden Tablets */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+        {/* Four subsections within the shared panel */}
+        <div className="divide-y divide-amber-200 space-y-6">
           {/* Tablet 1: Badr Battlefield */}
-          <div className="relative rounded-3xl bg-gradient-to-br from-[#FFFDF8] via-[#FAF6EE] to-[#F5EEDC] p-7 sm:p-8 border-2 border-amber-600/40 shadow-md space-y-4 flex flex-col justify-between group hover:border-amber-600 transition-all">
+          <div className="pt-6 first:pt-0 space-y-4">
             <div className="space-y-3">
-              <div className="flex items-center justify-between border-b border-amber-200/80 pb-3">
+              <div className="flex flex-wrap items-center gap-3 border-b border-amber-200/80 pb-3">
                 <span className="w-9 h-9 rounded-xl bg-[#016332] text-amber-300 font-black text-sm flex items-center justify-center shadow-xs"><EditableText document="copy.ui.BadriKafilaSection" entry="e2yjit6" fallback={"১.১"} /></span>
                 <span className="text-[11px] font-bold text-emerald-900 bg-emerald-100/80 px-3 py-0.5 rounded-full border border-emerald-300"><EditableText document="copy.ui.BadriKafilaSection" entry="e154bt7b" fallback={"বদর প্রান্তর ও ৫,০০০ ফেরেশতা"} /></span>
               </div>
@@ -319,9 +319,9 @@ export default function BadriKafilaSection() {
           </div>
 
           {/* Tablet 2: Symbol of Ultimate Victory */}
-          <div className="relative rounded-3xl bg-gradient-to-br from-[#FFFDF8] via-[#FAF6EE] to-[#F5EEDC] p-7 sm:p-8 border-2 border-amber-600/40 shadow-md space-y-4 flex flex-col justify-between group hover:border-amber-600 transition-all">
+          <div className="pt-6 first:pt-0 space-y-4">
             <div className="space-y-3">
-              <div className="flex items-center justify-between border-b border-amber-200/80 pb-3">
+              <div className="flex flex-wrap items-center gap-3 border-b border-amber-200/80 pb-3">
                 <span className="w-9 h-9 rounded-xl bg-[#8B111A] text-amber-300 font-black text-sm flex items-center justify-center shadow-xs"><EditableText document="copy.ui.BadriKafilaSection" entry="evd45co" fallback={"১.২"} /></span>
                 <span className="text-[11px] font-bold text-amber-900 bg-amber-100/80 px-3 py-0.5 rounded-full border border-amber-300"><EditableText document="copy.ui.BadriKafilaSection" entry="e14gqytq" fallback={"ঐতিহাসিক বিজয়ের প্রতীক"} /></span>
               </div>
@@ -350,9 +350,9 @@ export default function BadriKafilaSection() {
           </div>
 
           {/* Tablet 3: Blessed Number & Healing/Du'a */}
-          <div className="relative rounded-3xl bg-gradient-to-br from-[#FFFDF8] via-[#FAF6EE] to-[#F5EEDC] p-7 sm:p-8 border-2 border-amber-600/40 shadow-md space-y-4 flex flex-col justify-between group hover:border-amber-600 transition-all">
+          <div className="pt-6 first:pt-0 space-y-4">
             <div className="space-y-3">
-              <div className="flex items-center justify-between border-b border-amber-200/80 pb-3">
+              <div className="flex flex-wrap items-center gap-3 border-b border-amber-200/80 pb-3">
                 <span className="w-9 h-9 rounded-xl bg-[#014222] text-amber-300 font-black text-sm flex items-center justify-center shadow-xs"><EditableText document="copy.ui.BadriKafilaSection" entry="esu4lph" fallback={"১.৩"} /></span>
                 <span className="text-[11px] font-bold text-purple-900 bg-purple-100/80 px-3 py-0.5 rounded-full border border-purple-300"><EditableText document="copy.ui.BadriKafilaSection" entry="ejaf8xc" fallback={"বালা-মুসিবত দূরীকরণ আমল"} /></span>
               </div>
@@ -381,9 +381,9 @@ export default function BadriKafilaSection() {
           </div>
 
           {/* Tablet 4: Imam Mahdi's 313 Officers */}
-          <div className="relative rounded-3xl bg-gradient-to-br from-[#FFFDF8] via-[#FAF6EE] to-[#F5EEDC] p-7 sm:p-8 border-2 border-amber-600/40 shadow-md space-y-4 flex flex-col justify-between group hover:border-amber-600 transition-all">
+          <div className="pt-6 first:pt-0 space-y-4">
             <div className="space-y-3">
-              <div className="flex items-center justify-between border-b border-amber-200/80 pb-3">
+              <div className="flex flex-wrap items-center gap-3 border-b border-amber-200/80 pb-3">
                 <span className="w-9 h-9 rounded-xl bg-[#8B111A] text-amber-300 font-black text-sm flex items-center justify-center shadow-xs"><EditableText document="copy.ui.BadriKafilaSection" entry="etuvqlg" fallback={"১.৪"} /></span>
                 <span className="text-[11px] font-bold text-sky-900 bg-sky-100/80 px-3 py-0.5 rounded-full border border-sky-300"><EditableText document="copy.ui.BadriKafilaSection" entry="exnpj9w" fallback={"শেষ জামানার ভবিষ্যদ্বাণী"} /></span>
               </div>
@@ -452,7 +452,7 @@ export default function BadriKafilaSection() {
           ৫। ৩. আজীবন দাতা সদস্যদের প্রতি আহ্বান & ৪. সদস্য হওয়ার নিয়ম
       ===================================================================== */}
       <section id="rules" className="space-y-8 scroll-mt-20">
-        <div className="text-center max-w-2xl mx-auto space-y-2">
+        <div className="text-left space-y-2">
           <span className="text-xs font-bold text-[#8B111A] bg-red-50 px-3.5 py-1 rounded-full uppercase border border-red-200"><EditableText document="copy.ui.BadriKafilaSection" entry="e1l8iwm6" fallback={"পবিত্র দায়িত্ব ও আর্থিক কাঠামো"} /></span>
           <h2 className="text-2xl sm:text-3xl font-black text-stone-900"><EditableText document="copy.ui.BadriKafilaSection" entry="e1kj0qgz" fallback={"৩. সদস্যদের প্রতি আহ্বান ও ৪. সদস্য হওয়ার নিয়ম"} /></h2>
         </div>
@@ -646,7 +646,7 @@ export default function BadriKafilaSection() {
           ৭। ‘আজীবন দাতা সদস্য সনদ’ (Official Certificate Display)
       ===================================================================== */}
       <section id="certificate" className="space-y-6 scroll-mt-20">
-        <div className="text-center max-w-2xl mx-auto space-y-2">
+        <div className="text-left space-y-2">
           <span className="text-xs font-bold text-amber-800 bg-amber-100 px-3.5 py-1 rounded-full uppercase border border-amber-300"><EditableText document="copy.ui.BadriKafilaSection" entry="ecmwd3c" fallback={"দালিলিক স্বীকৃতি ও মর্যাদা"} /></span>
           <h2 className="text-2xl sm:text-3xl font-black text-stone-900"><EditableText document="copy.ui.BadriKafilaSection" entry="eo0bkxm" fallback={"‘আজীবন দাতা সদস্য সনদ’"} /></h2>
           <p className="text-xs sm:text-sm text-stone-600"><EditableText document="copy.ui.BadriKafilaSection" entry="ege2iro" fallback={"মাদরাসার পক্ষ থেকে প্রত্যেক সম্মানিত সদস্যকে একটি ঐতিহ্যবাহী ও সুদৃশ্য প্রাতিষ্ঠানিক ‘আজীবন দাতা সদস্য সনদ’ প্রদান করা হবে।"} /></p>

@@ -131,11 +131,11 @@ export default async function HomePrimarySection({
       <section className="max-w-7xl mx-auto px-3 sm:px-6 py-8 sm:py-11">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-7 items-start">
           {/* LEFT MAIN COLUMN (8 cols) */}
-          <div className="lg:col-span-8 space-y-6 lg:space-y-7">
+          <div className="contents lg:block lg:col-span-8 lg:space-y-7">
             {/* ৩। আমাদের জামিয়ায় স্বাগতম */}
             <article
               id="welcome"
-              className="bg-white rounded-xl border border-gray-200/90 shadow-sm hover:shadow-md transition-shadow overflow-hidden scroll-mt-14"
+              className="order-1 lg:order-none bg-white rounded-xl border border-gray-200/90 shadow-sm hover:shadow-md transition-shadow overflow-hidden scroll-mt-14"
             >
               <div className="bg-gradient-to-r from-[#014d26] via-[#016332] to-[#02733b] text-white px-4 sm:px-6 py-3 border-b-2 border-[#D9822B] flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
@@ -199,7 +199,7 @@ export default async function HomePrimarySection({
             {/* ৫. আমাদের লক্ষ্য ও উদ্দেশ্য */}
             <article
               id="mission"
-              className="bg-white rounded-xl border border-gray-200/90 shadow-sm hover:shadow-md transition-shadow overflow-hidden scroll-mt-14"
+              className="order-3 lg:order-none bg-white rounded-xl border border-gray-200/90 shadow-sm hover:shadow-md transition-shadow overflow-hidden scroll-mt-14"
             >
               <div className="bg-gradient-to-r from-[#014d26] via-[#016332] to-[#02733b] text-white px-4 sm:px-6 py-3 border-b-2 border-[#D9822B] flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
@@ -258,11 +258,11 @@ export default async function HomePrimarySection({
           </div>
 
           {/* RIGHT INSTITUTIONAL SIDEBAR COLUMN (4 cols) */}
-          <aside className="lg:col-span-4 space-y-6 lg:space-y-7">
+          <aside className="contents lg:block lg:col-span-4 lg:space-y-7">
             {/* ৪। এক নজরে আমাদের জামিয়া (Institutional Profile Table) */}
             <div
               id="at-a-glance"
-              className="bg-white rounded-xl border border-gray-200/90 shadow-sm overflow-hidden scroll-mt-14"
+              className="order-2 lg:order-none bg-white rounded-xl border border-gray-200/90 shadow-sm overflow-hidden scroll-mt-14"
             >
               <div className="bg-gradient-to-r from-[#750d15] via-[#8B111A] to-[#9e141e] text-white px-4 sm:px-5 py-3 border-b-2 border-[#D9822B] flex items-center gap-2">
                 <Building2 size={17} className="text-amber-300 shrink-0" />
@@ -360,7 +360,7 @@ export default async function HomePrimarySection({
             {/* ৯। নোটিশ ও বিজ্ঞপ্তি (Official Notice Board) */}
             <div
               id="notices"
-              className="bg-white rounded-xl border border-gray-200/90 shadow-sm overflow-hidden scroll-mt-14"
+              className="order-4 lg:order-none bg-white rounded-xl border border-gray-200/90 shadow-sm overflow-hidden scroll-mt-14"
             >
               <div className="bg-gradient-to-r from-[#014d26] via-[#016332] to-[#02733b] text-white px-4 sm:px-5 py-3 border-b-2 border-[#D9822B] flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -810,27 +810,25 @@ export default async function HomePrimarySection({
                 )}
               </div>
 
-              {/* Right Column: Support Pillars Ledger */}
+              {/* Right Column: Always-visible support appeal */}
               <div className="lg:col-span-5 bg-[#FAF7F0]/90 border border-[#D9822B]/30 rounded-xl p-4 sm:p-5 shadow-2xs">
-                <h4 className="text-xs sm:text-sm font-bold text-[#016332] pb-2.5 mb-3.5 border-b border-gray-200 flex items-center justify-between">
-                  <span><EditableText document="copy.ui.HomePrimarySection" entry="e1g5sq6y" fallback={"সহযোগিতার গুরুত্বপূর্ণ খাতসমূহ :"} /></span>
-                  <span className="text-[11px] font-semibold text-[#8B111A] bg-[#8B111A]/10 px-2 py-0.5 rounded-full"><EditableText document="copy.ui.HomePrimarySection" entry="e5re446" fallback={"সদকাহ ও অনুদান"} /></span>
-                </h4>
-
-                <div className="space-y-2.5">
-                  {orphanageSupport.supportPillars.map((pillar, idx) => (
-                    <div
-                      key={idx}
-                      className="bg-white border border-gray-200/90 rounded-lg p-3 border-l-3 border-l-[#016332] hover:border-[#016332]/50 transition-colors shadow-2xs"
-                    >
-                      <h5 className="text-xs sm:text-[13px] font-bold text-gray-900 mb-0.5">
-                        {pillar.title}
-                      </h5>
-                      <p className="text-[11.5px] sm:text-xs text-gray-600 leading-relaxed">
-                        {pillar.desc}
-                      </p>
-                    </div>
-                  ))}
+                <h4 className="text-base sm:text-lg font-bold text-[#016332] pb-3 mb-4 border-b border-gray-200">{orphanageSupport.appealTitle}</h4>
+                <div className="space-y-5 text-sm text-gray-700">
+                  <div>
+                    <h5 className="mb-3 font-bold text-[#016332]">{orphanageSupport.waysTitle}</h5>
+                    <ol className="list-decimal space-y-2 pl-6 marker:font-bold marker:text-[#8B111A]">
+                      {orphanageSupport.supportWays.map((way, index) => <li key={index}>{way}</li>)}
+                    </ol>
+                    <p className="mt-4 leading-relaxed">{orphanageSupport.impact}</p>
+                  </div>
+                  <div className="border-t border-[#D9822B]/30 pt-4">
+                    <h5 className="mb-3 font-bold text-[#016332]">{orphanageSupport.closingTitle}</h5>
+                    <p className="leading-relaxed">{orphanageSupport.closingDescription}</p>
+                    <p className="mt-3 leading-relaxed">{orphanageSupport.closingPrayer}</p>
+                    <Link href={orphanageSupport.buttons[1].href} className="mt-4 inline-flex items-center gap-1.5 font-bold text-[#8B111A] hover:underline">
+                      {orphanageSupport.buttons[1].label}<ArrowRight size={14} className="shrink-0" />
+                    </Link>
+                  </div>
                 </div>
 
                 {/* Quick Bank & bKash info */}
@@ -863,30 +861,7 @@ export default async function HomePrimarySection({
               </div>
             </div>
 
-            {/* Full client appeal stays in the existing card; details keep the home page compact. */}
-            <details className="group border-t border-gray-200 bg-[#FAF7F0]/50">
-              <summary className="flex cursor-pointer items-center justify-between gap-3 px-5 py-3.5 text-sm font-bold text-[#016332] marker:content-none sm:px-7 [&::-webkit-details-marker]:hidden">
-                <span>{orphanageSupport.appealTitle}</span>
-                <span aria-hidden="true" className="text-lg leading-none transition-transform group-open:rotate-45">+</span>
-              </summary>
-              <div className="grid gap-5 border-t border-gray-200 px-5 py-5 text-sm text-gray-700 sm:px-7 lg:grid-cols-2">
-                <div>
-                  <h4 className="mb-3 font-bold text-[#016332]">{orphanageSupport.waysTitle}</h4>
-                  <ol className="list-decimal space-y-2 pl-6 marker:font-bold marker:text-[#8B111A]">
-                    {orphanageSupport.supportWays.map((way, index) => <li key={index}>{way}</li>)}
-                  </ol>
-                  <p className="mt-4 leading-relaxed">{orphanageSupport.impact}</p>
-                </div>
-                <div className="rounded-lg border border-[#D9822B]/30 bg-white p-4">
-                  <h4 className="mb-3 font-bold text-[#016332]">{orphanageSupport.closingTitle}</h4>
-                  <p className="leading-relaxed">{orphanageSupport.closingDescription}</p>
-                  <p className="mt-3 leading-relaxed">{orphanageSupport.closingPrayer}</p>
-                  <Link href={orphanageSupport.buttons[1].href} className="mt-4 inline-flex items-center gap-1.5 font-bold text-[#8B111A] hover:underline">
-                    {orphanageSupport.buttons[1].label}<ArrowRight size={14} />
-                  </Link>
-                </div>
-              </div>
-            </details>
+
           </div>
 
           {/* ===================================================================
