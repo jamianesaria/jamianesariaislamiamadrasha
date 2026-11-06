@@ -281,7 +281,7 @@ export default async function HomePrimarySection({
 
                 {/* ২. জমিদাতাগন (প্রতিষ্ঠাকালের ঠিক নিচে) */}
                 <div className="grid grid-cols-12 px-4 py-3 bg-[#F9FAF8] hover:bg-[#FAF7F0]/50 transition-colors">
-                  <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e1i3k9cx" fallback={"জমিদাতাগন"} /></span>
+                  <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e1i3k9cx" fallback={"জমিদাতাগণ"} /></span>
                   <div className="col-span-8 font-semibold text-gray-900 space-y-1">
                     {atAGlance.landDonors.map((donor, idx) => (
                       <div
@@ -317,7 +317,7 @@ export default async function HomePrimarySection({
 
                 {/* ৬. শিক্ষক (শিক্ষা কার্যক্রমের ঠিক উপরে) */}
                 <div className="grid grid-cols-12 px-4 py-3 bg-[#F9FAF8] hover:bg-[#FAF7F0]/50 transition-colors">
-                  <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="eglance_teachers" fallback={"শিক্ষক"} /></span>
+                  <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="eglance_teachers" fallback={"শিক্ষকবৃন্দ"} /></span>
                   <span className="col-span-8 font-bold text-gray-900"><EditableText document="copy.ui.HomePrimarySection" entry="ecolon_teachers" fallback={": "} />{atAGlance.teachers || "৩২ জন"}
                   </span>
                 </div>
@@ -330,19 +330,21 @@ export default async function HomePrimarySection({
                 </div>
 
                 {/* ৮. শিক্ষা কার্যক্রম */}
-                <div className="grid grid-cols-12 px-4 py-3 bg-[#F9FAF8] hover:bg-[#FAF7F0]/50 transition-colors">
-                  <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e12q7x5k" fallback={"শিক্ষা কার্যক্রম"} /></span>
-                  <span className="col-span-8 font-semibold text-gray-900 leading-snug"><EditableText document="copy.ui.HomePrimarySection" entry="ehivn56" fallback={": "} />{atAGlance.academicPrograms}
-                  </span>
+                <div className="px-4 py-3 bg-[#F9FAF8] hover:bg-[#FAF7F0]/50 transition-colors">
+                  <h3 className="font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e12q7x5k" fallback={"শিক্ষা কার্যক্রম"} /></h3>
+                  <ul className="mt-2 list-disc pl-5 space-y-1 font-semibold text-gray-900 leading-relaxed">
+                    {atAGlance.academicPrograms.split(/\r?\n/).map((program) => program.trim()).filter(Boolean).map((program, index) => <li key={index}>{program}</li>)}
+                  </ul>
                 </div>
 
-                {/* ৯. নিবন্ধন নম্বর */}
-                <div className="grid grid-cols-12 px-4 py-3 bg-white hover:bg-[#FAF7F0]/50 transition-colors">
-                  <span className="col-span-4 font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e116wvzk" fallback={"নিবন্ধন নম্বর"} /></span>
-                  <div className="col-span-8 text-xs font-semibold text-gray-800 space-y-1">
-                    <div><EditableText document="copy.ui.HomePrimarySection" entry="e1x8rbwy" fallback={"হাইআতুল উলয়া: "} /><span className="font-bold text-[#016332]"><EditableText document="copy.ui.HomePrimarySection" entry="eje7drx" fallback={"০০৬৮৫"} /></span><EditableText document="copy.ui.HomePrimarySection" entry="eiubbvy" fallback={" | বেফাক: "} /><span className="font-bold text-[#8B111A]"><EditableText document="copy.ui.HomePrimarySection" entry="e9a51v7" fallback={"১/৭৪৩"} /></span></div>
-                    <div><EditableText document="copy.ui.HomePrimarySection" entry="e16v2far" fallback={"এতিমখানা (সমাজসেবা): "} /><span className="font-bold text-[#016332]"><EditableText document="copy.ui.HomePrimarySection" entry="eaofc4i" fallback={"ঢ-০৫০৪"} /></span></div>
-                  </div>
+                {/* ৯. নিবন্ধন ও স্বীকৃতি */}
+                <div className="px-4 py-3 bg-white hover:bg-[#FAF7F0]/50 transition-colors">
+                  <h3 className="font-bold text-gray-600"><EditableText document="copy.ui.HomePrimarySection" entry="e116wvzk" fallback={"নিবন্ধন ও স্বীকৃতি"} /></h3>
+                  <ul className="mt-2 list-disc pl-5 space-y-1 font-semibold text-gray-800 leading-relaxed">
+                    <li><EditableText document="copy.ui.HomePrimarySection" entry="e1x8rbwy" fallback={"আল-হাইআতুল উলয়া: "} /><span className="font-bold text-[#016332]"><EditableText document="copy.ui.HomePrimarySection" entry="eje7drx" fallback={"০০৬৮৫"} /></span></li>
+                    <li><EditableText document="copy.ui.HomePrimarySection" entry="eiubbvy" fallback={"বেফাকুল মাদারিসিল আরাবিয়া: "} /><span className="font-bold text-[#8B111A]"><EditableText document="copy.ui.HomePrimarySection" entry="e9a51v7" fallback={"১/৭৪৩"} /></span></li>
+                    <li><EditableText document="copy.ui.HomePrimarySection" entry="e16v2far" fallback={"এতিমখানা (সমাজসেবা): "} /><span className="font-bold text-[#016332]"><EditableText document="copy.ui.HomePrimarySection" entry="eaofc4i" fallback={"ঢ-০৫০৪"} /></span></li>
+                  </ul>
                 </div>
 
                 {/* ১০. ঠিকানা ও ফোন নম্বর */}

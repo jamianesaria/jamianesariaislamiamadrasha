@@ -5393,57 +5393,57 @@
         "_key": "e1vgp79r",
         "_type": "contentEntry",
         "kind": "text",
-        "label": "এক নজরে আমাদের জামিয়া",
+        "label": "এক নজরে আমাদের জামিয়া",
         "source": "atAGlance.title",
-        "text": "এক নজরে আমাদের জামিয়া"
+        "text": "এক নজরে আমাদের জামিয়া"
       },
       {
         "_key": "e14b4j1r",
         "_type": "contentEntry",
         "kind": "text",
-        "label": "১৯৬৯ খ্রিষ্টাব্দ (১৩৭৬ বাংলা | ১৩৮৮ হিজরি)",
+        "label": "১৯৬৯ খ্রিষ্টাব্দ",
         "source": "atAGlance.established",
-        "text": "১৯৬৯ খ্রিষ্টাব্দ (১৩৭৬ বাংলা | ১৩৮৮ হিজরি)"
+        "text": "১৯৬৯ খ্রিষ্টাব্দ"
       },
       {
         "_key": "e1hrpzup",
         "_type": "contentEntry",
         "kind": "text",
-        "label": "মনিরুজ্জামান মনু",
+        "label": "হাজী মনিরুজ্জামান মনু",
         "source": "atAGlance.mutawalli",
-        "text": "মনিরুজ্জামান মনু"
+        "text": "হাজী মনিরুজ্জামান মনু"
       },
       {
         "_key": "e746fkl",
         "_type": "contentEntry",
         "kind": "text",
-        "label": "১। মরহুম চান মিয়া সাহেব",
+        "label": "মরহুম চাঁন মিয়া",
         "source": "atAGlance.landDonors.0",
-        "text": "১। মরহুম চান মিয়া সাহেব"
+        "text": "মরহুম চাঁন মিয়া"
       },
       {
         "_key": "e6u6tvm",
         "_type": "contentEntry",
         "kind": "text",
-        "label": "২। আমিনা খাতুন",
+        "label": "মরহুমা আমেনা খাতুন",
         "source": "atAGlance.landDonors.1",
-        "text": "২। আমিনা খাতুন"
+        "text": "মরহুমা আমেনা খাতুন"
       },
       {
         "_key": "e6k786n",
         "_type": "contentEntry",
         "kind": "text",
-        "label": "৩। সফর বানু",
+        "label": "মরহুমা সফর বানু",
         "source": "atAGlance.landDonors.2",
-        "text": "৩। সফর বানু"
+        "text": "মরহুমা সফর বানু"
       },
       {
         "_key": "e1d1sgi9",
         "_type": "contentEntry",
         "kind": "text",
-        "label": "কবির হোসেন শিমুল",
+        "label": "কবির হোসেন শিমুল",
         "source": "atAGlance.president",
-        "text": "কবির হোসেন শিমুল"
+        "text": "কবির হোসেন শিমুল"
       },
       {
         "_key": "eruofc1",
@@ -5457,17 +5457,17 @@
         "_key": "es4tnuh",
         "_type": "contentEntry",
         "kind": "text",
-        "label": "মক্তব, হিফজ, হিফজ রিভিশন, কিতাব ও মাদানি নেসাব বিভাগ",
+        "label": "মক্তব বিভাগ হিফজুল কুরআন বিভাগ হিফজ রিভিশন বিভাগ মাদানি নেসাব (৩য় বর্ষ পর্যন্ত)",
         "source": "atAGlance.academicPrograms",
-        "text": "মক্তব, হিফজ, হিফজ রিভিশন, কিতাব ও মাদানি নেসাব বিভাগ"
+        "text": "মক্তব বিভাগ\nহিফজুল কুরআন বিভাগ\nহিফজ রিভিশন বিভাগ\nমাদানি নেসাব (৩য় বর্ষ পর্যন্ত)\nকিতাব বিভাগ (দাওরায়ে হাদিস পর্যন্ত)"
       },
       {
         "_key": "e1ufae51",
         "_type": "contentEntry",
         "kind": "text",
-        "label": "মরকুন, তিস্তা গেট–আনোয়ার সিল্ক মিলস সংলগ্ন, টঙ্গী, গাজীপুর, বাংলাদেশ। ফোন: 01716296379",
+        "label": "মরকুন, (তিস্তাগেট–আনোয়ার সিল্ক মিলস সংলগ্ন), টঙ্গী–১৭১০, গাজীপুর, বাংলাদেশ। মোব",
         "source": "atAGlance.address",
-        "text": "মরকুন, তিস্তা গেট–আনোয়ার সিল্ক মিলস সংলগ্ন,\nটঙ্গী, গাজীপুর, বাংলাদেশ।\nফোন: 01716296379"
+        "text": "মরকুন, (তিস্তাগেট–আনোয়ার সিল্ক মিলস সংলগ্ন), টঙ্গী–১৭১০, গাজীপুর, বাংলাদেশ।\nমোবাইল: +৮৮০১৭১৬২৯৬৩৭৯"
       },
       {
         "_key": "e2c85du",
@@ -7226,9 +7226,9 @@
         "_key": "e4ullpz",
         "_type": "contentEntry",
         "kind": "text",
-        "label": "৫০০ জন",
+        "label": "প্রায় ৫০০ জন",
         "source": "atAGlance.students",
-        "text": "৫০০ জন"
+        "text": "প্রায় ৫০০ জন"
       },
       {
         "_key": "eorphan245",
@@ -20458,9 +20458,9 @@
         "_key": "e1i3k9cx",
         "_type": "contentEntry",
         "kind": "text",
-        "label": "জমিদাতাগন",
+        "label": "জমিদাতাগণ",
         "source": "text:13397",
-        "text": "জমিদাতাগন"
+        "text": "জমিদাতাগণ"
       },
       {
         "_key": "ev78mb9",
@@ -20514,17 +20514,17 @@
         "_key": "e116wvzk",
         "_type": "contentEntry",
         "kind": "text",
-        "label": "নিবন্ধন নম্বর",
+        "label": "নিবন্ধন ও স্বীকৃতি",
         "source": "text:15402",
-        "text": "নিবন্ধন নম্বর"
+        "text": "নিবন্ধন ও স্বীকৃতি"
       },
       {
         "_key": "e1x8rbwy",
         "_type": "contentEntry",
         "kind": "text",
-        "label": "হাইআতুল উলয়া: ",
+        "label": "আল-হাইআতুল উলয়া: ",
         "source": "text:15585",
-        "text": "হাইআতুল উলয়া: "
+        "text": "আল-হাইআতুল উলয়া: "
       },
       {
         "_key": "eje7drx",
@@ -20538,9 +20538,9 @@
         "_key": "eiubbvy",
         "_type": "contentEntry",
         "kind": "text",
-        "label": " | বেফাক: ",
+        "label": "বেফাকুল মাদারিসিল আরাবিয়া: ",
         "source": "text:15655",
-        "text": " | বেফাক: "
+        "text": "বেফাকুল মাদারিসিল আরাবিয়া: "
       },
       {
         "_key": "e9a51v7",

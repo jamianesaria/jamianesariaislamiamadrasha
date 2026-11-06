@@ -176,6 +176,12 @@ export const homepageType = defineType({
       initialValue: "কবির হোসেন শিমুল",
     }),
     defineField({
+      name: "atAGlanceMuhtamim",
+      title: "এক নজরে: মুহতামিম (Profile Muhtamim)",
+      type: "string",
+      description: "শুধু এক নজরে কার্ডের নাম; অন্য অংশের মুহতামিমের বাণী পরিবর্তন করে না। (Profile card only.)",
+    }),
+    defineField({
       name: "atAGlanceTeachers",
       title: "এক নজরে: শিক্ষক সংখ্যা (Teachers Count)",
       type: "string",
@@ -190,8 +196,10 @@ export const homepageType = defineType({
     defineField({
       name: "atAGlanceAcademicPrograms",
       title: "এক নজরে: শিক্ষা কার্যক্রম (Academic Programs)",
-      type: "string",
-      initialValue: "মক্তব, হিফজ, হিফজ রিভিশন, কিতাব ও মাদানি নেসাব বিভাগ",
+      type: "text",
+      rows: 5,
+      description: "প্রতি লাইনে একটি কার্যক্রম লিখুন। (One program per line.)",
+      initialValue: "মক্তব বিভাগ\nহিফজুল কুরআন বিভাগ\nহিফজ রিভিশন বিভাগ\nমাদানি নেসাব (৩য় বর্ষ পর্যন্ত)\nকিতাব বিভাগ (দাওরায়ে হাদিস পর্যন্ত)",
     }),
     defineField({
       name: "atAGlanceAddress",
