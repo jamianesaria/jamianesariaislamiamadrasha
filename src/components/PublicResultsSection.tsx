@@ -6,7 +6,7 @@ import { stegaClean } from "@sanity/client/stega";
 import type { ResultDocument } from "@/sanity/lib/documents";
 import { EditableText } from "@/content/client";
 import PdfDocumentViewer from "./PdfDocumentViewer";
-import { availableClasses } from "@/data/siteData";
+import { resultClasses } from "@/data/resultClasses";
 import { examTerms } from "@/data/examTerms";
 
 export default function PublicResultsSection({
@@ -28,7 +28,7 @@ export default function PublicResultsSection({
   );
   const classLabel = (record: ResultDocument) =>
     (stegaClean(record.classId || "") === "all" ? "সকল শ্রেণি" : "") ||
-    availableClasses.find((item) => item.id === stegaClean(record.classId || ""))?.name ||
+    resultClasses.find((item) => item.id === stegaClean(record.classId || ""))?.name ||
     stegaClean(record.className || "");
   const years = [...new Set(candidates.map((record) => stegaClean(record.academicYear)))].filter(Boolean);
   const classes = [...new Set(candidates.map(classLabel))].filter(Boolean);

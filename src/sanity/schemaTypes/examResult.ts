@@ -1,5 +1,5 @@
 import { defineField, defineType } from "sanity";
-import { availableClasses } from "@/data/siteData";
+import { resultClasses } from "@/data/resultClasses";
 import { examTerms } from "@/data/examTerms";
 
 export const examResultType = defineType({
@@ -8,7 +8,7 @@ export const examResultType = defineType({
   type: "document",
   description: "এখানে কেবল প্রকাশের অনুমোদনপ্রাপ্ত ফলাফলের বিজ্ঞপ্তি ও পাবলিক তালিকা দিন। ব্যক্তিগত শিক্ষার্থী রেকর্ড ইনবক্সের সুরক্ষিত ব্যবস্থার বাইরে প্রকাশ করবেন না।",
   fields: [
-    defineField({ name: "classId", title: "ফলাফলের শ্রেণি", type: "string", options: { list: [{ title: "সকল শ্রেণি (All Classes)", value: "all" }, ...availableClasses.map((item) => ({ title: item.name, value: item.id }))] }, description: "একটি PDF-এ সব শ্রেণির ফলাফল থাকলে সকল শ্রেণি নির্বাচন করুন।" }),
+    defineField({ name: "classId", title: "ফলাফলের শ্রেণি", type: "string", options: { list: [{ title: "সকল শ্রেণি (All Classes)", value: "all" }, ...resultClasses.map((item) => ({ title: item.name, value: item.id }))] }, description: "একটি PDF-এ সব শ্রেণির ফলাফল থাকলে সকল শ্রেণি নির্বাচন করুন।" }),
     defineField({
       name: "title",
       title: "ফলাফলের শিরোনাম",
