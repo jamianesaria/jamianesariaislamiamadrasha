@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { FileText, Search, Download, Eye } from "lucide-react";
 import { stegaClean } from "@sanity/client/stega";
 import type { ResultDocument } from "@/sanity/lib/documents";
@@ -21,6 +21,7 @@ export default function PublicResultsSection({
   const [examTerm, setExamTerm] = useState("");
   const [searched, setSearched] = useState(false);
   const [selectedRecordId, setSelectedRecordId] = useState<string | null>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
 
   const candidates = useMemo(
     () => records.filter((record) => (stegaClean(record.examTerm) === "admission") === admission),
@@ -144,8 +145,8 @@ export default function PublicResultsSection({
 
         {/* Results Data Table */}
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-left text-xs sm:text-sm">
-            <thead className="bg-gray-100">
+          <table className="block w-full border-collapse text-left text-xs sm:table sm:text-sm">
+            <thead className="hidden bg-gray-100 sm:table-header-group">
               <tr>
                 <th className="p-3 border border-gray-200">
                   <EditableText document="copy.ui.PublicResultsSection" entry="e56ry96" fallback={"ফলাফলের শিরোনাম"} />
@@ -158,7 +159,7 @@ export default function PublicResultsSection({
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="block sm:table-row-group">
               {displayList.map((record) => {
                 const isSelected = activeRecord?._id === record._id;
                 const pdfUrl = record.meritListPdfUrl ? stegaClean(record.meritListPdfUrl) : "";
@@ -166,29 +167,36 @@ export default function PublicResultsSection({
                 return (
                   <tr
                     key={record._id}
-                    className={`transition-colors ${
+                    className={`mb-3 block overflow-hidden rounded-lg border border-gray-200 transition-colors sm:mb-0 sm:table-row sm:overflow-visible sm:rounded-none sm:border-0 ${
                       isSelected ? "bg-emerald-50/50" : "hover:bg-gray-50/80"
                     }`}
                   >
-                    <td className="p-3 border border-gray-200">
-                      <strong className="text-gray-900">{record.title}</strong>
+                    <td className="block border-b border-gray-200 px-3 py-2.5 sm:table-cell sm:border sm:p-3">
+                      <strong className="break-words text-gray-900">{record.title}</strong>
                       {record.summaryNotes && (
                         <p className="mt-1 text-gray-500 whitespace-pre-wrap text-xs">
                           {record.summaryNotes}
                         </p>
                       )}
                     </td>
-                    <td className="p-3 border border-gray-200 text-gray-700 whitespace-nowrap">
+                    <td className="block border-b border-gray-200 px-3 py-2.5 text-gray-700 sm:table-cell sm:border sm:p-3 sm:whitespace-nowrap">
                       <span className="font-semibold">{classLabel(record)}</span>
                       <br />
                       <span className="text-xs text-gray-500">{record.academicYear}</span>
                     </td>
-                    <td className="p-3 border border-gray-200 text-center whitespace-nowrap">
+                    <td className="block px-3 py-2.5 text-left sm:table-cell sm:border sm:border-gray-200 sm:p-3 sm:text-center sm:whitespace-nowrap">
                       {pdfUrl ? (
-                        <div className="inline-flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-2 sm:inline-flex">
                           <button
                             type="button"
-                            onClick={() => setSelectedRecordId(record._id)}
+                            onClick={() => {
+                              setSelectedRecordId(record._id);
+                              if (window.matchMedia("(max-width: 639px)").matches) {
+                                window.requestAnimationFrame(() =>
+                                  previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+                                );
+                              }
+                            }}
                             className={`inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded transition-colors cursor-pointer ${
                               isSelected
                                 ? "bg-[#016332] text-white shadow-2xs"
@@ -235,7 +243,7 @@ export default function PublicResultsSection({
 
         {/* Visual PDF Document Canvas: Displays like a picture and provides download/view */}
         {activeRecord?.meritListPdfUrl && (
-          <div className="mt-8 border-t-2 border-[#126b59]/30 pt-6">
+          <div ref={previewRef} className="mt-8 scroll-mt-4 border-t-2 border-[#126b59]/30 pt-6">
             <div className="bg-emerald-50/80 border border-emerald-300 rounded-xl p-3.5 mb-4 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <FileText className="text-[#016332] shrink-0" size={18} />

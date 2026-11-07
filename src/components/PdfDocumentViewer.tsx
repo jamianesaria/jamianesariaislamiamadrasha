@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { Download, ExternalLink, FileText, RefreshCw, Eye } from "lucide-react";
 import { stegaClean } from "@sanity/client/stega";
 
@@ -13,6 +13,15 @@ interface PdfDocumentViewerProps {
   fitViewport?: boolean;
 }
 
+const mobilePdfQuery = "(max-width: 639px)";
+const subscribeToMobile = (onChange: () => void) => {
+  const query = window.matchMedia(mobilePdfQuery);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+};
+const getMobileSnapshot = () => window.matchMedia(mobilePdfQuery).matches;
+const getServerMobileSnapshot = () => false;
+
 export default function PdfDocumentViewer({
   url,
   title = "অফিসিয়াল PDF নথি",
@@ -21,7 +30,9 @@ export default function PdfDocumentViewer({
   compact = false,
   fitViewport = false,
 }: PdfDocumentViewerProps) {
-  const [viewerMode, setViewerMode] = useState<"google" | "direct">(fitViewport ? "direct" : "google");
+  const isMobile = useSyncExternalStore(subscribeToMobile, getMobileSnapshot, getServerMobileSnapshot);
+  const [viewerOverride, setViewerOverride] = useState<"google" | "direct" | null>(null);
+  const viewerMode = viewerOverride ?? (fitViewport && !isMobile ? "direct" : "google");
   const cleanUrl = stegaClean(url || "").trim();
 
   if (!cleanUrl || cleanUrl === "#" || cleanUrl.startsWith("javascript:")) {
@@ -61,7 +72,7 @@ export default function PdfDocumentViewer({
         <div className="flex items-center gap-2 flex-wrap">
           <button
             type="button"
-            onClick={() => setViewerMode(viewerMode === "google" ? "direct" : "google")}
+            onClick={() => setViewerOverride(viewerMode === "google" ? "direct" : "google")}
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-100 hover:text-white bg-black/20 hover:bg-black/35 px-2.5 py-1.5 rounded-lg border border-white/20 transition-colors"
             title="ভিউয়ার পরিবর্তন করুন (Google Docs / Direct Browser View)"
           >
